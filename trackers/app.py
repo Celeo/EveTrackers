@@ -109,9 +109,7 @@ def _name():
 
 def _can_access():
     """ Returns if the user can access the resources at that page """
-    # TODO
-    # return not _name() == 'None'
-    return True
+    return not _name() == 'None'
 
 
 @app.context_processor
