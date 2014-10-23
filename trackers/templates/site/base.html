@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block subtitle %}{% endblock %} | SiteMngr{% block titleAdd %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Eve Online Site Management Django App">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+{% if eveigb.is_igb() %}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+{% else %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+{% endif %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('body').keydown(function(event) {
+                if (event.target.tagName !== 'BODY')
+                    return;
+                switch (event.keyCode)
+                {
+                    case 66:
+                        $("#toggle_sidebar").click();
+                        break;
+                    case 71:
+                        $('#b_nav_graph').click();
+                        break;
+                    case 72:
+                        window.location.href = "{{ url_for('.index') }}";
+                        break;
+                    case 80:
+                        $('#b_nav_paste').click();
+                        break;
+                    case 82:
+                        $('#b_refresh').click();
+                        break;
+                    case 83:
+                        $('#b_nav_search').click();
+                        break;
+                    case 84:
+                        $('#b_nav_tables').click();
+                        break;
+                    case 87:
+                        $('#b_wormholes').click();
+                        break;
+                }
+            });
+            $("#toggle_sidebar").on("click", function() {
+                $("#wrapper").toggleClass("toggled");
+                $("#page_proper").toggleClass("shadow-left-pad");
+            });
+        {% if eveigb.is_igb() %}
+            function getIGBSystem() {
+                $.get("{{ url_for('.in_game_player_system') }}", function(data) {});
+            }
+            getIGBSystem();
+            setInterval(getIGBSystem, 5000);
+            $("#tracking_progress").html("Tracking");
+        {% endif %}
+        });
+    </script>
+    {% block extraHead %}{% endblock %}
+</head>
+
+<body>
+
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand"><a href="{{ url_for('.index') }}">Site Tracker</a></li>
+            <li><a href="{{ url_for('.index') }}"><span class="sub-brand">Home (h)</span></a></li>
+            <li><a href="{{ url_for('.add') }}">Add</a></li>
+            <li><a href="{{ url_for('.paste') }}">Paste</a></li>
+            <li><a href="{{ url_for('.mass_close') }}">Close Multiple</a></li>
+            <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
+            <li><a href="{{ url_for('.mastertable') }}">Master list</a></li>
+            <li><a href="{{ url_for('.stats') }}">Stats</a></li>
+            <hr class="break">
+        {% if valid_user %}
+            <li><a href="{{ url_for('logout_page') }}">Logout of {{ displayname }}</a></li>
+            <li><a href="{{ url_for('.settings') }}">User settings</a></li>
+        {% else %}
+            <li><a href="{{ url_for('login_page') }}">Login</a></li>
+        {% endif %}
+            <hr class="break">
+            <li><a href="http://auth.talkinlocal.org">Back to TIL</a></li>
+            <li><a style="padding-top: 4em;"><span style="font-size: 80%;">Press 'b' to toggle the sidebar</span></a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="page-content-wrapper container-fluid shadowall shadow-left-pad" id="page_proper">
+<button type="button" class="btn btn-default pull-left" id="toggle_sidebar" style="background-color:rgba(0, 0, 0, 0);">
+    <span class="glyphicon glyphicon-align-justify"></span>
+</button>
+    <div class="container pad-top">
+        <center>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                    <p>
+                        {{ message }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </center>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+{% block loadLaterJavascript %}{% endblock %}
+
+</body>
+
+</html>

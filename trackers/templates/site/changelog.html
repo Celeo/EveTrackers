@@ -1,0 +1,382 @@
+{% extends 'site/base.html' %}
+
+{% block subtitle %}
+Changelog
+{% endblock %}
+
+{% block content %}
+
+<h1>Changelog</h1>
+
+<br />
+
+<h4>June 14, 2014</h4>
+<ul>
+    <li>Code made open source. For the changelog off of GitHub, see <a href="https://github.com/Celeo/SiteTracker/commits/master">this page</a>.</li>
+</ul>
+
+<h4>May 14, 2014</h4>
+<ul>
+    <li>K-space jump counts to tradehubs on system pages now link to the Dotlan route for that trip.</li>
+    <li>Top nav bar adjustments</li>
+    <li>UI changes</li>
+    <li>URL restructuring</li>
+    <li>Removed the site location column on the index page</li>
+</ul>
+
+<h4>May 11, 2014</h4>
+<ul>
+    <li>Edits for Python 3 support</li>
+</ul>
+
+<h4>May 4, 2014</h4>
+<ul>
+    <li>The index page auto-capitalizes the scanid when editing in-line after saving</li>
+</ul>
+
+<h4>April 19, 2014</h4>
+<ul>
+    <li>When redirected to the no access page, users are instead redirected to the login page</li>
+</ul>
+
+<h4>April 14, 2014</h4>
+<ul>
+    <li>Wormhole statics now included on wspace system pages</li>
+</ul>
+
+<h4>April 13, 2014</h4>
+<ul>
+    <li>Index page search feature is now only for system names</li>
+    <li>Pressing the <code>H</code> key will redirect you to the index page</li>
+    <li>System kills now include the last 24 hours and load quicker</li>
+    <li>System pages now include information about the system's region, constellation, faction, pirates, and recent jumps</li>
+    <li>Wormhole systems with effects now show which effect they have on their system page</li>
+</ul>
+
+<h4>April 12, 2014</h4>
+<ul>
+    <li>Distances to tradehubs for kspace systems are now stored in the database after being calculated for the 
+        first time, drastically increasing load times for browsing commonly-viewed systems.</li>
+</ul>
+
+<h4>April 6, 2014</h4>
+<ul>
+    <li>Index page graph updated</li>
+</ul>
+
+<h4>March 24, 2014</h4>
+<ul>
+    <li>Field added for wormholes - the other sides' system's scanid</li>
+</ul>
+
+<h4>March 19, 2014</h4>
+<ul>
+    <li>Index page now has keyboard shotcuts to "click" the toggle button nav bar</li>
+    <li>Index page toggle buttons now have an active state when clicked</li>
+    <li>Index page's wormhole and site tables are now part of the toggle button nav bar</li>
+</ul>
+
+<h4>March 17, 2014</h4>
+<ul>
+    <li>VoC and EoL option added for wormholes</li>
+</ul>
+
+<h4>February 19, 2014</h4>
+<ul>
+    <li>New checkbox added to wormhole edit form if the user does not want to update the graph to reflect 
+        the changes they are making to that wormhole. Useful when updating multiple wormholes at once, as 
+        the graph does not need to be updated but for the last time to reflect all new changes.</li>
+</ul>
+
+<h4>February 17, 2014</h4>
+<ul>
+    <li>Overlay page (as viewed on the index page) now examines both sides of a wormhole for calculating information</li>
+</ul>
+
+<h4>February 12, 2014</h4>
+<ul>
+    <li>System page now loads recent kills from JavaScript, decreasing page load times</li>
+</ul>
+
+<h4>February 9, 2014</h4>
+<ul>
+    <li>Pasting to the scanner paste page no longer counts as an edit for purposes of marking on the index page</li>
+</ul>
+
+<h4>February 8, 2014</h4>
+<ul>
+    <li>Title added to index page to give name to the instance of the tracker being viewed</li>
+</ul>
+
+<h4>February 7, 2014</h4>
+<ul>
+    <li>The index page graph is now more accurate.</li>
+</ul>
+
+<h4>February 6, 2014</h4>
+<ul>
+    <li>Paste page bug fixed to support wormholes leading into the system being parsed</li>
+</ul>
+
+<h4>January 31, 2014</h4>
+<ul>
+    <li>The index page and recent scan edits page tables can now be sorted via JavaScript by clicking on the headers</li>
+</ul>
+
+<h4>January 18, 2014</h4>
+<ul>
+    <li>User account creation disabled as this site now authticates against remote LDAP.</li>
+</ul>
+
+<h4>January 18, 2014</h4>
+<ul>
+    <li>Indxe page last updated feature added</li>
+    <li>Index page wormhole timers now count ellapsed time, not time remaining</li>
+</ul>
+
+<h4>January 14, 2014</h4>
+<ul>
+    <li>Added more information to the recent scanid changes page</li>
+    <li>Changed the styling slighly on the addsite/addwormhole pages</li>
+    <li>Recent kills added to system overview pages</li>
+</ul>
+
+<h4>January 10, 2014</h4>
+<ul>
+    <li>The Index page now features a wormhole countdown feature, calculated with the enter time of the wormhole with its state.</li>
+    <li>Users deleted again, sorry. :(</li>
+    <li>Database overhaul! Instead of just marking if a field was changed when someone edits a site/wormhole, a snapshot of the site/wormhole's 
+        state prior to the edit is saved, and then appears on the viewsite/viewwormhole pages like the old checkbox 
+        table used to. This shows a better history of edits than just if a field was changed.</li>
+</ul>
+
+<h4>January 5, 2014</h4>
+<ul>
+    <li>Moved to a new host</li>
+</ul>
+
+<h4>January 4, 2014</h4>
+<ul>
+    <li>Systems that are not found are no longer black; they're now gray</li>
+</ul>
+
+<h4>January 3, 2014</h4>
+<ul>
+    <li>New row added to the bottom of the index page's site and wormhole tables for quickly adding new data</li>
+</ul>
+
+<h4>January 2, 2014</h4>
+<ul>
+    <li>In line editing feature added to the index page for wormholes</li>
+</ul>
+
+<h4>December 31, 2013</h4>
+<ul>
+    <li>Wspace system pages once again show wormhole class</li>
+    <li>After downtime paste page now works correctly</li>
+</ul>
+
+<h4>December 29, 2013</h4>
+<ul>
+    <li>The add/edit site pages now correctly store the selected site type in the database</li>
+    <li>Reworked many of the links to redirects - browser URLs will now be more fluid</li>
+</ul>
+
+<h4>December 24, 2013</h4>
+<ul>
+    <li>Site type input changed to dropdown menu like wormhole status</li>
+</ul>
+
+<h4>December 23, 2013</h4>
+<ul>
+    <li>When a new graph is generated, a wormhole with status Fresh or Undecayed will be set to Unknown</li>
+</ul>
+
+<h4>December 22, 2013</h4>
+<ul>
+    <li>Design improvements</li>
+    <li>Tooltips added to index page elements and footer links</li>
+</ul>
+
+<h4>December 21, 2013</h4>
+<ul>
+    <li>Design improvements</li>
+</ul>
+
+<h4>December 20, 2013</h4>
+<ul>
+    <li>Design improvements</li>
+</ul>
+
+<h4>December 19, 2013</h4>
+<ul>
+    <li>Design improvements</li>
+</ul>
+
+<h4>December 18, 2013</h4>
+<ul>
+    <li>Scanner paste form copy added to index page</li>
+</ul>
+
+<h4>December 16, 2013</h4>
+<ul>
+    <li>More information added to graph</li>
+</ul>
+
+<h4>December 14, 2013</h4>
+<ul>
+    <li>Mass close wormhole page added, see top navigation menu</li>
+</ul>
+
+<h4>December 10, 2013</h4>
+<ul>
+    <li>Quick links added to system page to add sites and wormholes starting/ending in that system</li>
+    <li>All tables went on a diet</li>
+</ul>
+
+<h4>December 9, 2013</h4>
+<ul>
+    <li>Search feature added - see main page for instructions</li>
+</ul>
+
+<h4>December 7, 2013</h4>
+<ul>
+    <li>New styles added to the wormhole chain graph</li>
+</ul>
+
+<h4>December 4, 2013</h4>
+<ul>
+    <li>Graphing no longer on a timer - if the graph is outdated when someone visits the index page, it will be updated and presented before the page loads.</li>
+</ul>
+
+<h4>November 29, 2013</h4>
+<ul>
+    <li>Time information added to index page.</li>
+    <li>Model added for when a player uses the paste feature.</li>
+</ul>
+
+<h4>November 28, 2013</h4>
+<ul>
+    <li>Fixed bug with usernames not being properly stored into database</li>
+</ul>
+
+<h4>November 19, 2013</h4>
+<ul>
+    <li>System overview page shows more information</li>
+    <li>Overview div shows more information</li>
+    <li>My current system link added to menu</li>
+</ul>
+
+<h4>November 16, 2013</h4>
+<ul>
+    <li>Overview div added to index page</li>
+    <li>Speed improvements</li>
+</ul>
+
+<h4>November 15, 2013</h4>
+<ul>
+    <li>Grapher will no longer graph unopened wormholes</li>
+    <li>Jumps to the 5 major tradehub calculated on a k-space system's page</li>
+    <li>Typing in scanids for Sites and Wormholes transforms the letters into uppercase</li>
+</ul>
+
+<h4>November 8, 2013</h4>
+<ul>
+    <li>Paste page backend code re-work finished</li>
+</ul>
+
+<h4>November 7, 2013</h4>
+<ul>
+    <li>Paste page backend code rewritten</li>
+</ul>
+
+<h4>November 6, 2013</h4>
+<ul>
+    <li>Background image added</li>
+</ul>
+
+<h4>October 28, 2013</h4>
+<ul>
+    <li>Graphing color coordination added</li>
+</ul>
+
+<h4>October 26, 2013</h4>
+<ul>
+    <li>Graphing code added to make a visual of the chain</li>
+</ul>
+
+<h4>October 12, 2013</h4>
+<ul>
+    <li>Reordered model __unicode__ return strings to improve functionality of paste page</li>
+</ul>
+
+<h4>August 16, 2013</h4>
+<ul>
+    <li>Downtime paste page now shows more info about the scanids being changed</li>
+</ul>
+
+<h4>August 15, 2013</h4>
+<ul>
+    <li>Players can now request access for their out-of-alliance characters</li>
+</ul>
+
+<h4>August 13, 2013</h4>
+<ul>
+    <li>New 'no access' page for restricted viewing</li>
+    <li>Checkboxes are now disabled on viewing pages</li>
+    <li>Wormhol.es link on system page</li>
+    <li>Highlights the user's current system on the system overview and checkkills pages, if present</li>
+    <li>New settings page for users to customize their access</li>
+</ul>
+
+<h4>August 7, 2013</h4>
+<ul>
+    <li>New stats page</li>
+</ul>
+
+<h4>August 6, 2013</h4>
+<ul>
+    <li>Unopened sites section added to system overview page</li>
+    <li>IGNORE option for downtime scanning</li>
+    <li>CLOSE and IGNORE changed to -CLOSE- and -IGNORE- (respectively) to stand out better</li>
+    <li>ScanIDs in closedwormholes on system overview are now links to their respective edit pages</li>
+    <li>Editing a sig's scanid appends that change to its notes section</li>
+    <li>New page for viewing recent scanid changes</li>
+</ul>
+
+<h4>August 1, 2013</h4>
+<ul>
+    <li>CLOSE option added to downtime paste page to allow quickly marking a site as despawned from overnight</li>
+</ul>
+
+<h4>July 31, 2013</h4>
+<ul>
+    <li>Bootstrap responsive JS disabled</li>
+    <li>'Present' category on paste page works properly now</li>
+    <li>Open sites added to system overview page</li>
+    <li>Downtime support</li>
+</ul>
+
+<h4>July 30, 2013</h4>
+<ul>
+    <li>Wormhole type field hidden due to not being used in the alliance</li>
+    <li>On the system page looking at a w-space system, the wormhole's class is listed</li>
+    <li>New kill check page that checks all connected systems for kills in the last hour</li>
+</ul>
+
+<h4>July 29, 2013</h4>
+<ul>
+    <li>Changelog page</li>
+    <li>Nav menu has been moved to the top bar in the form of a dropdown menu</li>
+    <li>Edit links now open into new tabs in the browser</li>
+    <li>True/False testboxes are now checkboxes</li>
+</ul>
+
+<hr>
+
+<h3>Thanks</h3>
+<p>
+    Thanks especially to Elroy, for a lot of really great ideas, and being patient when I threw screenshots of my progress at him every 15 minutes, and Tsal, for suggestions, support, and encouragement.
+</p>
+
+{% endblock %}

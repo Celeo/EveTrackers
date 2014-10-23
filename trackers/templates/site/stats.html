@@ -1,0 +1,67 @@
+{% extends 'site/base.html' %}
+
+{% block subtitle %}
+Stats
+{% endblock %}
+
+{% block extraHead %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/canvasjs.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<h1>Stats</h1>
+
+<h3>Current Data</h3>
+<strong>Total number of sites: {{ num_sites }}<br />
+Total number of wormholes: {{ num_wormholes }}<br />
+Total number of edits: {{ num_edits }}<br />
+Total number of paste updates: {{ num_pastes }}<br />
+Total number of contributors: {{ num_contributors }}</strong>
+
+<br /><br />
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var chart = new CanvasJS.Chart("chartContainer",
+        {
+            title : { text: "Top 30 Contributors" },
+            axisY: { title: "Additions" },
+            legend: {
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+            },
+            theme: "theme2",
+            data: [
+            {
+                type: "column",
+                legendMarkerColor: "gray",
+                showInLegend: true,
+                legendText: "Players",
+                dataPoints: [
+                    {% for data in graph %}
+                        {{ data|safe }}
+                    {% endfor %}
+                ]
+            }
+            ]
+        });
+        chart.render();
+    });
+</script>
+<div id="chartContainer" style="height: 500px; width: 100%;"></div>
+
+<br />
+
+<h3>Total Edit Count by User</h3>
+<p>
+{% for a, b in all_contributors %}
+    <span class="label label-primary">{{ a }}</span> <span class="label label-success">{{ b }} additions</span><br />
+{% endfor %}
+</p>
+
+</center>
+
+{% endblock %}

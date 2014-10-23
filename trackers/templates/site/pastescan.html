@@ -1,0 +1,112 @@
+{% extends 'site/base.html' %}
+
+{% block subtitle %}
+Paste
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<h3>Paste data from your system scanner here:</h3><br />
+<form action="" method="POST">
+
+    <table style="border: none;">
+        <tr style="border: none;">
+            <td>
+                <span><b>System</b>:</span>
+            </td>
+            <td style="padding-left: 5px;">
+                <input type="text" name="system" value="{% if system %}{{ system }}{% elif eveigb.is_igb() %}{{ eveigb['solarsystemname'] }}{% else %}{{ homesystem }}{% endif %}">
+            </td>
+        </tr>
+    </table><br />
+    <textarea name="pastedata" rows="20" id="ta_pastedata">{% if raw %}{{ raw }}{% endif %}</textarea><br />
+    <input type="submit" value="Parse" class="btn btn-primary" data-loading-text="Parsing..." onclick="$(this).button('loading');"> 
+</form>
+
+<hr>
+
+<div class="row">
+    <div class="col-lg-4">
+        <strong>The following already exist in the database:</strong>
+        {% if present %}
+            <table class="table-striped">
+                <tr>
+                    <th>
+                        Scan ID
+                    </th>
+                    <th>
+                        Link
+                    </th>
+                </tr>
+                {% for p in present %}
+                <tr>
+                    <td>{{ p.scanid }}</td>
+                    {% if p.is_site_object() %}
+                        <td><a href="{{ url_for('.site', id=p.id) }}" {% if newTab %}target="_blank"{% endif %}>Link</a></td>
+                    {% else %}
+                        <td><a href="{{ url_for('.wormhole', id=p.id) }}" {% if newTab %}target="_blank"{% endif %}>Link</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        <strong>The following are not in your paste, but<br />are in the database for this system. Please review:</strong>
+        {% if notfound %}
+            <table class="table-striped">
+                <tr>
+                    <th>Scan ID</th>
+                    <th>Edit</th>
+                </tr>
+                {% for n in notfound %}
+                <tr>
+                    <td>{{ n.scanid }}</td>
+                    <td>
+                    {% if n.is_site_object() %}
+                        <a href="{{ url_for('.site', id=n.id) }}"{% if newTab %} target="_blank"{% endif %}>Link</a>
+                    {% else %}
+                        <a href="{{ url_for('.wormhole', id=n.id) }}"{% if newTab %} target="_blank"{% endif %}>Link</a>
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        <strong>The following are in your paste, but<br />are not in the database. Please add:</strong>
+        {% if findnew %}
+            <table class="table-striped">
+                <tr>
+                    <th>Scan ID</th>
+                    <th>Link to add</th>
+                </tr>
+                {% for f in findnew %}
+                <tr>
+                    <td>{{ f.scanid }}</td>
+                    <td>
+                        {% if f.is_wormhole %}
+                            <a href="{{ url_for('.add') }}?model_type={{ f.model_type }}&scanid={{ f.scanid }}&start={{ system }}" {% if newTab %}target="_blank"{% endif %}>Link</a>
+                        {% else %}
+                            <a href="{{ url_for('.add') }}?model_type={{ f.model_type }}&scanid={{ f.scanid }}&type={{ f.type_ }}&name={{ f.name }}&system={{ system }}" {% if newTab %}target="_blank"{% endif %}>Link</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+</div>
+
+</center>
+
+{% endblock %}

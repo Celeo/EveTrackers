@@ -1,0 +1,7 @@
+flask
+flask-socketio
+flask-admin
+flask-oauth
+flask-sqlalchemy
+requests
+eveapi

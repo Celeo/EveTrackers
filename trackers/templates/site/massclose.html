@@ -1,0 +1,42 @@
+{% extends 'site/base.html' %}
+
+{% block subtitle %}
+Mass Close
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+{{ data }}
+
+<form method="POST" action="">
+    <table class="table-striped extracellspacing">
+        <tr>
+            <th>Scan id</th>
+            <th>Date</th>
+            <th>Start</th>
+            <th>Destination </th>
+            <th>Status</th>
+            <th>Opened</th>
+            <th>Close?</th>
+        </tr>
+    {% for w in wormholes %}
+        <tr>
+            <td><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
+            <td>{{ w.date|date }}</td>
+            <td><a href="{{ url_for('.system', system=w.start) }}">{{ w.start }}</a></td>
+            <td><a href="{{ url_for('.system', system=w.end) }}">{{ w.end }}</a></td>
+            <td>{{ w.status }}</td>
+            <td>{% if w.opened %}<span style="color: green;">True</span>{% else %}<span style="color: red;">False</span>{% endif %}</td>
+            <td><input type="checkbox" name="{{ w.id }}"></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <br />
+    <input type="submit" class="btn btn-primary" value="Commit edits" data-loading-text="Commiting..." onclick="$(this).button('loading');">
+</form>
+
+</center>
+
+{% endblock %}

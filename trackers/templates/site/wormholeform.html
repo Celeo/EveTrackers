@@ -1,0 +1,66 @@
+<input type="hidden" name="model_type" value="wormhole">
+<table class="contenttable">
+    <tr>
+        <td><label>Creator</label></td>
+        <td><input type="text" name="creator" value="{% if wormhole %}{{ wormhole.creator }}{% else %}{{ displayname }}{% endif %}" readonly></td>
+    </tr>
+    {% if wormhole %}
+    <tr>
+        <td><label>Date</label></td>
+        <td><input type="text" name="date" value="{% if wormhole %}{{ wormhole.date|date }}{% endif %}" readonly><td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td><label id="l_scanid">Scan ID</label></td>
+        <td><input type="text" id="wormhole_scanid" onkeyup="validate();" class="uppercase" name="scanid" placeholder="AAA, BBB, LOL ..." value="{% if wormhole %}{{ wormhole.scanid }}{% elif g_scanid %}{{ g_scanid }}{% endif %}" maxlength="3"></td>
+    </tr>
+    <tr>
+        <td><label>Started in</label></td>
+        <td><input type="text" id="wormhole_start" onkeyup="validate();" name="start" placeholder="Jita, J123456 ..." value="{% if wormhole %}{{ wormhole.start }}{% elif g_start %}{{ g_start }}{% else %}{{ eveigb.solarsystemname }}{% endif %}"></td>
+    </tr>
+    <tr>
+        <td><label>Leads to</label></td>
+        <td><input type="text" id="wormhole_end" onkeyup="validate();" name="end" placeholder="Jita, J123456 ..." value="{% if wormhole %}{{ wormhole.end }}{% elif g_end %}{{ g_end }}{% endif %}"></td>
+    </tr>
+    <tr>
+        <td>
+            <label>Status</label>
+        </td>
+        <td>
+            <select name="status">
+                {% if wormhole %}
+                    <option>{{ wormhole.status }}</option>
+                {% endif %}
+                <option>Undecayed</option>
+                <option>Unopened</option>
+                <option>Fresh</option>
+                <option>&#60 50% mass</option>
+                <option>VoC</option>
+                <option>EoL</option>
+                <option>VoC and EoL</option>
+                <option>Unknown</option>
+                <option>Closed</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><label>Has the wormhole been opened</label></td>
+        <td><input type="checkbox" name="opened" {% if wormhole and wormhole.opened %}checked="checked"{% endif %}{% if not wormhole %}checked="checked"{% endif %}></td>
+    </tr>
+    <tr>
+        <td><label>Has the wormhole closed</label></td>
+        <td><input type="checkbox" name="closed" {% if wormhole and wormhole.closed %}checked="checked"{% endif %}></td>
+    </tr>
+    <tr>
+        <td><label>Notes</label></td>
+        <td><textarea name="notes">{% if wormhole %}{{ wormhole.notes }}{% endif %}</textarea></td>
+    </tr>
+    <tr>
+        <td><label>Other side's scanid</label></td>
+        <td><input type="text" id="wormhole_otherscanid" class="uppercase" name="o_scanid" placeholder="AAA, BBB, LOL ..." value="{% if wormhole and wormhole.o_scanid %}{{ wormhole.o_scanid }}{% endif %}" maxlength="3"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="submit" id="wormhole_submit_button" value="Store" class="btn btn-primary" data-loading-text="Storing..." onclick="$(this).button('loading');"></td>
+    </tr>
+</table>

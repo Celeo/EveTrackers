@@ -1,0 +1,55 @@
+{% extends 'site/base.html' %}
+
+{% block subtitle %}
+Add
+{% endblock %}
+
+{% block extraHead %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        validate();
+    });
+    function validate() {
+        if ($('#site_scanid').val().length == 3 && $('#site_name').val().length > 0 && $('#site_system').val().length > 0) {
+            $('#site_submit_button').removeAttr("disabled");
+        }
+        else {
+            $('#site_submit_button').attr('disabled', 'disabled');
+        }
+        if ($('#wormhole_scanid').val().length == 3 && $('#wormhole_start').val().length > 0 && $('#wormhole_end').val().length > 0) {
+            $('#wormhole_submit_button').removeAttr("disabled");
+        }
+        else {
+            $('#wormhole_submit_button').attr('disabled', 'disabled');
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<ul class="nav nav-pills" role="tablist" style="margin-left: auto; width: 50%;">
+    <li{% if model_type == 'site' %} class="active"{% endif %}><a href="#site" role="tab" data-toggle="tab">Site</a></li>
+    <li{% if model_type == 'wormhole' %} class="active"{% endif %}><a href="#wormhole" role="tab" data-toggle="tab">Wormhole</a></li>
+</ul>
+
+<br /><br />
+
+<div class="tab-content">
+    <div class="tab-pane fade{% if model_type == 'site' %} in active{% endif %}" id="site">
+        <form action="" method="POST" class="wideinput extracellspacing">
+            {% include 'siteform.html' %}
+        </form>
+    </div>
+    <div class="tab-pane fade{% if model_type == 'wormhole' %} in active{% endif %}" id="wormhole">
+        <form action="" method="POST" class="wideinput extracellspacing">
+            {% include 'wormholeform.html' %}
+        </form>
+    </div>
+</div>
+
+</center>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+body {
+    margin-top: 3%;
+    font-size: medium;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    padding: 5px 0 5px 0;
+}
+
+th {
+    font-size: 120%;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+input {
+    text-align: center;
+}
+
+hr {
+    border: 1px solid black;
+}
+
+.celltop {
+    border: 1px solid #e5e5e5;
+    padding: 5px;
+    cursor: pointer;
+}
+.celltop:hover {
+    text-decoration: underline;
+}
+.cellbottom {
+    border: 1px solid #e5e5e5;
+    padding: 5px;
+}
+.cellholder {
+    margin-bottom: 2px;
+}

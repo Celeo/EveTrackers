@@ -1,0 +1,249 @@
+{% extends 'op/base.html' %}
+
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        function getOpId() {
+            return "{{ op.id }}";
+        }
+        $(document).on("click", "a.increment", function() {
+            var pid = $(this).attr("playerid");
+            var sitecountfield = $("#sc_" + pid);
+            var sitecount = parseFloat(sitecountfield.text());
+            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('.op', op_id=op.id) }}",
+                data: {
+                    playerid: pid,
+                    type: "increment",
+                    step: step
+                },
+                success: function(data) {
+                    sitecountfield.text(data);
+                }
+            });
+        });
+        $(document).on("click", "a.decrement", function() {
+            var pid = $(this).attr("playerid");
+            var sitecountfield = $("#sc_" + pid);
+            var sitecount = parseFloat(sitecountfield.text());
+            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('.op', op_id=op.id) }}",
+                data: {
+                    playerid: pid,
+                    type: "decrement",
+                    step: step
+                },
+                success: function(data) {
+                    sitecountfield.text(data);
+                }
+            });
+        });
+    });
+    function updatePlayers() {
+        $("#players").load("{{ url_for('.players', op_id=op.id) }}");
+    }
+    setTimeout("updatePlayers();", 500);
+    {% if not op.locked %}
+    setInterval("updatePlayers();", 30000);
+    {% endif %}
+    function renameOperation() {
+        $("#opname").html("<input type='text' id='i_opname' value='" + $('#currentopname').text() + "'>");
+        $("#renameop").hide();
+        $("#saverename").show();
+    }
+    function saveRenameOperation() {
+        var newName = $("#i_opname").val();
+        $("#opname").html(newName);
+        $("#renameop").show();
+        $("#saverename").hide();
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.op', op_id=op.id) }}",
+            data: {
+                rename: newName
+            },
+            success: function(data) {
+                // empty
+            }
+        });
+    }
+    function changeFC() {
+        $("#opfc").html("<input type='text' id='i_opfc' value='" + $('#opfc').text() + "'>");
+        $("#savechangefc").show();
+        $("#changefc").hide();
+    }
+    function saveChangeFC() {
+        var newFC = $("#i_opfc").val();
+        $("#opfc").html(newFC);
+        $("#savechangefc").hide();
+        $("#changefc").show();
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.op', op_id=op.id) }}",
+            data: {
+                fc: newFC
+            },
+            success: function(data) {
+                // empty
+            }
+        });
+    }
+    function changeDescription() {
+        $("#opdescription").html("<textarea id='i_opdescription' style='width: 50%;' rows='10'>" +
+            $("#opdescription").text() + "</textarea>");
+        $("#savechangedescription").show();
+        $("#changedescription").hide();
+    }
+    function saveChangeDescription() {
+        var newDescription = $("#i_opdescription").val();
+        $("#opdescription").html(newDescription);
+        $("#savechangedescription").hide();
+        $("#changedescription").show();
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.op', op_id=op.id) }}",
+            data: {
+                description: newDescription
+            },
+            success: function(data) {
+                // empty
+            }
+        });
+    }
+    function changeLocation() {
+        $("#oplocation").html("<input type='text' id='i_oplocation' value='" + $('#oplocation').text() + "'>");
+        $("#savechangelocation").show();
+        $("#changelocation").hide();
+    }
+    function saveChangeLocation() {
+        var newLocation = $("#i_oplocation").val();
+        $("#oplocation").html(newLocation);
+        $("#savechangelocation").hide();
+        $("#changelocation").show();
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.op', op_id=op.id) }}",
+            data: {
+                location: newLocation
+            },
+            success: function(data) {
+                // empty
+            }
+        });
+    }
+    function lock(i) {
+        console.log(i);
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.op', op_id=op.id) }}",
+            data: {
+                lock: i
+            },
+            success: function(data) {
+                location.href = "{{ url_for('.op', op_id=op.id) }}"
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+
+<span id="currentopname" hidden>{{ op.name }}</span>
+<span id="currentopid" hidden>{{ op.id }}</span>
+
+<h3><span id="opname">{{ op.name }}</span>
+    {% if not op.locked %}
+    <a onclick="renameOperation();" id="renameop" style="font-size: 50%;">RENAME</a> 
+    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a> {% endif %}
+    <a href="{{ url_for('.op', op_id=op.id) }}" style="font-size: 50%;">REFRESH PAGE</a></h3>
+
+<div class="well">
+    <p>
+        <b>FC</b>: <span id="opfc">{{ op.leader }}</span> {% if not op.locked %}<a onclick="changeFC();" id="changefc" style="font-size: 60%;">CHANGE</a> 
+            <a onclick="saveChangeFC();" id="savechangefc" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
+        <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" style="font-size: 60%;">CHANGE</a> 
+            <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
+        <b>Started</b>: {{ op.date }}<br />
+        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
+        <b>Status</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
+        {% if not op.locked %}
+        <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
+            <select name="state">
+                <option>{{ op.state }}</option>
+                <option>Not started</option>
+                <option>In progress</option>
+                <option>Loot collected</option>
+                <option>Loot sold</option>
+                <option>Paid</option>
+            </select>
+            <input type="submit" class="btn btn-primary" value="Change status">
+        </form>
+        {% else %}
+        <br />
+        {% endif %}
+        {% if bursar %}
+        <a {% if not op.locked %}onclick="lock('1');"{% endif %}class="btn btn-danger" {% if op.locked %}disabled="disabed"{% endif %}>Lock</a>
+        <a {% if op.locked %}onclick="lock('0');"{% endif %}class="btn btn-success" {% if not op.locked %}disabled="disabed"{% endif %}>Unlock</a>
+        {% endif %}
+        {% if op.locked %}
+        <p>
+            <br />
+            This operation was locked by an accounting staff member.{% if bursar %} As you are one of those accountants, you can 
+            unlock this page with the Unlock button.{% endif %}
+        </p>        
+        {% endif %}
+    </p>
+</div>
+
+<div class="modal fade" id="apikeyexplain" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This API key is used by the tool for automatically tracking payouts for operations from corporation wallets.
+                    <br />
+                    While this tool does support full manual payouts to players, it aims to eliminate much of the work that has to 
+                    be recorded by bursars in doing payouts, specifically for escalations.
+                    <br />
+                    Bursars can push a button on the payout management page and the tool will poll the API keys in storage and 
+                    attempt to mark as many players as possible as paid for their participation in operations.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="well">
+    <h4>Description</h4>
+    <span id="opdescription">{{ op.description|safe }}</span><br />
+    {% if not op.locked %}
+    <a onclick="changeDescription();" id="changedescription" style="font-size: 60%;">CHANGE</a> 
+    <a onclick="saveChangeDescription();" id="savechangedescription" style="font-size: 60%;" hidden>SAVE</a>
+    {% endif %}
+</div>
+
+<div class="well">
+    <h4 style="float: left;">Players</h4>
+    {% if not op.locked %}
+    <div style="float: right;">
+        <input id="step" type="number" min="0.1" max="1.0" step="0.1" placeholder="Delta (default is 1.0)" style="width: 12em;">
+    </div>
+    {% endif %}
+    <div class="clearfix"></div>
+    <div id="players">
+        <p style="color: gray;">Loading players ...</p>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if is_in_chain %}
+    <h3>This system is directly in the chain</h3>
+{% elif closest_chain %}
+    <h3>Closest chain system to this is {{ closest_chain }}, {{ closest_jumps }} jumps</h3>
+{% else %}
+    <h3>There is no direct access to this system with the current wormhole chain.</h3>
+{% endif %}
