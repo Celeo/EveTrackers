@@ -7,6 +7,8 @@ from datetime import datetime
 from shared import *
 from trackers.site.app import blueprint as site
 from trackers.op.app import blueprint as op
+from trackers.corp.app import blueprint as corp
+from trackers.fuel.app import blueprint as fuel
 
 # flask
 app = Flask(__name__)
@@ -148,6 +150,8 @@ socketio.init_app(app)
 
 app.register_blueprint(site)
 app.register_blueprint(op, url_prefix='/operations')
+app.register_blueprint(corp, url_prefix='/corp')
+app.register_blueprint(fuel, url_prefix='/fuel')
 
 
 if __name__ == '__main__':

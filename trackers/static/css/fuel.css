@@ -1,0 +1,26 @@
+body {
+    margin-top: 3%;
+    font-size: medium;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    padding: 5px 0 5px 0;
+}
+
+th {
+    font-size: 120%;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+input {
+    text-align: center;
+}
+
+hr {
+    border: 1px solid black;
+}
