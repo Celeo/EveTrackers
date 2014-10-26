@@ -5,6 +5,7 @@ from flask.ext.admin.contrib.sqla import ModelView
 import requests
 from datetime import datetime
 from shared import *
+from trackers.landing.app import blueprint as landing
 from trackers.site.app import blueprint as site
 from trackers.op.app import blueprint as op
 from trackers.corp.app import blueprint as corp
@@ -128,7 +129,7 @@ def _preprocess():
     print('Full path: ' + request.path)
     if request.path.startswith('/static/'):
         return
-    if request.path in ['/noaccess', '/login', '/oauthauthorized']:
+    if request.path in ['/noaccess', '/login', '/oauthauthorized', '/landing']:
         return
     if not _can_access():
         return redirect(url_for('no_access'))
@@ -148,6 +149,7 @@ def no_access():
 socketio.app = app
 socketio.init_app(app)
 
+app.register_blueprint(landing)
 app.register_blueprint(site)
 app.register_blueprint(op, url_prefix='/operations')
 app.register_blueprint(corp, url_prefix='/corp')
