@@ -15,7 +15,6 @@ Index
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/site');
     socket.on('connect', function() {
         console.log("Client connected");
-        socket.emit('sitetracker event', { data: 'connect' });
     });
     socket.on('sitetracker response', function(msg) {
         console.log("Socket message: " + msg.data);
