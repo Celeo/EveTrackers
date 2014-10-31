@@ -1,6 +1,24 @@
 {% extends 'op/base.html' %}
 
 {% block head %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/op');
+    socket.on('connect', function() {
+        console.log("Client connected");
+    });
+    socket.on('optracker response', function(msg) {
+        console.log("Socket message: " + msg.data);
+        // TODO handle processing of return events from the server
+    });
+    function messageSocket(message) {
+        socket.emit('optracker event', message);
+    }
+    $(document).ready(function() {
+        socket.emit('optracker event', { data: 'player_locations' });
+    });
+</script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         function getOpId() {
@@ -8,48 +26,22 @@
         }
         $(document).on("click", "a.increment", function() {
             var pid = $(this).attr("playerid");
-            var sitecountfield = $("#sc_" + pid);
-            var sitecount = parseFloat(sitecountfield.text());
             var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('.op', op_id=op.id) }}",
-                data: {
-                    playerid: pid,
-                    type: "increment",
-                    step: step
-                },
-                success: function(data) {
-                    sitecountfield.text(data);
-                }
-            });
+            messageSocket({ command: 'increment', player_id: pid, step: step });
         });
         $(document).on("click", "a.decrement", function() {
             var pid = $(this).attr("playerid");
-            var sitecountfield = $("#sc_" + pid);
-            var sitecount = parseFloat(sitecountfield.text());
             var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('.op', op_id=op.id) }}",
-                data: {
-                    playerid: pid,
-                    type: "decrement",
-                    step: step
-                },
-                success: function(data) {
-                    sitecountfield.text(data);
-                }
-            });
+            messageSocket({ command: 'decrement', player_id: pid, step: step });
         });
     });
     function updatePlayers() {
         $("#players").load("{{ url_for('.players', op_id=op.id) }}");
     }
     setTimeout("updatePlayers();", 500);
-    {% if not op.locked %}
+{% if not op.locked %}
     setInterval("updatePlayers();", 30000);
-    {% endif %}
+{% endif %}
     function renameOperation() {
         $("#opname").html("<input type='text' id='i_opname' value='" + $('#currentopname').text() + "'>");
         $("#renameop").hide();
@@ -57,19 +49,9 @@
     }
     function saveRenameOperation() {
         var newName = $("#i_opname").val();
-        $("#opname").html(newName);
         $("#renameop").show();
         $("#saverename").hide();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                rename: newName
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        messageSocket({ command: 'rename', name: newName });
     }
     function changeFC() {
         $("#opfc").html("<input type='text' id='i_opfc' value='" + $('#opfc').text() + "'>");
@@ -77,42 +59,21 @@
         $("#changefc").hide();
     }
     function saveChangeFC() {
-        var newFC = $("#i_opfc").val();
-        $("#opfc").html(newFC);
+        var newLeader = $("#i_opfc").val();
         $("#savechangefc").hide();
         $("#changefc").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                fc: newFC
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        messageSocket({ command: 'leader', leader: newLeader });
     }
     function changeDescription() {
-        $("#opdescription").html("<textarea id='i_opdescription' style='width: 50%;' rows='10'>" +
-            $("#opdescription").text() + "</textarea>");
+        $("#opdescription").html("<textarea id='i_opdescription' style='width: 50%;' rows='10'>" + $("#opdescription").text() + "</textarea>");
         $("#savechangedescription").show();
         $("#changedescription").hide();
     }
     function saveChangeDescription() {
         var newDescription = $("#i_opdescription").val();
-        $("#opdescription").html(newDescription);
         $("#savechangedescription").hide();
         $("#changedescription").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                description: newDescription
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        messageSocket({ command: 'description', description: newDescription });
     }
     function changeLocation() {
         $("#oplocation").html("<input type='text' id='i_oplocation' value='" + $('#oplocation').text() + "'>");
@@ -121,32 +82,12 @@
     }
     function saveChangeLocation() {
         var newLocation = $("#i_oplocation").val();
-        $("#oplocation").html(newLocation);
         $("#savechangelocation").hide();
         $("#changelocation").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                location: newLocation
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        messageSocket({ command: 'location', location: newLocation });
     }
     function lock(i) {
-        console.log(i);
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                lock: i
-            },
-            success: function(data) {
-                location.href = "{{ url_for('.op', op_id=op.id) }}"
-            }
-        });
+        messageSocket({ command: 'lock', locked: i });
     }
 </script>
 {% endblock %}
