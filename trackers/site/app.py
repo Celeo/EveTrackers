@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from flask.ext.socketio import emit
 from trackers.shared import *
 from .models import *
 from datetime import datetime
@@ -1044,21 +1043,15 @@ def _notify_change(changed):
 
 @socketio.on('sitetracker event', namespace='/site')
 def websocket_message(message):
-    """ Listener: Echo normal event """
+    """ Listener: Normal event """
     if message['data'] == 'player_locations':
         _notify_change('locations:' + _get_player_locations())
-
-
-@socketio.on('sitetracker broadcast event', namespace='/site')
-def websocket_broadcast_message(message):
-    """ Listener: Echo broadcast event """
-    emit('sitetracker response', { 'data': message['data'] }, broadcast=True)
 
 
 @socketio.on('connect', namespace='/site')
 def websocket_connect():
     """ Listener: Socket connection made """
-    emit('sitetracker response', { 'data': 'connected' })
+    pass
 
 
 @socketio.on('disconnect', namespace='/site')
