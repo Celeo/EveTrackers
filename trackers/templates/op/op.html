@@ -176,7 +176,82 @@
     {% endif %}
     <div class="clearfix"></div>
     <div id="players">
-        <p style="color: gray;">Loading players ...</p>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th style="text-align: center;">Shares</th>
+                {% if not op.locked %}
+                <th style="text-align: right;">Increment</th>
+                <th style="text-align: right;">Decrement</th>
+                <th style="text-align: right;">Remove</th>
+                {% else %}
+                <th style="text-align: right;">ISK Earned</th>
+                {% endif %}
+            </tr>
+        {% for player in op.get_all_players() %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td style="text-align: center;"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
+                {% if not op.locked %}
+                <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
+                <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
+                <th style="text-align: right;">
+                    <form method="POST" action="{{ url_for('.op', op_id=op.id) }}">
+                        <input type="hidden" name="remove" value="{{ player.id }}">
+                        <input type="submit" class="btn btn-danger" value="X">
+                    </form>
+                </th>
+                {% else %}
+                <td style="text-align: right;">{{ player.get_share() }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <th style="text-align: center;">{{ op.total_shares() }}</th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-lg-4">
+                {% if not op.locked %}
+                <h4>Add Player</h4>
+                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
+                        <input type="text" name="playername" placeholder="Player name" value="{{ displayname }}">
+                        <input type="hidden" value="site"><br />
+                        <input type="submit" class="btn btn-primary" value="Add">
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <h4>Loot</h4>
+                {% if op.locked or not bursar %}
+                    <p>
+                        {{ op.loot }} isk
+                    </p>
+                {% else %}
+                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
+                        <input type="text" placeholder="123456789" name="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
+                        <input type="submit" class="btn btn-primary" value="Save">
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <h4>Tax (decimal)</h4>
+                {% if op.locked or not bursar %}
+                    <p>
+                        {{ op.tax_as_percentage() }}
+                    </p>
+                {% else %}
+                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
+                        <input name="tax" id="step" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
+                        <input type="submit" class="btn btn-primary" value="Save">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 
