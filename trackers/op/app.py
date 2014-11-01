@@ -72,17 +72,10 @@ def op(op_id):
     """ View: operation page """
     # TODO players.html bursar controls and removing a player are all HTML form POST'ed - change to web sockets
     operation = Operation.query.filter_by(id=op_id).first_or_404()
-    return render_template('op/op.html', op=operation)
-
-
-@blueprint.route('/players/<op_id>')
-def players(op_id):
-    """ AJAX View: return list of players in the operation """
-    operation = Operation.query.filter_by(id=op_id).first_or_404()
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
         total_shares += player.sites
-    return render_template('op/players.html', op=operation, total_shares=total_shares)
+    return render_template('op/op.html', op=operation, total_shares=total_shares)
 
 
 @blueprint.route('/playernames', methods=['POST'])

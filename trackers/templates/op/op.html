@@ -35,13 +35,6 @@
             messageSocket({ command: 'decrement', player_id: pid, step: step });
         });
     });
-    function updatePlayers() {
-        $("#players").load("{{ url_for('.players', op_id=op.id) }}");
-    }
-    setTimeout("updatePlayers();", 500);
-{% if not op.locked %}
-    setInterval("updatePlayers();", 30000);
-{% endif %}
     function renameOperation() {
         $("#opname").html("<input type='text' id='i_opname' value='" + $('#currentopname').text() + "'>");
         $("#renameop").hide();
