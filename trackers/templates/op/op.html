@@ -8,8 +8,13 @@
         console.log("Client connected");
     });
     // TODO convert all forms to sockets
-    socket.on("optracker response", function(msg) {
-        console.log("Socket message: " + msg.data);
+    socket.on("optracker response", function(message) {
+        console.log("From server: " + JSON.stringify(message));
+
+        // see if the message is for this operation
+        if (message.op_id !== getOpId())
+            return;
+        
         // TODO handle processing of return events from the server
     });
     function messageSocket(message) {

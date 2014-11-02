@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from trackers.shared import InGameBrowser, socketio
-from flask.ext.socketio import emit
 from .models import *
 from datetime import datetime
 from collections import Counter
@@ -230,26 +229,18 @@ def websocket_message(message):
             db.session.delete(removed)
             db.session.commit()
             _log('Removed {} from op {}'.format(removed.name, op_id))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'location':
         operation.location = message['info']
         db.session.commit()
         _log('Changed location to {} on op {}'.format(operation.location, op_id))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'lock':
         operation.locked = True if message['info'] == '1' else False
         db.session.commit()
         _log('Set op {} to {}'.format(op_id, 'locked' if operation.locked else 'Unlocked'))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'state':
         operation.state = message['info']
         db.session.commit()
         _log('Set op {} to state {}'.format(op_id, operation.state))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'lootprice':
         try:
             isk = float(message['info'].replace(',', ''))
@@ -258,8 +249,6 @@ def websocket_message(message):
             _log('Set loot on op {} to {}'.format(op_id, isk))
         except:
             flash('Error in updating the loot price for the operation', 'danger')
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'tax':
         try:
             operation.tax = float(message['tax'])
@@ -267,27 +256,23 @@ def websocket_message(message):
             _log('Set tax for op {} to {}'.format(op_id, operation.tax))
         except:
             pass
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'rename':
         operation.name = message['info']
         db.session.commit()
         _log('Renamed op {} to {}'.format(op_id, operation.name))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'fc':
         operation.leader = message['info']
         db.session.commit()
         _log('Set leader for op {} to {}'.format(op_id, operation.leader))
-        emit('optracker response', message, broadcast=True)
-        return
     if message['command'] == 'description':
         operation.description = message['info']
         db.session.commit()
         _log('Set description for op {} to {}'.format(op_id, operation.description))
-        emit('optracker response', message, broadcast=True)
-        return
-    player = None
+    if message['command'] == 'add':
+        player = Player(operation_id=op_id, name=message['name'])
+        db.session.add(player)
+        db.session.commit()
+        _log('Added {} to op {}'.format(message['name'], op_id))
     playername = message['info'] if 'playername' in message else None
     playerid = message['info'] if 'playerid' in message else -1
     if Player.query.filter_by(name=playername, operation_id=op_id).count() == 1:
@@ -301,14 +286,12 @@ def websocket_message(message):
                 player.sites -= float(message['info'])
             _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
             db.session.commit()
-            emit('optracker response', message, broadcast=True)
-            return
-        else:
-            if playername:
-                player = Player(operation_id=op_id, name=playername)
-                db.session.add(player)
-                db.session.commit()
-                _log('Added {} to op {}'.format(playername, op_id))
+    _message_clients(message)
+
+
+def _message_clients(data):
+    print('Sending to clients: {}'.format(data)) # TODO remove
+    socketio.emit('optracker response', data, namespace='/op')
 
 
 @socketio.on('connect', namespace='/op')
