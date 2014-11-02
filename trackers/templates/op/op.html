@@ -3,40 +3,40 @@
 {% block head %}
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/op');
-    socket.on('connect', function() {
+    var socket = io.connect("http://" + document.domain + ":" + location.port + "/op");
+    socket.on("connect", function() {
         console.log("Client connected");
     });
-    socket.on('optracker response', function(msg) {
+    // TODO convert all forms to sockets
+    socket.on("optracker response", function(msg) {
         console.log("Socket message: " + msg.data);
         // TODO handle processing of return events from the server
     });
     function messageSocket(message) {
-        socket.emit('optracker event', message);
+        message["op_id"] = getOpId();
+        socket.emit("optracker event", message);
+        console.log("Sent to server: " + JSON.stringify(message)); // TODO remove
     }
-    $(document).ready(function() {
-        socket.emit('optracker event', { data: 'player_locations' });
-    });
 </script>
 
 <script type="text/javascript">
+    function getOpId() {
+        return {{ op.id }};
+    }
     $(document).ready(function() {
-        function getOpId() {
-            return "{{ op.id }}";
-        }
         $(document).on("click", "a.increment", function() {
             var pid = $(this).attr("playerid");
-            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            messageSocket({ command: 'increment', player_id: pid, step: step });
+            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
+            messageSocket({ command: "increment", player_id: pid, step: step });
         });
         $(document).on("click", "a.decrement", function() {
             var pid = $(this).attr("playerid");
-            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            messageSocket({ command: 'decrement', player_id: pid, step: step });
+            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
+            messageSocket({ command: "decrement", player_id: pid, step: step });
         });
     });
     function renameOperation() {
-        $("#opname").html("<input type='text' id='i_opname' value='" + $('#currentopname').text() + "'>");
+        $("#opname").html('<input type="text" id="i_opname" value="' + $("#currentopname").text() + '">');
         $("#renameop").hide();
         $("#saverename").show();
     }
@@ -44,10 +44,11 @@
         var newName = $("#i_opname").val();
         $("#renameop").show();
         $("#saverename").hide();
-        messageSocket({ command: 'rename', name: newName });
+        $("#opname").html(newName);
+        messageSocket({ command: "rename", name: newName });
     }
     function changeFC() {
-        $("#opfc").html("<input type='text' id='i_opfc' value='" + $('#opfc').text() + "'>");
+        $("#opfc").html('<input type="text" id="i_opfc" value=' + $("#opfc").text() + '>');
         $("#savechangefc").show();
         $("#changefc").hide();
     }
@@ -55,10 +56,11 @@
         var newLeader = $("#i_opfc").val();
         $("#savechangefc").hide();
         $("#changefc").show();
-        messageSocket({ command: 'leader', leader: newLeader });
+        $("#opfc").html(newLeader);
+        messageSocket({ command: "leader", leader: newLeader });
     }
     function changeDescription() {
-        $("#opdescription").html("<textarea id='i_opdescription' style='width: 50%;' rows='10'>" + $("#opdescription").text() + "</textarea>");
+        $("#opdescription").html('<textarea id="i_opdescription" style="width: 50%;" rows="10">' + $("#opdescription").text() + '</textarea>');
         $("#savechangedescription").show();
         $("#changedescription").hide();
     }
@@ -66,10 +68,11 @@
         var newDescription = $("#i_opdescription").val();
         $("#savechangedescription").hide();
         $("#changedescription").show();
-        messageSocket({ command: 'description', description: newDescription });
+        $("#opdescription").html(newDescription);
+        messageSocket({ command: "description", description: newDescription });
     }
     function changeLocation() {
-        $("#oplocation").html("<input type='text' id='i_oplocation' value='" + $('#oplocation').text() + "'>");
+        $("#oplocation").html('<input type="text" id="i_oplocation" value="' + $("#oplocation").text() + '">');
         $("#savechangelocation").show();
         $("#changelocation").hide();
     }
@@ -77,10 +80,27 @@
         var newLocation = $("#i_oplocation").val();
         $("#savechangelocation").hide();
         $("#changelocation").show();
-        messageSocket({ command: 'location', location: newLocation });
+        $("#oplocation").html(newLocation);
+        messageSocket({ command: "location", location: newLocation });
+    }
+    function changeStatus() {
+        var newStatus = $("#state").val();
+        messageSocket({ command: "status", newStatus: newStatus });
+    }
+    function removePlayer(id) {
+        messageSocket({ command: "remove", player_id: id });
+    }
+    function addPlayer() {
+        messageSocket({ command: "add", name: $("#playername").val() });
+    }
+    function changeLoot() {
+        messageSocket({ command: "loot", loot: $("#lootprice").val() });
+    }
+    function changeTax() {
+        messageSocket({ command: "tax", tax: $("#tax").val() });
     }
     function lock(i) {
-        messageSocket({ command: 'lock', locked: i });
+        messageSocket({ command: "lock", info: i });
     }
 </script>
 {% endblock %}
@@ -93,8 +113,9 @@
 <h3><span id="opname">{{ op.name }}</span>
     {% if not op.locked %}
     <a onclick="renameOperation();" id="renameop" style="font-size: 50%;">RENAME</a> 
-    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a> {% endif %}
-    <a href="{{ url_for('.op', op_id=op.id) }}" style="font-size: 50%;">REFRESH PAGE</a></h3>
+    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a>
+    {% endif %}
+</h3>
 
 <div class="well">
     <p>
@@ -106,8 +127,8 @@
         <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
         <b>Status</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
         {% if not op.locked %}
-        <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-            <select name="state">
+        <div class="form-inline">
+            <select name="state" id="state">
                 <option>{{ op.state }}</option>
                 <option>Not started</option>
                 <option>In progress</option>
@@ -115,8 +136,8 @@
                 <option>Loot sold</option>
                 <option>Paid</option>
             </select>
-            <input type="submit" class="btn btn-primary" value="Change status">
-        </form>
+            <button class="btn btn-primary" onclick="changeStatus();">Change status</button>
+        </div>
         {% else %}
         <br />
         {% endif %}
@@ -196,10 +217,10 @@
                 <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
                 <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
                 <th style="text-align: right;">
-                    <form method="POST" action="{{ url_for('.op', op_id=op.id) }}">
+                    <div class="form-inline">
                         <input type="hidden" name="remove" value="{{ player.id }}">
-                        <input type="submit" class="btn btn-danger" value="X">
-                    </form>
+                        <button class="btn btn-danger" onclick="removePlayer({{ player.id }});">X</button>
+                    </div>
                 </th>
                 {% else %}
                 <td style="text-align: right;">{{ player.get_share() }}</td>
@@ -218,11 +239,10 @@
             <div class="col-lg-4">
                 {% if not op.locked %}
                 <h4>Add Player</h4>
-                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                        <input type="text" name="playername" placeholder="Player name" value="{{ displayname }}">
-                        <input type="hidden" value="site"><br />
-                        <input type="submit" class="btn btn-primary" value="Add">
-                    </form>
+                    <div class="form-inline">
+                        <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
+                        <button class="btn btn-primary" onclick="addPlayer();">Add</button>
+                    </div>
                 {% endif %}
             </div>
             <div class="col-lg-4">
@@ -232,10 +252,10 @@
                         {{ op.loot }} isk
                     </p>
                 {% else %}
-                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                        <input type="text" placeholder="123456789" name="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
-                        <input type="submit" class="btn btn-primary" value="Save">
-                    </form>
+                    <div class="form-inline">
+                        <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
+                        <button class="btn btn-primary" onclick="changeLoot();">Save</button>
+                    </div>
                 {% endif %}
             </div>
             <div class="col-lg-4">
@@ -245,10 +265,10 @@
                         {{ op.tax_as_percentage() }}
                     </p>
                 {% else %}
-                    <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                        <input name="tax" id="step" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
-                        <input type="submit" class="btn btn-primary" value="Save">
-                    </form>
+                    <div class="form-inline">
+                        <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
+                        <button class="btn btn-primary" onclick="changeTax();">Save</button>
+                    </div>
                 {% endif %}
             </div>
         </div>

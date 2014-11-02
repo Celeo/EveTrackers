@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from trackers.shared import InGameBrowser
+from trackers.shared import InGameBrowser, socketio
 from flask.ext.socketio import emit
 from .models import *
 from datetime import datetime
@@ -70,7 +70,6 @@ def index():
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
 def op(op_id):
     """ View: operation page """
-    # TODO players.html bursar controls and removing a player are all HTML form POST'ed - change to web sockets
     operation = Operation.query.filter_by(id=op_id).first_or_404()
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
@@ -222,7 +221,9 @@ def _log(message):
 @socketio.on('optracker event', namespace='/op')
 def websocket_message(message):
     """ Listener: Normal event """
+    print('Received from client: {}'.format(message)) # TODO remove
     op_id = int(message['op_id'])
+    operation = Operation.query.filter_by(id=op_id).first_or_404()
     if message['command'] == 'remove':
         removed = Player.query.filter_by(id=message['player_id']).first()
         if removed:
