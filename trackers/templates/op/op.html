@@ -14,7 +14,7 @@
         // see if the message is for this operation
         if (message.op_id !== getOpId())
             return;
-        
+
         // TODO handle processing of return events from the server
     });
     function messageSocket(message) {
@@ -88,9 +88,9 @@
         $("#oplocation").html(newLocation);
         messageSocket({ command: "location", location: newLocation });
     }
-    function changeStatus() {
-        var newStatus = $("#state").val();
-        messageSocket({ command: "status", newStatus: newStatus });
+    function changeState() {
+        var newState = $("#state").val();
+        messageSocket({ command: "state", state: newState });
     }
     function removePlayer(id) {
         messageSocket({ command: "remove", player_id: id });
@@ -130,7 +130,7 @@
             <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
         <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
-        <b>Status</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
+        <b>State</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
         {% if not op.locked %}
         <div class="form-inline">
             <select name="state" id="state">
@@ -141,7 +141,7 @@
                 <option>Loot sold</option>
                 <option>Paid</option>
             </select>
-            <button class="btn btn-primary" onclick="changeStatus();">Change status</button>
+            <button class="btn btn-primary btn-xs" onclick="changeState();">Change state</button>
         </div>
         {% else %}
         <br />

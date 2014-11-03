@@ -219,8 +219,13 @@ def _log(message):
 
 @socketio.on('optracker event', namespace='/op')
 def websocket_message(message):
-    """ Listener: Normal event """
-    print('Received from client: {}'.format(message)) # TODO remove
+    """
+    Listener: Normal event
+        If nothing goes wrong in the processing of the command from the client,
+        the server will broadcast the command to all connected clients.
+        In order to prevent the server from broadcasting the command back,
+        use a return in the if case for the command.
+    """
     op_id = int(message['op_id'])
     operation = Operation.query.filter_by(id=op_id).first_or_404()
     if message['command'] == 'remove':
@@ -230,7 +235,7 @@ def websocket_message(message):
             db.session.commit()
             _log('Removed {} from op {}'.format(removed.name, op_id))
     if message['command'] == 'location':
-        operation.location = message['info']
+        operation.location = message['location']
         db.session.commit()
         _log('Changed location to {} on op {}'.format(operation.location, op_id))
     if message['command'] == 'lock':
@@ -238,54 +243,57 @@ def websocket_message(message):
         db.session.commit()
         _log('Set op {} to {}'.format(op_id, 'locked' if operation.locked else 'Unlocked'))
     if message['command'] == 'state':
-        operation.state = message['info']
+        operation.state = message['state']
         db.session.commit()
         _log('Set op {} to state {}'.format(op_id, operation.state))
     if message['command'] == 'lootprice':
         try:
-            isk = float(message['info'].replace(',', ''))
+            isk = float(message['loot'].replace(',', ''))
             operation.loot = isk
             db.session.commit()
             _log('Set loot on op {} to {}'.format(op_id, isk))
         except:
-            flash('Error in updating the loot price for the operation', 'danger')
+            return
     if message['command'] == 'tax':
         try:
             operation.tax = float(message['tax'])
             db.session.commit()
             _log('Set tax for op {} to {}'.format(op_id, operation.tax))
         except:
-            pass
+            return
     if message['command'] == 'rename':
-        operation.name = message['info']
+        operation.name = message['name']
         db.session.commit()
         _log('Renamed op {} to {}'.format(op_id, operation.name))
-    if message['command'] == 'fc':
-        operation.leader = message['info']
+    if message['command'] == 'leader':
+        operation.leader = message['leader']
         db.session.commit()
         _log('Set leader for op {} to {}'.format(op_id, operation.leader))
     if message['command'] == 'description':
-        operation.description = message['info']
+        operation.description = message['description']
         db.session.commit()
         _log('Set description for op {} to {}'.format(op_id, operation.description))
     if message['command'] == 'add':
-        player = Player(operation_id=op_id, name=message['name'])
-        db.session.add(player)
-        db.session.commit()
-        _log('Added {} to op {}'.format(message['name'], op_id))
-    playername = message['info'] if 'playername' in message else None
-    playerid = message['info'] if 'playerid' in message else -1
-    if Player.query.filter_by(name=playername, operation_id=op_id).count() == 1:
-        _log('Tried to add duplicate player {} to {}'.format(playername, op_id))
-    else:
-        player = Player.query.filter_by(id=int(playerid)).first()
-        if player:
-            if message['info'] == 'increment':
-                player.sites += float(message['info'])
-            elif player.sites > 0.0:
-                player.sites -= float(message['info'])
-            _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
+        if Player.query.filter_by(name=message['name'], operation_id=op_id).count() == 0:
+            player = Player(operation_id=op_id, name=message['name'])
+            db.session.add(player)
             db.session.commit()
+            _log('Added {} to op {}'.format(message['name'], op_id))
+        else:
+            _log('Tried to add duplicate player {} to {}'.format(message['name'], op_id))
+            return
+    if message['command'] in ['increment', 'decrement']:
+        player = Player.query.filter_by(id=message['player_id']).first()
+        if not player:
+            return
+        step = float(message['step'])
+        if message['command'] == 'increment':
+            player.sites += step
+        else:
+            if player.sites - step >= 0.0:
+                player.sites -= step
+        db.session.commit()
+        _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
     _message_clients(message)
 
 
