@@ -11,13 +11,16 @@ from trackers.op.app import blueprint as op
 from trackers.corp.app import blueprint as corp
 from trackers.fuel.app import blueprint as fuel
 
+
 # flask
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 
+
 # flask-sqlalchemy
 db.app = app
 db.init_app(app)
+
 
 # settings
 ALLIANCE = app.config['ALLIANCE']
@@ -25,10 +28,11 @@ HOME_SYSTEM = app.config['HOME_SYSTEM']
 SYSTEM_RENAMES = app.config['SYSTEM_RENAMES']
 ADMINS = app.config['ADMINS']
 
+
 # flask-admin
 from trackers.site.models import *
 from trackers.op.models import *
-admin = Admin(app, 'Op Tracker Admin Panel')
+admin = Admin(app, 'Eve Trackers Admin Panel')
 class MyModelView(ModelView):
     """ Overwrite default view to include access restrictions """
     def is_accessible(self):

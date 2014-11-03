@@ -46,7 +46,6 @@
     function messageSocket(message) {
         message["op_id"] = getOpId();
         socket.emit("optracker event", message);
-        console.log("Sent to server: " + JSON.stringify(message)); // TODO remove
     }
 </script>
 

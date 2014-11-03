@@ -319,7 +319,6 @@ def websocket_message(message):
 
 
 def _message_clients(data):
-    print('Sending to clients: {}'.format(data)) # TODO remove
     socketio.emit('optracker response', data, namespace='/op')
 
 
