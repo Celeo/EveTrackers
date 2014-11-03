@@ -7,15 +7,41 @@
     socket.on("connect", function() {
         console.log("Client connected");
     });
-    // TODO convert all forms to sockets
     socket.on("optracker response", function(message) {
         console.log("From server: " + JSON.stringify(message));
-
-        // see if the message is for this operation
         if (message.op_id !== getOpId())
             return;
-
-        // TODO handle processing of return events from the server
+        if (message.command == "rename") {
+            $("#opname").text(message.name);
+        }
+        if (message.command == "leader") {
+            $("#opfc").text(message.leader);
+        }
+        if (message.command == "location") {
+            $("#oplocation").text(message.location);
+        }
+        if (message.command == "state") {
+            $("#opstate").text(message.state);
+        }
+        if (message.command == "lock") {
+            window.location.reload();
+        }
+        if (message.command == "description") {
+            $("#opdescription").text(message.description);
+        }
+        if (message.command == "add" || message.command == "remove") {
+            updatePlayers();
+        }
+        if (message.command == "increment" || message.command == "decrement") {
+            $("#playerrow_" + message.player_id + "_share").text(message.share);
+            $("#tabletotalshares").text(message.total_shares);
+        }
+        if (message.command == "loot") {
+            $("#lootprice").val(message.loot);
+        }
+        if (message.command == "tax") {
+            $("#tax").val(message.tax);
+        }
     });
     function messageSocket(message) {
         message["op_id"] = getOpId();
@@ -40,6 +66,9 @@
             messageSocket({ command: "decrement", player_id: pid, step: step });
         });
     });
+    function updatePlayers() {
+        $("#players").load("{{ url_for('.players', op_id=op.id) }}");
+    }
     function renameOperation() {
         $("#opname").html('<input type="text" id="i_opname" value="' + $("#currentopname").text() + '">');
         $("#renameop").hide();
@@ -130,7 +159,7 @@
             <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
         <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
-        <b>State</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
+        <b>State</b>: <span class="label label-success" id="opstate">{{ op.state }}</span><br />
         {% if not op.locked %}
         <div class="form-inline">
             <select name="state" id="state">
@@ -202,23 +231,23 @@
     {% endif %}
     <div class="clearfix"></div>
     <div id="players">
-        <table class="table">
-            <tr>
+        <table class="table" id="playerstable">
+            <tr id="tableheader">
                 <th>Name</th>
                 <th style="text-align: center;">Shares</th>
-                {% if not op.locked %}
+            {% if not op.locked %}
                 <th style="text-align: right;">Increment</th>
                 <th style="text-align: right;">Decrement</th>
                 <th style="text-align: right;">Remove</th>
-                {% else %}
+            {% else %}
                 <th style="text-align: right;">ISK Earned</th>
-                {% endif %}
+            {% endif %}
             </tr>
         {% for player in op.get_all_players() %}
-            <tr>
+            <tr id="playerrow_{{ player.id }}">
                 <td>{{ player.name }}</td>
-                <td style="text-align: center;"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
-                {% if not op.locked %}
+                <td style="text-align: center;" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
+            {% if not op.locked %}
                 <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
                 <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
                 <th style="text-align: right;">
@@ -227,14 +256,14 @@
                         <button class="btn btn-danger" onclick="removePlayer({{ player.id }});">X</button>
                     </div>
                 </th>
-                {% else %}
+            {% else %}
                 <td style="text-align: right;">{{ player.get_share() }}</td>
-                {% endif %}
+            {% endif %}
             </tr>
         {% endfor %}
-            <tr>
+            <tr id="playerrow_total">
                 <td></td>
-                <th style="text-align: center;">{{ op.total_shares() }}</th>
+                <th style="text-align: center;" id="tabletotalshares">{{ op.total_shares() }}</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -242,13 +271,13 @@
         </table>
         <div class="row">
             <div class="col-lg-4">
-                {% if not op.locked %}
+            {% if not op.locked %}
                 <h4>Add Player</h4>
                     <div class="form-inline">
                         <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
                         <button class="btn btn-primary" onclick="addPlayer();">Add</button>
                     </div>
-                {% endif %}
+            {% endif %}
             </div>
             <div class="col-lg-4">
                 <h4>Loot</h4>

@@ -234,7 +234,10 @@ def websocket_message(message):
         If nothing goes wrong in the processing of the command from the client,
         the server will broadcast the command to all connected clients.
         In order to prevent the server from broadcasting the command back,
-        use a return in the if case for the command.
+        use a return in the if case for the command,
+            EXCEPT:
+        increment and decrement commands don't simply return the source command;
+        instead, they return a command with the now-current share count for the player.
     """
     op_id = int(message['op_id'])
     operation = Operation.query.filter_by(id=op_id).first_or_404()
@@ -304,6 +307,14 @@ def websocket_message(message):
                 player.sites -= step
         db.session.commit()
         _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
+        new_message = message.copy()
+        new_message['share'] = player.sites
+        total_shares = 0
+        for player in Player.query.filter_by(operation_id=op_id).all():
+            total_shares += player.sites
+        new_message['total_shares'] = total_shares
+        _message_clients(new_message)
+        return
     _message_clients(message)
 
 
