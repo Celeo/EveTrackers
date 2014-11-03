@@ -1,152 +1,139 @@
 {% extends 'op/base.html' %}
 
 {% block head %}
-<script type="text/javascript">
-    $(document).ready(function() {
-        function getOpId() {
-            return "{{ op.id }}";
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script>
+    var socket = io.connect("http://" + document.domain + ":" + location.port + "/op");
+    socket.on("connect", function() {
+        console.log("Client connected");
+    });
+    socket.on("optracker response", function(message) {
+        console.log("From server: " + JSON.stringify(message));
+        if (message.op_id !== getOpId())
+            return;
+        if (message.command == "rename") {
+            $("#opname").text(message.name);
         }
+        if (message.command == "leader") {
+            $("#opfc").text(message.leader);
+        }
+        if (message.command == "location") {
+            $("#oplocation").text(message.location);
+        }
+        if (message.command == "state") {
+            $("#opstate").text(message.state);
+        }
+        if (message.command == "lock") {
+            window.location.reload();
+        }
+        if (message.command == "description") {
+            $("#opdescription").text(message.description);
+        }
+        if (message.command == "add" || message.command == "remove") {
+            updatePlayers();
+        }
+        if (message.command == "increment" || message.command == "decrement") {
+            $("#playerrow_" + message.player_id + "_share").text(message.share);
+            $("#tabletotalshares").text(message.total_shares);
+        }
+        if (message.command == "loot") {
+            $("#lootprice").val(message.loot);
+        }
+        if (message.command == "tax") {
+            $("#tax").val(message.tax);
+        }
+    });
+    function messageSocket(message) {
+        message["op_id"] = getOpId();
+        socket.emit("optracker event", message);
+    }
+</script>
+
+<script type="text/javascript">
+    function getOpId() {
+        return {{ op.id }};
+    }
+    $(document).ready(function() {
         $(document).on("click", "a.increment", function() {
             var pid = $(this).attr("playerid");
-            var sitecountfield = $("#sc_" + pid);
-            var sitecount = parseFloat(sitecountfield.text());
-            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('.op', op_id=op.id) }}",
-                data: {
-                    playerid: pid,
-                    type: "increment",
-                    step: step
-                },
-                success: function(data) {
-                    sitecountfield.text(data);
-                }
-            });
+            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
+            messageSocket({ command: "increment", player_id: pid, step: step });
         });
         $(document).on("click", "a.decrement", function() {
             var pid = $(this).attr("playerid");
-            var sitecountfield = $("#sc_" + pid);
-            var sitecount = parseFloat(sitecountfield.text());
-            var step = $('#step').val() == '' ? 1.0 : parseFloat($('#step').val());
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('.op', op_id=op.id) }}",
-                data: {
-                    playerid: pid,
-                    type: "decrement",
-                    step: step
-                },
-                success: function(data) {
-                    sitecountfield.text(data);
-                }
-            });
+            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
+            messageSocket({ command: "decrement", player_id: pid, step: step });
         });
     });
     function updatePlayers() {
         $("#players").load("{{ url_for('.players', op_id=op.id) }}");
     }
-    setTimeout("updatePlayers();", 500);
-    {% if not op.locked %}
-    setInterval("updatePlayers();", 30000);
-    {% endif %}
     function renameOperation() {
-        $("#opname").html("<input type='text' id='i_opname' value='" + $('#currentopname').text() + "'>");
+        $("#opname").html('<input type="text" id="i_opname" value="' + $("#currentopname").text() + '">');
         $("#renameop").hide();
         $("#saverename").show();
     }
     function saveRenameOperation() {
         var newName = $("#i_opname").val();
-        $("#opname").html(newName);
         $("#renameop").show();
         $("#saverename").hide();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                rename: newName
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        $("#opname").html(newName);
+        messageSocket({ command: "rename", name: newName });
     }
     function changeFC() {
-        $("#opfc").html("<input type='text' id='i_opfc' value='" + $('#opfc').text() + "'>");
+        $("#opfc").html('<input type="text" id="i_opfc" value=' + $("#opfc").text() + '>');
         $("#savechangefc").show();
         $("#changefc").hide();
     }
     function saveChangeFC() {
-        var newFC = $("#i_opfc").val();
-        $("#opfc").html(newFC);
+        var newLeader = $("#i_opfc").val();
         $("#savechangefc").hide();
         $("#changefc").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                fc: newFC
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        $("#opfc").html(newLeader);
+        messageSocket({ command: "leader", leader: newLeader });
     }
     function changeDescription() {
-        $("#opdescription").html("<textarea id='i_opdescription' style='width: 50%;' rows='10'>" +
-            $("#opdescription").text() + "</textarea>");
+        $("#opdescription").html('<textarea id="i_opdescription" style="width: 50%;" rows="10">' + $("#opdescription").text() + '</textarea>');
         $("#savechangedescription").show();
         $("#changedescription").hide();
     }
     function saveChangeDescription() {
         var newDescription = $("#i_opdescription").val();
-        $("#opdescription").html(newDescription);
         $("#savechangedescription").hide();
         $("#changedescription").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                description: newDescription
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        $("#opdescription").html(newDescription);
+        messageSocket({ command: "description", description: newDescription });
     }
     function changeLocation() {
-        $("#oplocation").html("<input type='text' id='i_oplocation' value='" + $('#oplocation').text() + "'>");
+        $("#oplocation").html('<input type="text" id="i_oplocation" value="' + $("#oplocation").text() + '">');
         $("#savechangelocation").show();
         $("#changelocation").hide();
     }
     function saveChangeLocation() {
         var newLocation = $("#i_oplocation").val();
-        $("#oplocation").html(newLocation);
         $("#savechangelocation").hide();
         $("#changelocation").show();
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                location: newLocation
-            },
-            success: function(data) {
-                // empty
-            }
-        });
+        $("#oplocation").html(newLocation);
+        messageSocket({ command: "location", location: newLocation });
+    }
+    function changeState() {
+        var newState = $("#state").val();
+        messageSocket({ command: "state", state: newState });
+    }
+    function removePlayer(id) {
+        messageSocket({ command: "remove", player_id: id });
+    }
+    function addPlayer() {
+        messageSocket({ command: "add", name: $("#playername").val() });
+    }
+    function changeLoot() {
+        messageSocket({ command: "loot", loot: $("#lootprice").val() });
+    }
+    function changeTax() {
+        messageSocket({ command: "tax", tax: $("#tax").val() });
     }
     function lock(i) {
-        console.log(i);
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.op', op_id=op.id) }}",
-            data: {
-                lock: i
-            },
-            success: function(data) {
-                location.href = "{{ url_for('.op', op_id=op.id) }}"
-            }
-        });
+        messageSocket({ command: "lock", info: i });
     }
 </script>
 {% endblock %}
@@ -159,8 +146,9 @@
 <h3><span id="opname">{{ op.name }}</span>
     {% if not op.locked %}
     <a onclick="renameOperation();" id="renameop" style="font-size: 50%;">RENAME</a> 
-    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a> {% endif %}
-    <a href="{{ url_for('.op', op_id=op.id) }}" style="font-size: 50%;">REFRESH PAGE</a></h3>
+    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a>
+    {% endif %}
+</h3>
 
 <div class="well">
     <p>
@@ -170,10 +158,10 @@
             <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
         <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
-        <b>Status</b>: <span class="label {{ op.get_state_label() }}">{{ op.state }}</span><br />
+        <b>State</b>: <span class="label label-success" id="opstate">{{ op.state }}</span><br />
         {% if not op.locked %}
-        <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-            <select name="state">
+        <div class="form-inline">
+            <select name="state" id="state">
                 <option>{{ op.state }}</option>
                 <option>Not started</option>
                 <option>In progress</option>
@@ -181,8 +169,8 @@
                 <option>Loot sold</option>
                 <option>Paid</option>
             </select>
-            <input type="submit" class="btn btn-primary" value="Change status">
-        </form>
+            <button class="btn btn-primary btn-xs" onclick="changeState();">Change state</button>
+        </div>
         {% else %}
         <br />
         {% endif %}
@@ -242,7 +230,81 @@
     {% endif %}
     <div class="clearfix"></div>
     <div id="players">
-        <p style="color: gray;">Loading players ...</p>
+        <table class="table" id="playerstable">
+            <tr id="tableheader">
+                <th>Name</th>
+                <th style="text-align: center;">Shares</th>
+            {% if not op.locked %}
+                <th style="text-align: right;">Increment</th>
+                <th style="text-align: right;">Decrement</th>
+                <th style="text-align: right;">Remove</th>
+            {% else %}
+                <th style="text-align: right;">ISK Earned</th>
+            {% endif %}
+            </tr>
+        {% for player in op.get_all_players() %}
+            <tr id="playerrow_{{ player.id }}">
+                <td>{{ player.name }}</td>
+                <td style="text-align: center;" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
+            {% if not op.locked %}
+                <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
+                <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
+                <th style="text-align: right;">
+                    <div class="form-inline">
+                        <input type="hidden" name="remove" value="{{ player.id }}">
+                        <button class="btn btn-danger" onclick="removePlayer({{ player.id }});">X</button>
+                    </div>
+                </th>
+            {% else %}
+                <td style="text-align: right;">{{ player.get_share() }}</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+            <tr id="playerrow_total">
+                <td></td>
+                <th style="text-align: center;" id="tabletotalshares">{{ op.total_shares() }}</th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-lg-4">
+            {% if not op.locked %}
+                <h4>Add Player</h4>
+                    <div class="form-inline">
+                        <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
+                        <button class="btn btn-primary" onclick="addPlayer();">Add</button>
+                    </div>
+            {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <h4>Loot</h4>
+                {% if op.locked or not bursar %}
+                    <p>
+                        {{ op.loot }} isk
+                    </p>
+                {% else %}
+                    <div class="form-inline">
+                        <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
+                        <button class="btn btn-primary" onclick="changeLoot();">Save</button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <h4>Tax (decimal)</h4>
+                {% if op.locked or not bursar %}
+                    <p>
+                        {{ op.tax_as_percentage() }}
+                    </p>
+                {% else %}
+                    <div class="form-inline">
+                        <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
+                        <button class="btn btn-primary" onclick="changeTax();">Save</button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 

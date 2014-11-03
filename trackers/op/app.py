@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from trackers.shared import InGameBrowser
+from flask import Blueprint, render_template, request, redirect, url_for, session
+from trackers.shared import InGameBrowser, socketio
 from .models import *
 from datetime import datetime
 from collections import Counter
@@ -70,87 +70,13 @@ def index():
 def op(op_id):
     """ View: operation page """
     operation = Operation.query.filter_by(id=op_id).first_or_404()
-    if request.method == 'POST':
-        if 'remove' in request.form:
-            removed = Player.query.filter_by(id=request.form['remove']).first()
-            if removed:
-                db.session.delete(removed)
-                db.session.commit()
-                _log('Removed {} from op {}'.format(removed.name, op_id))
-            return redirect(url_for('.op', op_id=op_id))
-        if 'location' in request.form:
-            operation.location = request.form['location']
-            db.session.commit()
-            _log('Changed location to {} on op {}'.format(operation.location, op_id))
-            return '1'
-        if 'lock' in request.form:
-            operation.locked = True if request.form['lock'] == '1' else False
-            db.session.commit()
-            _log('Set op {} to {}'.format(op_id, 'locked' if operation.locked else 'Unlocked'))
-            return '1'
-        if 'state' in request.form:
-            operation.state = request.form['state']
-            db.session.commit()
-            _log('Set op {} to state {}'.format(op_id, operation.state))
-            return redirect(url_for('.op', op_id=op_id))
-        if 'lootprice' in request.form:
-            try:
-                isk = float(request.form['lootprice'].replace(',', ''))
-                operation.loot = isk
-                db.session.commit()
-                _log('Set loot on op {} to {}'.format(op_id, isk))
-            except:
-                flash('Error in updating the loot price for the operation', 'danger')
-            return redirect(url_for('.op', op_id=op_id))
-        if 'tax' in request.form:
-            try:
-                operation.tax = float(request.form['tax'])
-                db.session.commit()
-                _log('Set tax for op {} to {}'.format(op_id, operation.tax))
-            except:
-                pass
-            return redirect(url_for('.op', op_id=op_id))
-        if 'rename' in request.form:
-            operation.name = request.form['rename']
-            db.session.commit()
-            _log('Renamed op {} to {}'.format(op_id, operation.name))
-            return '1'
-        if 'fc' in request.form:
-            operation.leader = request.form['fc']
-            db.session.commit()
-            _log('Set leader for op {} to {}'.format(op_id, operation.leader))
-            return '1'
-        if 'description' in request.form:
-            operation.description = request.form['description']
-            db.session.commit()
-            _log('Set description for op {} to {}'.format(op_id, operation.description))
-            return '1'
-        player = None
-        playername = request.form['playername'] if 'playername' in request.form else None
-        playerid = request.form['playerid'] if 'playerid' in request.form else -1
-        if Player.query.filter_by(name=playername, operation_id=op_id).count() == 1:
-            _log('Tried to add duplicate player {} to {}'.format(playername, op_id))
-        else:
-            player = Player.query.filter_by(id=int(playerid)).first()
-            if player:
-                if request.form['type'] == 'increment':
-                    player.sites += float(request.form['step'])
-                elif player.sites > 0.0:
-                    player.sites -= float(request.form['step'])
-                _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
-                db.session.commit()
-                return str(player.sites)
-            else:
-                if playername:
-                    player = Player(operation_id=op_id, name=playername)
-                    db.session.add(player)
-                    db.session.commit()
-                    _log('Added {} to op {}'.format(playername, op_id))
-        return redirect(url_for('.op', op_id=op_id))
-    return render_template('op/op.html', op=operation)
+    total_shares = 0
+    for player in Player.query.filter_by(operation_id=op_id).all():
+        total_shares += player.sites
+    return render_template('op/op.html', op=operation, total_shares=total_shares)
 
 
-@blueprint.route('/players/<op_id>')
+@blueprint.route('/op/<op_id>/players')
 def players(op_id):
     """ AJAX View: return list of players in the operation """
     operation = Operation.query.filter_by(id=op_id).first_or_404()
@@ -299,3 +225,110 @@ def _log(message):
     """ Logs a message to the database """
     db.session.add(LogStatement(user=_name(), message=message))
     db.session.commit()
+
+
+@socketio.on('optracker event', namespace='/op')
+def websocket_message(message):
+    """
+    Listener: Normal event
+        If nothing goes wrong in the processing of the command from the client,
+        the server will broadcast the command to all connected clients.
+        In order to prevent the server from broadcasting the command back,
+        use a return in the if case for the command,
+            EXCEPT:
+        increment and decrement commands don't simply return the source command;
+        instead, they return a command with the now-current share count for the player.
+    """
+    op_id = int(message['op_id'])
+    operation = Operation.query.filter_by(id=op_id).first_or_404()
+    if message['command'] == 'remove':
+        removed = Player.query.filter_by(id=message['player_id']).first()
+        if removed:
+            db.session.delete(removed)
+            db.session.commit()
+            _log('Removed {} from op {}'.format(removed.name, op_id))
+    if message['command'] == 'location':
+        operation.location = message['location']
+        db.session.commit()
+        _log('Changed location to {} on op {}'.format(operation.location, op_id))
+    if message['command'] == 'lock':
+        operation.locked = True if message['info'] == '1' else False
+        db.session.commit()
+        _log('Set op {} to {}'.format(op_id, 'locked' if operation.locked else 'Unlocked'))
+    if message['command'] == 'state':
+        operation.state = message['state']
+        db.session.commit()
+        _log('Set op {} to state {}'.format(op_id, operation.state))
+    if message['command'] == 'lootprice':
+        try:
+            isk = float(message['loot'].replace(',', ''))
+            operation.loot = isk
+            db.session.commit()
+            _log('Set loot on op {} to {}'.format(op_id, isk))
+        except:
+            return
+    if message['command'] == 'tax':
+        try:
+            operation.tax = float(message['tax'])
+            db.session.commit()
+            _log('Set tax for op {} to {}'.format(op_id, operation.tax))
+        except:
+            return
+    if message['command'] == 'rename':
+        operation.name = message['name']
+        db.session.commit()
+        _log('Renamed op {} to {}'.format(op_id, operation.name))
+    if message['command'] == 'leader':
+        operation.leader = message['leader']
+        db.session.commit()
+        _log('Set leader for op {} to {}'.format(op_id, operation.leader))
+    if message['command'] == 'description':
+        operation.description = message['description']
+        db.session.commit()
+        _log('Set description for op {} to {}'.format(op_id, operation.description))
+    if message['command'] == 'add':
+        if Player.query.filter_by(name=message['name'], operation_id=op_id).count() == 0:
+            player = Player(operation_id=op_id, name=message['name'])
+            db.session.add(player)
+            db.session.commit()
+            _log('Added {} to op {}'.format(message['name'], op_id))
+        else:
+            _log('Tried to add duplicate player {} to {}'.format(message['name'], op_id))
+            return
+    if message['command'] in ['increment', 'decrement']:
+        player = Player.query.filter_by(id=message['player_id']).first()
+        if not player:
+            return
+        step = float(message['step'])
+        if message['command'] == 'increment':
+            player.sites += step
+        else:
+            if player.sites - step >= 0.0:
+                player.sites -= step
+        db.session.commit()
+        _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
+        new_message = message.copy()
+        new_message['share'] = player.sites
+        total_shares = 0
+        for player in Player.query.filter_by(operation_id=op_id).all():
+            total_shares += player.sites
+        new_message['total_shares'] = total_shares
+        _message_clients(new_message)
+        return
+    _message_clients(message)
+
+
+def _message_clients(data):
+    socketio.emit('optracker response', data, namespace='/op')
+
+
+@socketio.on('connect', namespace='/op')
+def websocket_connect():
+    """ Listener: Socket connection made """
+    pass
+
+
+@socketio.on('disconnect', namespace='/op')
+def websocket_disconnect():
+    """ Listener: Socket connection disconnected """
+    pass
