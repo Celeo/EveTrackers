@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from trackers.shared import InGameBrowser, socketio
 from .models import *
 from datetime import datetime
@@ -74,6 +74,16 @@ def op(op_id):
     for player in Player.query.filter_by(operation_id=op_id).all():
         total_shares += player.sites
     return render_template('op/op.html', op=operation, total_shares=total_shares)
+
+
+@blueprint.route('/op/<op_id>/players')
+def players(op_id):
+    """ AJAX View: return list of players in the operation """
+    operation = Operation.query.filter_by(id=op_id).first_or_404()
+    total_shares = 0
+    for player in Player.query.filter_by(operation_id=op_id).all():
+        total_shares += player.sites
+    return render_template('op/players.html', op=operation, total_shares=total_shares)
 
 
 @blueprint.route('/playernames', methods=['POST'])
