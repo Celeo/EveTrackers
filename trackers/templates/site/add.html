@@ -40,12 +40,12 @@ Add
 <div class="tab-content">
     <div class="tab-pane fade{% if model_type == 'site' %} in active{% endif %}" id="site">
         <form action="" method="POST" class="wideinput extracellspacing">
-            {% include 'siteform.html' %}
+            {% include 'site/siteform.html' %}
         </form>
     </div>
     <div class="tab-pane fade{% if model_type == 'wormhole' %} in active{% endif %}" id="wormhole">
         <form action="" method="POST" class="wideinput extracellspacing">
-            {% include 'wormholeform.html' %}
+            {% include 'site/wormholeform.html' %}
         </form>
     </div>
 </div>
