@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Site(db.Model):
 
-    __tablename__ = 'sitemngr_site'
+    __tablename__ = 'sitetracker_site'
 
     id = db.Column(db.Integer, primary_key=True)
     creator = db.Column(db.String(200))
@@ -45,10 +45,10 @@ class Site(db.Model):
 
 class SiteSnapshot(db.Model):
 
-    __tablename__ = 'sitemngr_sitesnapshot'
+    __tablename__ = 'sitetracker_sitesnapshot'
 
     id = db.Column(db.Integer, primary_key=True)
-    site_id = db.Column(db.Integer, db.ForeignKey('sitemngr_site.id'))
+    site_id = db.Column(db.Integer, db.ForeignKey('sitetracker_site.id'))
     snapper = db.Column(db.String(200))
     changed = db.Column(db.Text)
     date = db.Column(db.DateTime)
@@ -65,7 +65,7 @@ class SiteSnapshot(db.Model):
 
 class Wormhole(db.Model):
 
-    __tablename__ = 'sitemngr_wormhole'
+    __tablename__ = 'sitetracker_wormhole'
 
     id = db.Column(db.Integer, primary_key=True)
     creator = db.Column(db.String(200))
@@ -104,10 +104,10 @@ class Wormhole(db.Model):
 
 class WormholeSnapshot(db.Model):
 
-    __tablename__ = 'sitemngr_wormholesnapshot'
+    __tablename__ = 'sitetracker_wormholesnapshot'
 
     id = db.Column(db.Integer, primary_key=True)
-    wormhole_id = db.Column(db.Integer, db.ForeignKey('sitemngr_wormhole.id'))
+    wormhole_id = db.Column(db.Integer, db.ForeignKey('sitetracker_wormhole.id'))
     snapper = db.Column(db.String(200))
     changed = db.Column(db.Text)
     date = db.Column(db.DateTime)
@@ -124,7 +124,7 @@ class WormholeSnapshot(db.Model):
 
 class Settings(db.Model):
 
-    __tablename__ = 'sitemngr_settings'
+    __tablename__ = 'sitetracker_settings'
 
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(200))
@@ -146,7 +146,7 @@ class Settings(db.Model):
 
 class System(db.Model):
 
-    __tablename__ = 'sitemngr_system'
+    __tablename__ = 'sitetracker_system'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -185,7 +185,7 @@ class System(db.Model):
 
 class WormholeType(db.Model):
 
-    __tablename__ = 'sitemngr_wormholetype'
+    __tablename__ = 'sitetracker_wormholetype'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(4))
@@ -209,7 +209,7 @@ class WormholeType(db.Model):
 
 class PasteUpdated(db.Model):
 
-    __tablename__ = 'sitemngr_pasteupdated'
+    __tablename__ = 'sitetracker_pasteupdated'
 
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(200))
@@ -225,7 +225,7 @@ class PasteUpdated(db.Model):
 
 class ShipMass(db.Model):
 
-    __tablename__ = 'sitemngr_shipmass'
+    __tablename__ = 'sitetracker_shipmass'
 
     id = db.Column(db.Integer, primary_key=True)
     ship = db.Column(db.String(50))
