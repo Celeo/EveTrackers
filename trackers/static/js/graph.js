@@ -1,5 +1,4 @@
 function graph() {
-    $('#graph_info').html('');
     $('.wormhole_row').each(function(item) { $(this).removeClass('highlighted'); });
     var stage = new Kinetic.Stage({
         container: 'graph',
