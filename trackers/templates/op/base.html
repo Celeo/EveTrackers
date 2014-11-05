@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -25,7 +26,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="{{ url_for('.index') }}" class="navbar-brand">Op Tracker</a>
+            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Op Tracker <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ url_for('site_tracker.index') }}">Site</a></li>
+                <li><a href="{{ url_for('corp_tracker.index') }}">Corp</a></li>
+            </ul>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

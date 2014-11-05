@@ -73,8 +73,8 @@
             </button>
             <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Site Tracker <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="/operations">Op</a></li>
-                <li><a href="/corp">Corp</a></li>
+                <li><a href="{{ url_for('op_tracker.index') }}">Op</a></li>
+                <li><a href="{{ url_for('corp_tracker.index') }}">Corp</a></li>
             </ul>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
