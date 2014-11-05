@@ -14,11 +14,7 @@
     </thead>
     <tbody>
     {% for w in wormholes %}
-    {% if w.opened %}
-        <tr class="open wormhole_row" id="wormhole_row_{{ w.id }}">
-    {% else %}
-        <tr class="closed wormhole_row" id="wormhole_row_{{ w.id }}">
-    {% endif %}
+        <tr class="{% if w.opened %}obj_open {% endif%}wormhole_row" id="wormhole_row_{{ w.id }}">
             <td id="wid{{ w.id }}"><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
             <td id="wstart{{ w.id }}"><a href="{{ url_for('.system', system=w.start) }}">{{ w.start }}</a></td>
             <td id="wend{{ w.id }}">{% if w.end == 'Unknown' or w.end == '' or w.end == 'Unopened' or w.end == 'Closed' %}{{ w.end }}{% else %}<a href="{{ url_for('.system', system=w.end) }}">{{ w.end }}</a>{% endif %}</td>
@@ -65,11 +61,11 @@
     <tbody>
     {% for s in sites %}
         {% if s.isAnom %}
-            <tr class="anom">
+            <tr class="obj_anom">
         {% elif s.opened %}
-            <tr class="open">
+            <tr class="obj_open">
         {% else %}
-            <tr class="closed">
+            <tr>
         {% endif %}
             <td id="sid{{ s.id }}"><a href="{{ url_for('.site', id=s.id) }}">{{ s.scanid }}</a></td>
             <td id="sname{{ s.id }}">{{ s.name }}</td>

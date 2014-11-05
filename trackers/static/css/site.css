@@ -105,19 +105,14 @@ hr.break {
 .p_link_big {
 }
 
-.anom {
+.obj_anom {
     background-color: rgb(51, 204, 255);
     background-color: rgba(51, 204, 255, 0.3);
 }
 
-.open {
+.obj_open {
     background-color: rgb(41, 255, 41);
     background-color: rgba(41, 255, 41, 0.3);
-}
-
-.closed {
-    # background-color: rgb(255, 41, 41);
-    # background-color: rgba(255, 41, 41, 0.3);
 }
 
 .highlighted {

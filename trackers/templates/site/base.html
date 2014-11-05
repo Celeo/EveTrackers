@@ -71,7 +71,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Site Tracker</a>
+            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Site Tracker <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/operations">Op</a></li>
+                <li><a href="/corp">Corp</a></li>
+            </ul>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav" style="margin-left: 15em;">
@@ -85,7 +89,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayname }}<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayname }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#">Settings</a></li>
                         <li><a href="#">Logout</a></li>
