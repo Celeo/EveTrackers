@@ -186,6 +186,45 @@ class System(db.Model):
     def is_kspace(self):
         return not re.match(r'^J\d{6}$', self.name)
 
+    @property
+    def open_wormholes(self):
+        ret = []
+        ret.extend(Wormhole.query.filter_by(start=self.name, opened=True, closed=False).all())
+        for wormhole in Wormhole.query.filter_by(end=self.name, opened=True, closed=False).all():
+            if not wormhole in ret:
+                ret.append(wormhole)
+        return ret
+
+    @property
+    def unopened_wormholes(self):
+        ret = []
+        ret.extend(Wormhole.query.filter_by(start=self.name, opened=False, closed=False).all())
+        for wormhole in Wormhole.query.filter_by(end=self.name, opened=False, closed=False).all():
+            if not wormhole in ret:
+                ret.append(wormhole)
+        return ret
+
+    @property
+    def closed_wormholes(self):
+        ret = []
+        ret.extend(Wormhole.query.filter_by(start=self.name, closed=True).all())
+        for wormhole in Wormhole.query.filter_by(end=self.name, closed=True).all():
+            if not wormhole in ret:
+                ret.append(wormhole)
+        return ret
+
+    @property
+    def open_sites(self):
+        return Site.query.filter_by(system=self.name, opened=True, closed=False).all()
+
+    @property
+    def unopened_sites(self):
+        return Site.query.filter_by(system=self.name, opened=False, closed=False).all()
+
+    @property
+    def closed_sites(self):
+        return Site.query.filter_by(system=self.name, closed=True).all()
+
 
 class WormholeType(db.Model):
 

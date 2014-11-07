@@ -827,7 +827,9 @@ def system_kills(system):
 @blueprint.route('/system/<system>')
 def system(system):
     """ View: show information about the specified system """
-    systemObject = System.query.filter_by(name=system).first_or_404()
+    systemObject = System.query.filter_by(name=system).first()
+    if not systemObject:
+        return render_template('site/systemnotfound.html', system=system)
     openwormholes = []
     openwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=False).all()])
     openwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])

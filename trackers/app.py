@@ -145,6 +145,12 @@ def _date(s):
     return s.strftime('%m/%d @ %H:%M')
 
 
+@app.template_filter('count')
+def _count(l):
+    """ Template filter: returns length of attached list """
+    return len(l)
+
+
 @app.route('/noaccess')
 def no_access():
     return render_template('no_access.html')

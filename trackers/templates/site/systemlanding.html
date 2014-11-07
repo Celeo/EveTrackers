@@ -10,12 +10,27 @@ Universe
 
 <h3>Universe Overview - systems with open sites/wormholes</h3>
 
-<div style="font-size: 2em;">
+<p style="font-size: 125%;">In the table below, the # / # / # values are in the form of open/unopened/closed.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>System</th>
+            <th>Level</th>
+            <th>Wormholes</th>
+            <th>Sites</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for system in systems %}
-    <a href="{{ url_for('.system', system=system.name) }}">{{ system.name }}</a>
-    {% if system.is_kspace() %}Sec {{ system.security_level }}{% else %}Class {{ system.class_ }}{% if not system.effect == 'None' %} {{ system.effect }}{% endif %}{% endif %}
-    <br />
-{% endfor %}
+        <tr>
+            <td><strong><a href="{{ url_for('.system', system=system.name) }}">{{ system.name }}</a></strong></td>
+            <td>{% if system.is_kspace() %}Sec {{ system.security_level }}{% else %}Class {{ system.class_ }}{% if not system.effect == 'None' %} {{ system.effect }}{% endif %}{% endif %}</td>
+            <td>{{ system.open_wormholes|count }} / {{ system.unopened_wormholes|count }} / {{ system.closed_wormholes|count }}</td>
+            <td>{{ system.open_sites|count }} / {{ system.unopened_sites|count }} / {{ system.closed_sites|count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </div>
 
 </center>
