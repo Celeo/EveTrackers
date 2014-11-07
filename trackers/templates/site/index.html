@@ -17,7 +17,6 @@ Index
         console.log("Client connected");
     });
     socket.on('sitetracker response', function(msg) {
-        console.log("Socket message: " + msg.data);
         if (msg.data == 'update_tables')
             $('#notify_refresh').show();
         if (msg.data.lastIndexOf('update_locations:', 0) === 0)
