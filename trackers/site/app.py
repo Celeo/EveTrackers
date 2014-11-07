@@ -919,8 +919,9 @@ def in_game_player_system():
     if not eveigb.is_igb():
         return 'Not using the in-game browser'
 
-    # get this user's current system via the Eve IGB
+    # get this user's current system and ship via the Eve IGB
     current = eveigb['Eve-Solarsystemname']
+    ship = eveigb['Eve-Shiptypename']
 
     # check if this user has just started using this page
     display_name = _name()
@@ -933,12 +934,12 @@ def in_game_player_system():
         last_system[display_name] = {}
         last_system[display_name]['current'] = current
         last_system[display_name]['time'] = datetime.utcnow()
-        last_system[display_name]['ship'] = eveigb['Eve-Shiptypename']
+        last_system[display_name]['ship'] = ship
         _notify_change('locations:' + _get_player_locations())
         return 'Tracking starting, with current system = ' + current
     last = last_system[display_name]['current']
 
-    #  update last_system with current data
+    #  update last_system with current timestamp
     last_system[display_name]['time'] = datetime.utcnow()
 
     # check if this user has not moved since the last AJAX call
@@ -947,6 +948,7 @@ def in_game_player_system():
 
     # update last_system with current data
     last_system[display_name]['current'] = current
+    last_system[display_name]['ship'] = ship
 
     # check if this user has moved in at last 1 w-space system this jump
     if not re.match(r'^J\d{6}$', last) and not re.match(r'^J\d{6}$', current):
