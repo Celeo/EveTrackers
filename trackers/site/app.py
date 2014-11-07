@@ -832,11 +832,11 @@ def system(system):
         return render_template('site/systemnotfound.html', system=system)
     openwormholes = []
     openwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=False).all()])
-    openwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])
+    openwormholes.extend([w for w in Wormhole.query.filter_by(end=system, opened=True, closed=True).all()])
     opensites = Site.query.filter_by(system=system, opened=True, closed=False).all()
     closedwormholes = []
     closedwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])
-    closedwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])
+    closedwormholes.extend([w for w in Wormhole.query.filter_by(end=system, opened=True, closed=True).all()])
     unopenedsites = Site.query.filter_by(system=system, opened=False, closed=False).all()
     return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if re.match(r'^J\d{6}$', system) else None,
         security=systemObject.security_level if not re.match(r'^J\d{6}$', system) else None, kspace=not re.match(r'^J\d{6}$', system),
