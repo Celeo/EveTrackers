@@ -13,7 +13,13 @@ System Info
         $('#kills').load("{{ url_for('.system_kills', system=systemObject.name) }}");
         $('#system_api_info').load("{{ url_for('.system_api_info', system=systemObject.name) }}");
     {% endif %}
-        $('#closest_system').load("{{ url_for('.closest_chain_system', system=systemObject.name) }}");
+        $('#closest_system').load("{{ url_for('.closest_chain_system', system=systemObject.name) }}", function() {
+            $("#toggle_additional").on("click", function()
+            {
+                console.log("toggle");
+                $("#additional_entrances").fadeToggle(500);
+            });
+        });
     });
 </script>
 {% endblock %}

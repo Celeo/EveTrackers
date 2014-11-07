@@ -736,6 +736,7 @@ def closest_chain_system(system):
     is_in_chain = system in chain_systems
     closest_chain = None
     closest_jumps = 5000
+    additional = []
     if not is_in_chain:
         for chain in chain_systems:
             if re.match(r'^J\d{6}$', chain):
@@ -743,17 +744,20 @@ def closest_chain_system(system):
             jumps = _get_jumps_between(chain, system)
             if jumps == -1:
                 continue
+            additional.append([chain, jumps])
             if jumps < closest_jumps:
                 closest_jumps = jumps
                 closest_chain = chain
-    return render_template('site/closestchainsystem.html', is_in_chain=is_in_chain, closest_chain=closest_chain, closest_jumps=closest_jumps)
+    for add in additional:
+        if add[0] == closest_chain:
+            additional.pop(additional.index(add))
+    return render_template('site/closestchainsystem.html', is_in_chain=is_in_chain, closest_chain=closest_chain, closest_jumps=closest_jumps, additional=additional)
 
 
 @blueprint.route('/system/<system>/tradehubjumps')
 def get_tradehub_jumps(system):
     """ AJAX View: return the number of jumps to each of the tradehubs from this system """
     systemObject = None
-    found = False
     systemObject = System.query.filter_by(name=system).first()
     if not systemObject:
         return ''
