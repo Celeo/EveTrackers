@@ -151,6 +151,12 @@ def _count(l):
     return len(l)
 
 
+@app.template_filter('formatcommas')
+def _format_commas(n):
+    """ Template filter: adds thousand's separator commas to large numbers """
+    return '{:,}'.format(n)
+
+
 @app.route('/noaccess')
 def no_access():
     return render_template('no_access.html')

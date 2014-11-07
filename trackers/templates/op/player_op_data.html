@@ -6,13 +6,13 @@
         <td><b>Sites</b>: {{ player.sites }}</td>
     </tr>
     <tr>
-        <td><b>Share</b>: {{ player.get_share() }}</td>
+        <td><b>Share</b>: {{ player.get_share()|formatcommas }}</td>
     </tr>
     <tr>
-        <td><b>Paid</b>: {{ player.paid }}</td>
+        <td><b>Paid</b>: {{ player.paid|formatcommas }}</td>
     </tr>
     <tr>
-        <td><b>Paid through API</b>: {{ player.api_paid }}</td>
+        <td><b>Paid through API</b>: {{ player.api_paid|formatcommas }}</td>
     </tr>
     <tr>
         <td><b>Tax</b>: {{ player.operation.tax_as_percentage() }}</td>

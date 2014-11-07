@@ -36,20 +36,20 @@
     </tr>
     <tr>
         <td>** Alliance **</td>
-        <td>{{ alliance_tax }}</td>
+        <td>{{ alliance_tax|formatcommas }}</td>
     </tr>
     <tr>
         <td><u>BRG</u></td>
-        <td>{{ brg }}</td>
+        <td>{{ brg|formatcommas }}</td>
     </tr>
     <tr>
         <td><u>SRP</u></td>
-        <td>{{ srp }}</td>
+        <td>{{ srp|formatcommas }}</td>
     </tr>
     {% for player, amount in isk_per_player %}
     <tr>
         <td>{{ player }}</td>
-        <td>{{ amount }}</td>
+        <td>{{ amount|formatcommas }}</td>
     </tr>
     {% endfor %}
     </table>
