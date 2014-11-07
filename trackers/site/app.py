@@ -30,7 +30,7 @@ def _prerender():
     settings = _get_settings(_name())
     displayname = _name()
     valid_user = not displayname == 'None'
-    return dict(displayname=displayname, valid_user=valid_user, homesystem=HOME_SYSTEM, eveigb=InGameBrowser(request),
+    return dict(displayname=displayname, valid_user=valid_user, homesystem=app_settings['HOME_SYSTEM'], eveigb=InGameBrowser(request),
         now=datetime.utcnow(), settings_nt=settings.edits_in_new_tabs, settings_sm=settings.store_multiple, settings_aeg=settings.auto_expand_graph)
 
 
@@ -71,7 +71,7 @@ def index():
         elif request.form['data_type'] == 'site':
             s = Site(creator=_name(), scanid=request.form['scanid'].upper() if request.form['scanid'] else '?',
                 name=request.form['name'], type_=request.form['type'],
-                system=HOME_SYSTEM, opened='opened' in request.form)
+                system=app_settings['HOME_SYSTEM'], opened='opened' in request.form)
             if not _check_existing(_name(), 'site', s):
                 db.session.add(s)
                 db.session.commit()
@@ -231,7 +231,7 @@ def open_site(id):
 def site(id):
     """ View: show the user an edit form for the site and accept edits """
     site = Site.query.filter_by(id=id).first_or_404()
-    admin = _name() in ADMINS
+    admin = _name() in app_settings['ADMINS']
     if request.method == 'POST':
         if 'admin_delete' in request.form and admin:
             db.session.delete(site)
@@ -333,7 +333,7 @@ def close_wormhole(id):
         wormhole.closed = True
         snap = WormholeSnapshot(wormhole.id, _name(), '<b>Closed</b>: False -> True')
         wormhole.snapshots.append(snap)
-        if (HOME_SYSTEM in [wormhole.start, wormhole.end]):
+        if (app_settings['HOME_SYSTEM'] in [wormhole.start, wormhole.end]):
             _close_chain(_name(), wormhole)
         db.session.commit()
         _notify_change('tables')
@@ -346,7 +346,7 @@ def close_wormhole(id):
 def wormhole(id):
     """ View: show the user an edit form for the wormhole and accept edits """
     wormhole = Wormhole.query.filter_by(id=id).first_or_404()
-    admin = _name() in ADMINS
+    admin = _name() in app_settings['ADMINS']
     if request.method == 'POST':
         if 'admin_delete' in request.form and admin:
             db.session.delete(wormhole)
@@ -394,7 +394,7 @@ def _edit_wormhole(wormhole, request, session, in_line=False):
     if len(changes) > 0:
         snap = WormholeSnapshot(wormhole_id=wormhole.id, snapper=_name(), changed=''.join(c + ', ' for c in changes)[:-2])
         wormhole.snapshots.append(snap)
-        if (HOME_SYSTEM in [wormhole.start, wormhole.end]) and wormhole.closed and originally_open:
+        if (app_settings['HOME_SYSTEM'] in [wormhole.start, wormhole.end]) and wormhole.closed and originally_open:
             _close_chain(_name(), wormhole)
         db.session.commit()
         _notify_change('tables')
@@ -408,10 +408,10 @@ def _close_chain(user, wormhole):
         * For performance, this method does not commit changes to the database.
     """
     connected = []
-    if not str(HOME_SYSTEM) == wormhole.start:
+    if not str(app_settings['HOME_SYSTEM']) == wormhole.start:
         connected = [w for w in Wormhole.query.filter_by(start=wormhole.start, opened=True, closed=False).all()]
         connected.extend([w for w in Wormhole.query.filter_by(end=wormhole.start, opened=True, closed=False).all() if not w in connected])
-    if not str(HOME_SYSTEM) == wormhole.end:
+    if not str(app_settings['HOME_SYSTEM']) == wormhole.end:
         connected.extend([w for w in Wormhole.query.filter_by(start=wormhole.end, opened=True, closed=False).all() if not w in connected])
         connected.extend([w for w in Wormhole.query.filter_by(end=wormhole.end, opened=True, closed=False).all() if not w in connected])
     if not connected:
@@ -502,8 +502,8 @@ def paste():
 def graph():
     """ View: return JSON for the graphing feature """
     def get_system_name(system):
-        if system in SYSTEM_RENAMES:
-            return SYSTEM_RENAMES[system]
+        if system in app_settings['SYSTEM_RENAMES']:
+            return app_settings['SYSTEM_RENAMES'][system]
         return system
     def get_player_count_in_system(system):
         count = 0
@@ -594,7 +594,7 @@ def graph():
 
     chains = []
     for wh in wormholes:
-        if wh.start == HOME_SYSTEM:
+        if wh.start == app_settings['HOME_SYSTEM']:
             chain = {
                 'name': get_system_name(wh.start),
                 'proper_name': wh.start,
@@ -840,7 +840,7 @@ def system(system):
     unopenedsites = Site.query.filter_by(system=system, opened=False, closed=False).all()
     return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if re.match(r'^J\d{6}$', system) else None,
         security=systemObject.security_level if not re.match(r'^J\d{6}$', system) else None, kspace=not re.match(r'^J\d{6}$', system),
-        rename=SYSTEM_RENAMES[system] if system in SYSTEM_RENAMES else None,
+        rename=app_settings['SYSTEM_RENAMES'][system] if system in app_settings['SYSTEM_RENAMES'] else None,
         openwormholes=openwormholes, opensites=opensites, closedwormholes=closedwormholes, unopenedsites=unopenedsites)
 
 
@@ -860,7 +860,7 @@ def mass_close():
             snap = WormholeSnapshot(wormhole_id=wormhole.id, snapper=_name(), changed='<b>Closed</b>: False -> True')
             wormhole.snapshots.append(snap)
             wormhole.closed = True
-            if (HOME_SYSTEM in [wormhole.start, wormhole.end]):
+            if (app_settings['HOME_SYSTEM'] in [wormhole.start, wormhole.end]):
                 _close_chain(_name(), wormhole)
         db.session.commit()
         return redirect(url_for('.mass_close'))

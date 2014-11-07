@@ -34,7 +34,7 @@
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_scanid" name="scanid" class="uppercase short_input" placeholder="id" maxlength="3"></td>
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_start" name="start" class="short_input" placeholder="start"></td>
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_end" name="end" class="short_input" placeholder="end"></td>
-            <td><select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 10em;" id="w_new_status" name="status"><option>Unopened</option><option>Fresh</option><option>Undecayed</option><option>&#60 50% mass</option><option>VoC</option><option>EoL</option><option>VoC and EoL</option><option>Unknown</option></select></td>
+            <td><select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 10em;" id="w_new_status" name="status"><option>Undecayed</option><option>Fresh</option><option>&#60 50% mass</option><option>VoC</option><option>EoL</option><option>VoC and EoL</option><option>Unknown</option></select></td>
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_o_scanid" name="o_scanid" class="uppercase short_input" placeholder="ID2" maxlength="3"></td>
             <td><button id="w_new_submit" type="submit" class="btn btn-xs btn-primary" onclick="addNewWormhole();" disabled>Add New</button></td>
             <td></td>
@@ -85,7 +85,7 @@
             <td><input onkeyup="checkNew('site');" type="text" id="s_new_scanid" class="uppercase short_input" name="scanid" placeholder="id" maxlength="3"></td>
             <td><input onkeyup="checkNew('site');" type="text" id="s_new_name" name="name" class="short_input" placeholder="name"></td>
             <td><select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 100%;" id="s_new_type" name="type"><option>Combat</option><option>Relic</option><option>Gas</option><option>Data</option><option>Ore</option></select></td>
-            <td></td>
+            <td><input onkeyup="checkNew('site');" type="text" id="s_new_system" class="short_input" name="system" placeholder="{{ homesystem }}" value="{{ homesystem }}"></td>
             <td><input type="checkbox" name="opened"></td>
             <td><button id="s_new_submit" type="submit" class="btn btn-xs btn-primary" onclick="addNewSite();" disabled>Add New</button></td>
             <td></td>

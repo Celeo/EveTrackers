@@ -23,10 +23,10 @@ db.init_app(app)
 
 
 # settings
-ALLIANCE = app.config['ALLIANCE']
-HOME_SYSTEM = app.config['HOME_SYSTEM']
-SYSTEM_RENAMES = app.config['SYSTEM_RENAMES']
-ADMINS = app.config['ADMINS']
+app_settings['ALLIANCE'] = app.config['ALLIANCE']
+app_settings['HOME_SYSTEM'] = app.config['HOME_SYSTEM']
+app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
+app_settings['ADMINS'] = app.config['ADMINS']
 
 
 # flask-admin
