@@ -1,5 +1,6 @@
 from trackers.shared import db
 from datetime import datetime
+import re
 
 class Site(db.Model):
 
@@ -181,6 +182,9 @@ class System(db.Model):
 
     def __repr__(self):
         return '<System {}>'.format(self.name)
+
+    def is_kspace(self):
+        return not re.match(r'^J\d{6}$', self.name)
 
 
 class WormholeType(db.Model):

@@ -636,7 +636,7 @@ def system_landing():
         # if system is a stub system, don't append
         obj = System.query.filter_by(name=system).first()
         if obj and not obj.is_stub:
-            systems.append(system)
+            systems.append(obj)
     for w in Wormhole.query.filter_by(opened=True, closed=False).all():
         if not w.start in systems:
             append(w.start)

@@ -10,13 +10,13 @@ Universe
 
 <h3>Universe Overview - systems with open sites/wormholes</h3>
 
-{% if systems %}
-    {% for s in systems %}
-        <a href="{{ url_for('.system', system=s) }}">{% if s == eveigb['solarsystemname'] %}<strong>Current system: {{ s }}</strong>{% else %}{{ s }}{% endif %}<br />
-    {% endfor %}
-{% else %}
-    <p>None</p>
-{% endif %}
+<div style="font-size: 2em;">
+    {% for system in systems %}
+    <a href="{{ url_for('.system', system=system.name) }}">{{ system.name }}</a>
+    {% if system.is_kspace() %}Sec {{ system.security_level }}{% else %}Class {{ system.class_ }}{% if not system.effect == 'None' %} {{ system.effect }}{% endif %}{% endif %}
+    <br />
+{% endfor %}
+</div>
 
 </center>
 
