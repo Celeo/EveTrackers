@@ -7,6 +7,7 @@
             <th>Status</th>
             <th>Other side</th>
             <th>Entered</th>
+            <th>Tiny</th>
             <th>Elapsed</th>
             <th style="border: none;"></th>
             <th style="border: none;"></th>
@@ -21,6 +22,7 @@
             <td id="wstatus{{ w.id }}">{{ w.status }}</td>
             <td id="wo_scanid{{ w.id }}">{% if w.o_scanid %}{{ w.o_scanid }}{% else %}?{% endif %}</td>
             <td>{{ w.date|date }}</td>
+            <td>{% if w.tiny %}Yes{% else %}No{% endif %}</td>
             <td class="countup">{% for k,v in elapsed_timers.items() %}{% if k == w.id %}{{ v }}{% endif %}{% endfor %}</td>
             <td id="wlink{{ w.id }}"><a class="label label-warning" onclick="edit('wormhole', {{ w.id }});">Change</a></td>
         {% if w.opened %}

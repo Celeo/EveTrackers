@@ -52,6 +52,10 @@
         <td><input type="checkbox" name="closed" {% if wormhole and wormhole.closed %}checked="checked"{% endif %}></td>
     </tr>
     <tr>
+        <td><label>Is the wormhole tiny (frigate)?</label></td>
+        <td><input type="checkbox" name="tiny" {% if wormhole and wormhole.tiny %}checked="checked"{% endif %}></td>
+    </tr>
+    <tr>
         <td><label>Notes</label></td>
         <td><textarea name="notes">{% if wormhole %}{{ wormhole.notes }}{% endif %}</textarea></td>
     </tr>

@@ -79,11 +79,12 @@ class Wormhole(db.Model):
     opened = db.Column(db.Boolean)
     closed = db.Column(db.Boolean)
     mass_taken = db.Column(db.Integer)
+    tiny = db.Column(db.Boolean)
     notes = db.Column(db.Text)
     snapshots = db.relationship('WormholeSnapshot', backref='wormhole', lazy='dynamic')
 
     def __init__(self, creator='__server__', date=None, scanid='?', o_scanid='?',
-            start='', end='', status='Undecayed', opened=False, closed=False, mass_taken=0, notes=''):
+            start='', end='', status='Undecayed', opened=False, closed=False, mass_taken=0, tiny=False, notes=''):
         self.creator = creator
         self.date = date if date else datetime.utcnow()
         self.scanid = scanid
@@ -94,6 +95,7 @@ class Wormhole(db.Model):
         self.opened = opened
         self.closed = closed
         self.mass_taken = mass_taken
+        self.tiny = False
         self.notes = notes
 
     def __repr__(self):

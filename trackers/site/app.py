@@ -385,12 +385,16 @@ def _edit_wormhole(wormhole, request, session, in_line=False):
             wormhole.notes = request.form['notes']
         opened = 'opened' in request.form
         if not opened == wormhole.opened:
-            changes.append('<b>Opened</b>: {} -> {}'.format(wormhole.opened, 'opened' in request.form))
-            wormhole.opened = 'opened' in request.form
+            changes.append('<b>Opened</b>: {} -> {}'.format(wormhole.opened, opened))
+            wormhole.opened = opened
         closed = 'closed' in request.form
         if not closed == wormhole.closed:
-            changes.append('<b>Closed</b>: {} -> {}'.format(wormhole.closed, 'closed' in request.form))
-            wormhole.closed = 'closed' in request.form
+            changes.append('<b>Closed</b>: {} -> {}'.format(wormhole.closed, closed))
+            wormhole.closed = closed
+        tiny = 'tiny' in request.form
+        if not tiny == wormhole.tiny:
+            changes.append('<b>Tiny</b>: {} -> {}'.format(wormhole.tiny, tiny))
+            wormhole.tiny = tiny
     if len(changes) > 0:
         snap = WormholeSnapshot(wormhole_id=wormhole.id, snapper=_name(), changed=''.join(c + ', ' for c in changes)[:-2])
         wormhole.snapshots.append(snap)
