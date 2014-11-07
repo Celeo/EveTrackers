@@ -101,13 +101,13 @@ function graph() {
         sysCountText.setX(x - textWidth / 2);
         layer.add(sysCountText);
 
-        function _doClick(e) {
+        function _doMouseOver(e) {
             moreInfo(system);
         }
-        sysNameText.on('click', _doClick);
-        sysClassText.on('click', _doClick);
-        sysCountText.on('click', _doClick);
-        rect.on('click', _doClick);
+        sysNameText.on('mouseover', _doMouseOver);
+        sysClassText.on('mouseover', _doMouseOver);
+        sysCountText.on('mouseover', _doMouseOver);
+        rect.on('mouseover', _doMouseOver);
     }
     function drawLink(x1, y1, x2, y2, eol, mass) {
         var color;
