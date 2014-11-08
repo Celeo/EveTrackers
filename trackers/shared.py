@@ -9,6 +9,7 @@ app_settings = {
     'ALLIANCE': '',
     'HOME_SYSTEM': '',
     'SYSTEM_RENAMES': {},
+    'NOTIFICATION_KEYS': (),
     'ADMINS': []
 }
 

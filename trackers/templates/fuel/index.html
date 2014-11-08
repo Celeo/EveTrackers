@@ -4,4 +4,15 @@
 
 <h3>Tower Fuel Tracker</h3>
 
+<div>
+    <div class="bg-info" style="padding: 2em;">
+    {% for m in message %}
+        {{ m }}</br >
+    {% endfor %}
+    </div>
+    <br />
+    It is now {{ now }}<br />
+    Cache delay is set to 2 hours.
+</div>
+
 {% endblock %}
