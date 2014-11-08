@@ -81,7 +81,7 @@
         messageSocket({ command: "rename", name: newName });
     }
     function changeFC() {
-        $("#opfc").html('<input type="text" id="i_opfc" value=' + $("#opfc").text() + '>');
+        $("#opfc").html('<input type="text" id="i_opfc" value="' + $("#opfc").text() + '"">');
         $("#savechangefc").show();
         $("#changefc").hide();
     }
