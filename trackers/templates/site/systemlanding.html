@@ -25,7 +25,7 @@ Universe
     {% for system in systems %}
         <tr>
             <td><strong><a href="{{ url_for('.system', system=system.name) }}">{{ system.name }}</a></strong></td>
-            <td>{% if system.is_kspace() %}Sec {{ system.security_level }}{% else %}Class {{ system.class_ }}{% if not system.effect == 'None' %} {{ system.effect }}{% endif %}{% endif %}</td>
+            <td>{% if system.is_kspace() %}Sec {{ system.security_level }}{% else %}Class {{ system.class_ }}{% if system.effect and not system.effect == 'None' %} {{ system.effect }}{% endif %}{% endif %}</td>
             <td>{{ system.open_wormholes|count }} / {{ system.unopened_wormholes|count }} / {{ system.closed_wormholes|count }}</td>
             <td>{{ system.open_sites|count }} / {{ system.unopened_sites|count }} / {{ system.closed_sites|count }}</td>
         </tr>
