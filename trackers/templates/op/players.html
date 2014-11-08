@@ -11,9 +11,9 @@
         {% endif %}
     </tr>
 {% for player in op.get_all_players() %}
-    <tr>
+     <tr id="playerrow_{{ player.id }}">
         <td>{{ player.name }}</td>
-        <td style="text-align: center;"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
+        <td style="text-align: center;" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
         {% if not op.locked %}
         <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
         <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
@@ -28,9 +28,9 @@
         {% endif %}
     </tr>
 {% endfor %}
-    <tr>
+    <tr id="playerrow_total">
         <td></td>
-        <th style="text-align: center;">{{ op.total_shares() }}</th>
+        <th style="text-align: center;" id="tabletotalshares">{{ op.total_shares() }}</th>
         <td></td>
         <td></td>
         <td></td>
