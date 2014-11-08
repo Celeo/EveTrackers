@@ -886,26 +886,6 @@ def inline_edit_wormhole(id):
     return 'Error occurred in editing the wormhole'
 
 
-@blueprint.route('/getsearchresults/<search>')
-def get_search_results(search):
-    """ AJAX View: return matching system names """
-    results = []
-    # check system names in the chain
-    for system in _get_chain_systems():
-        if system.startswith(search):
-            results.append(system.name)
-    # check tradehub system names
-    for system in ['Jita', 'Rens', 'Dodixie', 'Amarr', 'Hek']:
-        if system.lower().startswith(search.lower()):
-            results.append(system)
-   # if we've found nothing else, then check system names from all of the universe if we can include systems
-    if not results:
-        for system in System.query.all():
-            if system.name.lower().startswith(search.lower()):
-                results.append(system.name)
-    return render_template('site/search_results.html', results=results)
-
-
 def _get_chain_systems():
     """ Returns all systems directly in the chain """
     chain_systems = [w.start for w in Wormhole.query.filter_by(opened=True, closed=False).all()]

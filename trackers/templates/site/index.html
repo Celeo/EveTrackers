@@ -52,18 +52,11 @@ Index
 <div class="btn-group" id="button_nav">
     <button id="b_nav_tables" class="btn btn-primary active" onclick="toggleSection('tables');" data-toggle="button">Toggle tables (t)</button>
     <button id="b_nav_graph" class="btn btn-primary{% if settings_aeg %} active{% endif %}" onclick="toggleSection('graph_all');" data-toggle="button">Toggle graph (g)</button>
-    <button id="b_nav_search" class="btn btn-primary" onclick="toggleSection('search');" data-toggle="button">System Search (s)</button>
     <button id="b_nav_paste" class="btn btn-primary" onclick="toggleSection('index_paste');" data-toggle="button">Paste (p)</button>
     <button id="b_wormholes" class="btn btn-primary" onclick="toggleSection('wormholes');" data-toggle="button">wh.pasta.gg (w)</button>
     <button id="b_refresh" class="btn btn-success" onclick="refreshData();">Refresh Data (r)</button>
 </div>
 
-<div id="search" style="border: 1px solid gray; padding: 10px 0 10px 0; display: none;">
-    <strong>System lookup</strong><br />
-    <input type="text" id="omnibox" style="margin-top: 10px; width: 50%;" onkeyup="get_tags();" placeholder="Beginning of system name...">
-    <img src="http://i.imgur.com/WWZwIWk.png" width="30" height="30" onclick="$('#omnibox').val(''); $('#omni_flags').val(''); $('#search_results').hide(); $('#search_results').html('');"><br />
-    <div id="search_results" style="width: 50%; overflow: auto; display: none;"></div>
-</div>
 <div id="wormholes" style="width: 100%; border: 1px solid black; padding-top: 10px; height: 50%; display: none;">
     <iframe src="http://wh.pasta.gg/" style="width: 100%; height: 100%;"></iframe>
 </div>

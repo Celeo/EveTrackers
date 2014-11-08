@@ -95,12 +95,6 @@ function addNewWormholeGraph() {
     });
 }
 
-function get_tags() {
-    var keyword = $('#omnibox').val();
-    $('#search_results').show();
-    $('#search_results').load('/getsearchresults/' + keyword);
-}
-
 function toggleSection(which) {
    $("#" + which).fadeToggle(100);
 }
