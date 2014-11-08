@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, url_for, redirect
 from datetime import datetime
 import eveapi
-from shared import app_settings
+from trackers.shared import app_settings
 
 
 # flask

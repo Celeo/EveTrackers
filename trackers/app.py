@@ -5,11 +5,6 @@ from flask.ext.admin.contrib.sqla import ModelView
 import requests
 from datetime import datetime
 from shared import *
-from trackers.site.app import blueprint as site
-from trackers.op.app import blueprint as op
-from trackers.corp.app import blueprint as corp
-from trackers.fuel.app import blueprint as fuel
-
 
 # flask
 app = Flask(__name__)
@@ -25,8 +20,14 @@ db.init_app(app)
 app_settings['ALLIANCE'] = app.config['ALLIANCE']
 app_settings['HOME_SYSTEM'] = app.config['HOME_SYSTEM']
 app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
+app_settings['NOTIFICATION_KEYS'] = app.config['NOTIFICATION_KEYS']
 app_settings['ADMINS'] = app.config['ADMINS']
 
+# import blueprints
+from trackers.site.app import blueprint as site
+from trackers.op.app import blueprint as op
+from trackers.corp.app import blueprint as corp
+from trackers.fuel.app import blueprint as fuel
 
 # flask-admin
 from trackers.site.models import *
