@@ -5,7 +5,6 @@ from flask.ext.admin.contrib.sqla import ModelView
 import requests
 from datetime import datetime
 from shared import *
-from trackers.landing.app import blueprint as landing
 from trackers.site.app import blueprint as site
 from trackers.op.app import blueprint as op
 from trackers.corp.app import blueprint as corp
@@ -78,16 +77,16 @@ def oauth_authorized(resp):
     """ Perform the "login validation" after oauth """
     if resp is None:
         flash('You denied the request to sign in', 'danger')
-        return redirect('landing.index')
+        return redirect(url_for('site_tracker.index'))
     data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token']).json()['user']
     if not data['auth_status'] in ['Internal', 'Protected']:
         flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
-        return redirect('landing.index')
+        return redirect(url_for('site_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
-    return redirect('landing.index')
+    return redirect(url_for('site_tracker.index'))
 
 
 @app.route('/login')
@@ -145,7 +144,7 @@ def _preprocess():
     print('Full path: ' + request.path)
     if request.path.startswith('/static/'):
         return
-    if request.path in ['/noaccess', '/login', '/oauthauthorized', '/landing', '/root_login']:
+    if request.path in ['/noaccess', '/login', '/oauthauthorized', '/root_login']:
         return
     if not _can_access():
         return redirect(url_for('no_access'))
@@ -177,7 +176,6 @@ def no_access():
 socketio.app = app
 socketio.init_app(app)
 
-app.register_blueprint(landing)
 app.register_blueprint(site)
 app.register_blueprint(op, url_prefix='/operations')
 app.register_blueprint(corp, url_prefix='/corp')
