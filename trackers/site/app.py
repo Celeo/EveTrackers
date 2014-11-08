@@ -639,16 +639,13 @@ def system_landing():
     def append(system):
         # if system is a stub system, don't append
         obj = System.query.filter_by(name=system).first()
-        if obj and not obj.is_stub:
+        if obj and not obj.is_stub and not obj in systems:
             systems.append(obj)
     for w in Wormhole.query.filter_by(opened=True, closed=False).all():
-        if not w.start in systems:
-            append(w.start)
-        if not w.end in systems:
-            append(w.end)
+        append(w.start)
+        append(w.end)
     for s in Site.query.filter_by(closed=False).all():
-        if not s.system in systems:
-            append(s.system)
+        append(s.system)
     return render_template('site/systemlanding.html', systems=systems)
 
 
