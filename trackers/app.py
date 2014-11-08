@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request, session, render_template
+from flask import Flask, redirect, url_for, request, session, render_template, flash
 from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
@@ -76,19 +76,18 @@ def get_oi_auth_token(token=None):
 @oi_auth.authorized_handler
 def oauth_authorized(resp):
     """ Perform the "login validation" after oauth """
-    next_url = request.args.get('next') or url_for('index')
     if resp is None:
         flash('You denied the request to sign in', 'danger')
-        return redirect(next_url)
+        return redirect('landing.index')
     data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token']).json()['user']
-    if not data['auth_status'] == 'Internal':
-        flash('You do not have sufficient permissions to use this tool', 'danger')
-        return redirect('login')
+    if not data['auth_status'] in ['Internal', 'Protected']:
+        flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
+        return redirect('landing.index')
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
-    return redirect(next_url)
+    return redirect('landing.index')
 
 
 @app.route('/login')
@@ -102,6 +101,19 @@ def logout_page():
     """ View: Delete the session cookie and redirect """
     session.clear()
     return redirect(url_for('no_access'))
+
+
+@app.route('/root_login', methods=['GET', 'POST'])
+def root_login():
+    """ View: Administrator login, bypassing the OAUTH login method """
+    if request.method == 'POST':
+        if (request.form['username'], request.form['password']) == app.config['ROOT_LOGIN']:
+            session['oi_auth_token'] = 'root_login_page'
+            session['oi_auth_user'] = app.config['ROOT_LOGIN'][0]
+            session.permanent = True
+            flash('You used the root login page to log into the trackers as {}'.format(app.config['ROOT_LOGIN'][0]), 'info')
+            return redirect(url_for('site_tracker.index'))
+    return render_template('root_login.html')
 
 
 def _name():
@@ -133,7 +145,7 @@ def _preprocess():
     print('Full path: ' + request.path)
     if request.path.startswith('/static/'):
         return
-    if request.path in ['/noaccess', '/login', '/oauthauthorized', '/landing']:
+    if request.path in ['/noaccess', '/login', '/oauthauthorized', '/landing', '/root_login']:
         return
     if not _can_access():
         return redirect(url_for('no_access'))

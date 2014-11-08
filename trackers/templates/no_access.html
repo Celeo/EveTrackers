@@ -1,11 +1,63 @@
 <!DOCTYPE html>
-<html>
+
 <head>
-    <title>No Access</title>
+    <meta charset="utf-8">
+    <title>Eve Trackers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </head>
+
 <body>
 
-<h1>No access. Please click <a href="{{ url_for('login_page') }}">here</a> to log in.</h1>
+<div class="container">
+
+<div class="container-fluid shadowall" id="page_proper">
+    <div class="container pad-top">
+        <center>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                    <p>
+                        {{ message }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </center>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+    <h3>Please log in</h3>
+
+    <h4>Click <a href="{{ url_for('login_page') }}">here</a> to log in</h4>
+
+    <hr style="border: 1px solid gray;">
+
+    <footer>
+        <p style="font-size: 80%;">
+            Apps &copy; <a href="https://github.com/Celeo">Celeo</a> 2013-14 <a href="https://github.com/Celeo/EveTrackers">We're open source!</a>
+            <br />
+            EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual
+            property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts
+            or other recognizable features of the intellectual property relating to these trademarks are
+            likewise the intellectual property of CCP hf. EVE Online and the EVE logo are the registered
+            trademarks of CCP hf. All rights are reserved worldwide. All other trademarks are the property
+            of their respective owners.
+        </p>
+    </footer>
+
+</div>
 
 </body>
+
 </html>

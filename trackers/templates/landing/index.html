@@ -36,6 +36,26 @@
 
 <div class="container">
 
+<div class="container-fluid shadowall" id="page_proper">
+    <div class="container pad-top">
+        <center>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                    <p>
+                        {{ message }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </center>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
     <h3>Eve Trackers</h3>
 
     <hr style="border: 1px solid gray;">
