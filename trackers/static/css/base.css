@@ -1,7 +1,3 @@
-body {
-    font-size: medium;
-}
-
 table {
     border-collapse: collapse;
 }
@@ -18,10 +14,6 @@ th {
 
 input {
     text-align: center;
-}
-
-hr {
-    border: 1px solid gray;
 }
 
 p .footer {
