@@ -2,24 +2,21 @@ body {
     font-size: medium;
 }
 
-table {
-    border-collapse: collapse;
+.celltop {
+    border: 1px solid #e5e5e5;
+    padding: 5px;
+    cursor: pointer;
 }
 
-tr {
-    padding: 5px 0 5px 0;
+.celltop:hover {
+    text-decoration: underline;
 }
 
-th {
-    font-size: 120%;
-    padding-left: 2px;
-    padding-right: 2px;
+.cellbottom {
+    border: 1px solid #e5e5e5;
+    padding: 5px;
 }
 
-input {
-    text-align: center;
-}
-
-hr {
-    border: 1px solid black;
+.cellholder {
+    margin-bottom: 2px;
 }

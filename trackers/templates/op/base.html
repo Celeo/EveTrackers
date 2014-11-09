@@ -9,6 +9,7 @@
     <meta name="author" content="Celeo">
 
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/op.css') }}">
     <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
@@ -70,10 +71,10 @@
 
 {% block content %}{% endblock %}
 
-<hr style="border: 1px solid gray;">
+<hr>
 
 <footer>
-    <p style="font-size: 80%;">
+    <p class="footer">
         App &copy; <a href="https://github.com/Celeo">Celeo</a> 2013-14 <a href="https://github.com/Celeo/EveTrackers">Open source</a>
         <br />
         EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual

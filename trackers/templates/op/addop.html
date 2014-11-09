@@ -5,11 +5,11 @@
 <div class="well">
     <h4>Start an Operation</h4>
     <form action="{{ url_for('.add_op') }}" method="POST" role="form">
-        <input class="form-control" style="width: 25%;" type="text" placeholder="Operation name ..." name="name">
-        <input class="form-control" style="width: 25%;" type="text" placeholder="FC ..." name="fc">
-        <input class="form-control" style="width: 25%;" type="text" placeholder="Location ..." name="location">
-        <textarea class="form-control" name="description" placeholder="Description ..." style="width: 50%;" rows="5"></textarea>
-        <select class="form-control" style="width: 25%;" name="state">
+        <input class="form-control width-quarter" type="text" placeholder="Operation name ..." name="name">
+        <input class="form-control width-quarter" type="text" placeholder="FC ..." name="fc">
+        <input class="form-control width-quarter" type="text" placeholder="Location ..." name="location">
+        <textarea class="form-control width-half" name="description" placeholder="Description ..." rows="5"></textarea>
+        <select class="form-control width-quarter" name="state">
             <option>Not started</option>
             <option>In progress</option>
             <option>Loot collected</option>

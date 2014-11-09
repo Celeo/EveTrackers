@@ -93,7 +93,7 @@
         messageSocket({ command: "leader", leader: newLeader });
     }
     function changeDescription() {
-        $("#opdescription").html('<textarea id="i_opdescription" style="width: 50%;" rows="10">' + $("#opdescription").text() + '</textarea>');
+        $("#opdescription").html('<textarea id="i_opdescription" class="width-half" rows="10">' + $("#opdescription").text() + '</textarea>');
         $("#savechangedescription").show();
         $("#changedescription").hide();
     }
@@ -145,19 +145,19 @@
 
 <h3><span id="opname">{{ op.name }}</span>
     {% if not op.locked %}
-    <a onclick="renameOperation();" id="renameop" style="font-size: 50%;">RENAME</a> 
-    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a>
+    <a onclick="renameOperation();" id="renameop" class="font-half">RENAME</a> 
+    <a onclick="saveRenameOperation();" id="saverename" class="font-half" hidden>SAVE</a>
     {% endif %}
 </h3>
 
 <div class="well">
     <p>
-        <b>FC</b>: <span id="opfc">{{ op.leader }}</span> {% if not op.locked %}<a onclick="changeFC();" id="changefc" style="font-size: 60%;">CHANGE</a> 
-            <a onclick="saveChangeFC();" id="savechangefc" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
-        <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" style="font-size: 60%;">CHANGE</a> 
-            <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
+        <b>FC</b>: <span id="opfc">{{ op.leader }}</span> {% if not op.locked %}<a onclick="changeFC();" id="changefc" class="font-half">CHANGE</a> 
+            <a onclick="saveChangeFC();" id="savechangefc" class="font-half" hidden>SAVE</a>{% endif %}<br />
+        <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" class="font-half">CHANGE</a> 
+            <a onclick="saveChangeLocation();" id="savechangelocation" class="font-half" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
-        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
+        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" class="font-half">WHAT IS THIS?</a><br />
         <b>State</b>: <span class="label label-success" id="opstate">{{ op.state }}</span><br />
         {% if not op.locked %}
         <div class="form-inline">
@@ -216,15 +216,15 @@
     <h4>Description</h4>
     <span id="opdescription">{{ op.description|safe }}</span><br />
     {% if not op.locked %}
-    <a onclick="changeDescription();" id="changedescription" style="font-size: 60%;">CHANGE</a> 
-    <a onclick="saveChangeDescription();" id="savechangedescription" style="font-size: 60%;" hidden>SAVE</a>
+    <a onclick="changeDescription();" id="changedescription" class="font-half">CHANGE</a> 
+    <a onclick="saveChangeDescription();" id="savechangedescription" class="font-half" hidden>SAVE</a>
     {% endif %}
 </div>
 
 <div class="well">
-    <h4 style="float: left;">Players</h4>
+    <h4 class="float-left">Players</h4>
     {% if not op.locked %}
-    <div style="float: right;">
+    <div class="float-right">
         <input id="step" type="number" min="0.1" max="1.0" step="0.1" placeholder="Delta (default is 1.0)" style="width: 12em;">
     </div>
     {% endif %}
@@ -233,36 +233,36 @@
         <table class="table" id="playerstable">
             <tr id="tableheader">
                 <th>Name</th>
-                <th style="text-align: center;">Shares</th>
+                <th class="text-center">Shares</th>
             {% if not op.locked %}
-                <th style="text-align: right;">Increment</th>
-                <th style="text-align: right;">Decrement</th>
-                <th style="text-align: right;">Remove</th>
+                <th class="text-right">Increment</th>
+                <th class="text-right">Decrement</th>
+                <th class="text-right">Remove</th>
             {% else %}
-                <th style="text-align: right;">ISK Earned</th>
+                <th class="text-right">ISK Earned</th>
             {% endif %}
             </tr>
         {% for player in op.get_all_players() %}
             <tr id="playerrow_{{ player.id }}">
                 <td>{{ player.name }}</td>
-                <td style="text-align: center;" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
+                <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
             {% if not op.locked %}
-                <td style="text-align: right;"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
-                <td style="text-align: right;"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
-                <th style="text-align: right;">
+                <td class="text-right"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
+                <td class="text-right"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
+                <th class="text-right">
                     <div class="form-inline">
                         <input type="hidden" name="remove" value="{{ player.id }}">
                         <button class="btn btn-danger" onclick="removePlayer({{ player.id }});">X</button>
                     </div>
                 </th>
             {% else %}
-                <td style="text-align: right;">{{ player.get_share() }}</td>
+                <td class="text-right">{{ player.get_share() }}</td>
             {% endif %}
             </tr>
         {% endfor %}
             <tr id="playerrow_total">
                 <td></td>
-                <th style="text-align: center;" id="tabletotalshares">{{ op.total_shares() }}</th>
+                <th class="text-center" id="tabletotalshares">{{ op.total_shares() }}</th>
                 <td></td>
                 <td></td>
                 <td></td>
