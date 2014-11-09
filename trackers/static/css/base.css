@@ -32,14 +32,34 @@ div .padding-tiny {
     padding: 1em;
 }
 
-input .width-quarter {
+.width-quarter {
     width: 25%;
 }
 
-input .width-half {
+.width-half {
     width: 50%;
 }
 
 .font-half {
     font-size: 50%;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
 }

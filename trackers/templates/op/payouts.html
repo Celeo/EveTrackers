@@ -114,14 +114,14 @@
     <br />
     <div class="row">
         <div class="col-lg-6">
-            <select class="form-control" style="width: 50%;" id="operation">
+            <select class="form-control width-half" id="operation">
             {% for operation in operations %}
                 <option>{{ operation.id }} - {{ operation.name }}</option>
             {% endfor %}
             </select>
-            <select class="form-control" style="width: 50%;" id="player"></select><br />
+            <select class="form-control width-half" id="player"></select><br />
             <div id="player_info"></div>
-            <input class="form-control" style="width: 50%;" type="text" id="amount" placeholder="Amount">
+            <input class="form-control width-half" type="text" id="amount" placeholder="Amount">
             <div style="margin-left: 1em;">
                 <label class="checkbox">
                     <input type="checkbox" class="money" id="payfull">Pay in full
@@ -133,7 +133,7 @@
             <a class="btn btn-primary" onclick="doPayment();">Pay</a>
         </div>
         <div class="col-lg-6">
-            <select class="form-control" id="api_selection" style="width: 50%;">
+            <select class="form-control width-half" id="api_selection">
                 {% for apikey in apikeys %}
                     <option>#{{ apikey.id }}: {{ apikey.note }} ({{ apikey.key}})</option>
                 {% endfor %}
