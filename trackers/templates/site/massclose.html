@@ -28,7 +28,7 @@ Mass Close
             <td><a href="{{ url_for('.system', system=w.start) }}">{{ w.start }}</a></td>
             <td><a href="{{ url_for('.system', system=w.end) }}">{{ w.end }}</a></td>
             <td>{{ w.status }}</td>
-            <td>{% if w.opened %}<span style="color: green;">True</span>{% else %}<span style="color: red;">False</span>{% endif %}</td>
+            <td>{% if w.opened %}<span class="g">True</span>{% else %}<span class="r">False</span>{% endif %}</td>
             <td><input type="checkbox" name="{{ w.id }}"></td>
         </tr>
     {% endfor %}

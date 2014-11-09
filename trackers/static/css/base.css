@@ -63,3 +63,11 @@ div .padding-tiny {
 .float-left {
     float: left;
 }
+
+.no-border {
+    border: none;
+}
+
+.text-plus {
+    font-size: 125%;
+}

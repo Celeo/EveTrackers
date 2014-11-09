@@ -36,21 +36,21 @@ System Info
 
 {% if kspace %}
 <span id="closest_system">
-    <span style="color: gray; text-align: left;">Loading closest system ...</span>
+    <span class="text-left gray">Loading closest system ...</span>
 </span>
 
 <span id="system_api_info">
-    <span style="color: gray; text-align: left;"><br /><br />Loading api data ...</span>
+    <span class="text-left gray"><br /><br />Loading api data ...</span>
 </span>
 {% endif %}
 
 <div class="row">
     {% if kspace %}
         <div class="col-lg-6">
-            <p id="kills"><span style="color: gray; text-align: left;">Loading recent kills in this system ...</span></p>
+            <p id="kills"><span class="text-left gray">Loading recent kills in this system ...</span></p>
         </div>
         <div class="col-lg-6">
-            <div style="width: 100%; margin-bottom: 20px;" id="jumps"><span style="color: gray; text-align: left;">Loading jumps to major tradehubs ...</span></div>
+            <div style="width: 100%; margin-bottom: 20px;" id="jumps"><span class="text-left gray">Loading jumps to major tradehubs ...</span></div>
         </div>
     {% else %}
     <div class="span12">

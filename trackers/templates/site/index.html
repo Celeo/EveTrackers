@@ -68,7 +68,7 @@ Index
     </div>
     <div id="graph"></div>
     <div class="form-inline">
-        <input type="text" name="scanid" id="graph_wormhole_scanid" placeholder="Scan ID" style="width: 10%; text-transform: uppercase;" maxlength="3">
+        <input type="text" name="scanid" id="graph_wormhole_scanid" placeholder="Scan ID" class="uppercase" style="width: 10%;" maxlength="3">
         <input type="text" name="start" id="graph_wormhole_start" placeholder="Start" style="width: 10%;">
         <input type="text" name="end" id="graph_wormhole_end" placeholder="end" style="width: 10%;">
         <button class="btn btn-sm btn-primary" onclick="addNewWormholeGraph();">Add</button>
@@ -81,8 +81,8 @@ Index
 <div id="index_paste" style="border: 1px solid gray; display: none;">
     <h4>This is the same function as on the <a href="{{ url_for('.paste') }}">paste page</a></h4>
     <form action="{{ url_for('.paste') }}" method="POST">
-        <table style="border: none;">
-            <tr style="border: none;">
+        <table class="no-border">
+            <tr class="no-border">
                 <td>
                     <span><b>System</b></span>
                 </td>
