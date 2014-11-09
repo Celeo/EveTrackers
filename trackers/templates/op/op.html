@@ -93,7 +93,7 @@
         messageSocket({ command: "leader", leader: newLeader });
     }
     function changeDescription() {
-        $("#opdescription").html('<textarea id="i_opdescription" style="width: 50%;" rows="10">' + $("#opdescription").text() + '</textarea>');
+        $("#opdescription").html('<textarea id="i_opdescription" class="width-half" rows="10">' + $("#opdescription").text() + '</textarea>');
         $("#savechangedescription").show();
         $("#changedescription").hide();
     }
@@ -145,19 +145,19 @@
 
 <h3><span id="opname">{{ op.name }}</span>
     {% if not op.locked %}
-    <a onclick="renameOperation();" id="renameop" style="font-size: 50%;">RENAME</a> 
-    <a onclick="saveRenameOperation();" id="saverename" style="font-size: 50%;" hidden>SAVE</a>
+    <a onclick="renameOperation();" id="renameop" class="font-half">RENAME</a> 
+    <a onclick="saveRenameOperation();" id="saverename" class="font-half" hidden>SAVE</a>
     {% endif %}
 </h3>
 
 <div class="well">
     <p>
-        <b>FC</b>: <span id="opfc">{{ op.leader }}</span> {% if not op.locked %}<a onclick="changeFC();" id="changefc" style="font-size: 60%;">CHANGE</a> 
-            <a onclick="saveChangeFC();" id="savechangefc" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
-        <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" style="font-size: 60%;">CHANGE</a> 
-            <a onclick="saveChangeLocation();" id="savechangelocation" style="font-size: 60%;" hidden>SAVE</a>{% endif %}<br />
+        <b>FC</b>: <span id="opfc">{{ op.leader }}</span> {% if not op.locked %}<a onclick="changeFC();" id="changefc" class="font-half">CHANGE</a> 
+            <a onclick="saveChangeFC();" id="savechangefc" class="font-half" hidden>SAVE</a>{% endif %}<br />
+        <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" class="font-half">CHANGE</a> 
+            <a onclick="saveChangeLocation();" id="savechangelocation" class="font-half" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
-        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" style="font-size: 60%;">WHAT IS THIS?</a><br />
+        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" class="font-half">WHAT IS THIS?</a><br />
         <b>State</b>: <span class="label label-success" id="opstate">{{ op.state }}</span><br />
         {% if not op.locked %}
         <div class="form-inline">
@@ -216,8 +216,8 @@
     <h4>Description</h4>
     <span id="opdescription">{{ op.description|safe }}</span><br />
     {% if not op.locked %}
-    <a onclick="changeDescription();" id="changedescription" style="font-size: 60%;">CHANGE</a> 
-    <a onclick="saveChangeDescription();" id="savechangedescription" style="font-size: 60%;" hidden>SAVE</a>
+    <a onclick="changeDescription();" id="changedescription" class="font-half">CHANGE</a> 
+    <a onclick="saveChangeDescription();" id="savechangedescription" class="font-half" hidden>SAVE</a>
     {% endif %}
 </div>
 

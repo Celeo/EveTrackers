@@ -1,5 +1,4 @@
 body {
-    margin-top: 3%;
     font-size: medium;
 }
 
@@ -22,5 +21,25 @@ input {
 }
 
 hr {
-    border: 1px solid black;
+    border: 1px solid gray;
+}
+
+p .footer {
+    font-size: 80%;
+}
+
+div .padding-tiny {
+    padding: 1em;
+}
+
+input .width-quarter {
+    width: 25%;
+}
+
+input .width-half {
+    width: 50%;
+}
+
+.font-half {
+    font-size: 50%;
 }
