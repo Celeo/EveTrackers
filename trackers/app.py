@@ -28,6 +28,7 @@ from trackers.site.app import blueprint as site
 from trackers.op.app import blueprint as op
 from trackers.corp.app import blueprint as corp
 from trackers.fuel.app import blueprint as fuel
+from trackers.war.app import blueprint as war
 
 # flask-admin
 from trackers.site.models import *
@@ -181,6 +182,7 @@ app.register_blueprint(site)
 app.register_blueprint(op, url_prefix='/operations')
 app.register_blueprint(corp, url_prefix='/corp')
 app.register_blueprint(fuel, url_prefix='/fuel')
+app.register_blueprint(war, url_prefix='/war')
 
 
 if __name__ == '__main__':
