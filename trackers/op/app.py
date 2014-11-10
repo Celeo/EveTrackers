@@ -259,7 +259,7 @@ def websocket_message(message):
         operation.state = message['state']
         db.session.commit()
         _log('Set op {} to state {}'.format(op_id, operation.state))
-    if message['command'] == 'lootprice':
+    if message['command'] == 'loot':
         try:
             isk = float(message['loot'].replace(',', ''))
             operation.loot = isk
