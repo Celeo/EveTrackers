@@ -1,0 +1,52 @@
+{% extends 'war/base.html' %}
+
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.load_image').each(function(e) {
+            $(this).html('<img src="' + $(this).attr('img_src') + '">');
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h2>Kill Page</h2>
+
+<p>
+    <strong>Kill id</strong>: {{ kill_id }}<br />
+    <strong>Hash code</strong>: {{ hashcode }}</br >
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Dropped</th>
+            <th>Destroyed</th>
+            <th>Image</th>
+            <th>Cost Per</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ js['victim']['shipType']['name'] }}</td>
+            <td>-</td>
+            <td>-</td>
+            <td class="load_image" img_src="http://image.eveonline.com/Type/{{ js['victim']['shipType']['id'] }}_64.png"></td>
+            <td></td>
+        </tr>
+        {% for item in js['victim']['items'] %}
+        <tr>
+            <td>{{ item['itemType']['name'] }}</td>
+            <td>{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
+            <td>{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
+            <td class="load_image" img_src="http://image.eveonline.com/Type/{{ item['itemType']['id'] }}_32.png"></td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,12 +1,27 @@
 from trackers.shared import db
 
 
-class Player(db.Model):
+class Item(db.Model):
 
-    __tablename__ = 'wartracker_player'
+    __tablename__ = 'eve_item'
 
     id = db.Column(db.Integer, primary_key=True)
-    kill_id = db.Column(db.Integer, db.ForeignKey('wartracker_kill.id'))
+    name = db.Column(db.String(500))
+
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+    def __repr__(self):
+        return '<Item {} {}>'.format(self.id, self.name)
+
+
+class Participant(db.Model):
+
+    __tablename__ = 'wartracker_participant'
+
+    id = db.Column(db.Integer, primary_key=True)
+    kill = db.relationship('Kill', backref='participant', lazy='dynamic')
     role = db.Column(db.String(10))
     corp_id = db.Column(db.Integer)
     corp_name = db.Column(db.String(200))
@@ -31,7 +46,7 @@ class Player(db.Model):
         self.final_blow = final_blow
 
     def __repr__(self):
-        return '<Player {} {} {} {} {}>'.format(self.name, self.role, self.corp_name, 
+        return '<Participant {} {} {} {} {}>'.format(self.name, self.role, self.corp_name, 
             self.alliance_name, self.final_blow)
 
 
@@ -41,8 +56,8 @@ class Kill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     kill_id = db.Column(db.Integer)
-    victim = db.relationship('Player', backref='victim_kill', lazy='dynamic')
-    attackers = db.relationship('Player', backref='attackers_kill', lazy='dynamic')
+    victim = db.relationship('Participant', backref='victim_kill', lazy='dynamic')
+    attackers = db.relationship('Participant', backref='attackers_kill', lazy='dynamic')
     date = db.Column(db.DateTime)
 
     def __init__(self, date=''):

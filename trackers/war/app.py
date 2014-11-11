@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, session, url_for, redirect
+from flask import Blueprint, render_template, session
 from datetime import datetime
 import eveapi
+import requests, json
 from trackers.shared import app_settings
 
 
@@ -29,6 +30,12 @@ def _prerender():
 def index():
     """ View: index page """
     return render_template('war/index.html')
+
+@blueprint.route('/<kill_id>,<hashcode>')
+def kill(kill_id, hashcode):
+    """ View: index page """
+    js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
+    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
 
 
 # update code - needs to be converted to actual DB models instead of loose objects
