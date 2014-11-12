@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session
 from datetime import datetime
 import eveapi
 import requests, json
+from lxml import etree
 from trackers.shared import app_settings
 
 
@@ -28,14 +29,21 @@ def _prerender():
 
 @blueprint.route('/')
 def index():
-    """ View: index page """
+    """ View: Index page """
     return render_template('war/index.html')
+
 
 @blueprint.route('/<kill_id>,<hashcode>')
 def kill(kill_id, hashcode):
-    """ View: index page """
+    """ View: Killmail page """
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
     return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
+
+
+@blueprint.route('/cost/<item_id>')
+def item_cost(item_id):
+    """ AJAX View: Item cost """
+    return str('{:,}'.format(float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(item_id)).text)).find('marketstat/type/buy/avg').text)))
 
 
 # update code - needs to be converted to actual DB models instead of loose objects

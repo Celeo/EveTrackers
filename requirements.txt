@@ -5,3 +5,4 @@ flask-oauth
 flask-sqlalchemy
 requests
 eveapi
+lxml
