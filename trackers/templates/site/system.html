@@ -54,16 +54,18 @@ System Info
         </div>
     {% else %}
     <div class="span12">
-        <p><b>Statics</b>:<br />{{ systemObject.static }}</p>
+        <h4><b>Statics</b>:<br />{{ systemObject.static }}</h4>
     </div>
     {% endif %}
 </div>
 
-<h3><a href="" onclick="$('#notesform').fadeToggle(100);">Alliance Notes</a></h3>
+<h4>Alliance Notes</h4>
 <form action="" method="POST" id="notesform">
     <textarea name="systemnote" id="systemnote" style="width: 45%;" rows="10">{{ systemObject.note }}</textarea><br />
-    <input type="submit" value="Save">
+    <input class="btn btn-primary" type="submit" value="Save">
 </form>
+
+<br />
 
 <h3>Open wormholes</h3>
 {% if openwormholes %}
