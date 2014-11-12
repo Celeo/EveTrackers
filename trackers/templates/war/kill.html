@@ -2,12 +2,31 @@
 
 {% block head %}
 <script type="text/javascript">
+    var destroyed = 0.00;
+    var dropped = 0.00;
     $(document).ready(function() {
         $('.load_image').each(function(e) {
             $(this).html('<img src="' + $(this).attr('img_src') + '">');
         });
         $('.load_price').each(function(e) {
-            $(this).load('/war/cost/' + $(this).attr('id'));
+            $.ajax({
+                type: 'GET',
+                url: '/war/cost/' + $(this).attr('id'),
+                data: {
+                    item_id: $(this).attr('id')
+                },
+                success: function (data) {
+                    console.log(data + ' | ' + $(e));
+                    $(this).html('<span>' + data + '</span>');
+                    data = parseFloat(data);
+                    if ($(this).hasClass('destroyed'))
+                        destroyed += data;
+                    else
+                        dropped += data;
+                    $('#dropped').text(dropped);
+                    $('#destroyed').text(destroyed);
+                }
+            });
         });
     });
 </script>
@@ -58,7 +77,7 @@
             <td class="center">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
             <td class="center">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
             <td class="load_image" img_src="http://image.eveonline.com/Type/{{ item['itemType']['id'] }}_32.png"></td>
-            <td class="load_price" id="{{ item['itemType']['id'] }}"></td>
+            <td class="load_price {% if 'quantityDropped' in item %}dropped{% else %}destroyed{% endif %}" id="{{ item['itemType']['id'] }}"></td>
         </tr>
         {% endfor %}
         <tr>
@@ -66,14 +85,14 @@
             <td></td>
             <td></td>
             <td class="center"><strong>Total Dropped</strong></td>
-            <td>?</td>
+            <td id="dropped"></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
             <td class="center"><strong>Total Destroyed</strong></td>
-            <td>?</td>
+            <td id="destroyed"></td>
         </tr>
     </tbody>
 </table>
