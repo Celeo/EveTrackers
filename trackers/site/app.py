@@ -797,19 +797,14 @@ def get_tradehub_jumps(system):
 
 
 def _get_jumps_between(start, end):
-    """ Returns the number of jumps between the two systems """
+    """ AJAX View: Returns the number of jumps between the two systems """
     if start == end:
         return 0
-    try:
-        url = 'http://evemaps.dotlan.net/route/{}:{}'.format(start.replace(' ', '_'), end.replace(' ', '_'))
-        count = 0
-        contents = requests.get(url).text
-        for line in contents.split('\n'):
-            if '<td align="right">' in line:
-                count += 1
-        return (count - 1) / 2
-    except:
+    page = requests.get('http://api.eve-central.com/api/route/from/{}/to/{}'.format(start, end)).text
+    if 'An internal error occurred' in page:
         return -1
+    else:
+        return len(json.loads(page))
 
 
 @blueprint.route('/system/<system>/kills')
