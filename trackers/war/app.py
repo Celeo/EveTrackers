@@ -37,13 +37,14 @@ def index():
 def kill(kill_id, hashcode):
     """ View: Killmail page """
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
-    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
+    item_count = len(js['victim']['items'])
+    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js, item_count=item_count)
 
 
-@blueprint.route('/cost/<item_id>')
-def item_cost(item_id):
+@blueprint.route('/cost/<item_id>/<qty>')
+def item_cost(item_id, qty):
     """ AJAX View: Item cost """
-    return str('{:,}'.format(float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(item_id)).text)).find('marketstat/type/buy/avg').text)))
+    return str('{:,}'.format(float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(item_id)).text)).find('marketstat/type/buy/avg').text) * float(qty)))
 
 
 # update code - needs to be converted to actual DB models instead of loose objects
