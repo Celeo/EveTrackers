@@ -6,6 +6,12 @@ The **site** app is for life in wormholes, tracking anomalies/signatures/wormhol
 
 The **op** app is for tracking operations and payouts.
 
+The **fuel** app is for tracking when towers will run out of fuel.
+
+The **corp** app (WIP) is for tracking corporation members.
+
+The **war** app (WIP) is for quickly viewing killmails on the web.
+
 # License
 
 See the included LICENSE.md file for the license.

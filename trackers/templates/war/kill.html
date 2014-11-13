@@ -2,12 +2,35 @@
 
 {% block head %}
 <script type="text/javascript">
+    var item_count = {{ item_count }};
     $(document).ready(function() {
-        $('.load_image').each(function(e) {
+        $('.load_image').each(function(index) {
             $(this).html('<img src="' + $(this).attr('img_src') + '">');
         });
-        $('.load_price').each(function(e) {
-            $(this).load('/war/cost/' + $(this).attr('id'));
+        $('.load_price').each(function(index) {
+            var td = $(this);
+            $.ajax({
+                type: 'GET',
+                url: '/war/cost/' + $(this).attr('id') + '/' + $(this).attr('qty'),
+                data: {},
+                success: function (data) {
+                    td.text(data);
+                    data = parseFloat(data);
+                    item_count --;
+                    if (item_count === -1) {
+                        var total = 0.00;
+                        $('.dropped').each(function(index) {
+                            total += parseFloat($(this).text());
+                        });
+                        $('#dropped').text(total);
+                        total = 0.00;
+                        $('.destroyed').each(function(index) {
+                            total += parseFloat($(this).text());
+                        });
+                        $('#destroyed').text(total);
+                    }
+                }
+            });
         });
     });
 </script>
@@ -31,17 +54,18 @@
 </p>
 
 <div id="overview" class="well" style="padding: 2em;">
-    <strong>$victim_name</strong> died to <strong>$attacker_count</strong> attackers on <strong>$date</strong>
+    <strong>{{ js['victim']['character']['name'] }}</strong> died to <strong>{{ js['attackerCount'] }}</strong> 
+    attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong>
 </div>
 
 <table class="table">
     <thead>
         <tr>
             <th>Item</th>
-            <th>Dropped</th>
-            <th>Destroyed</th>
+            <th class="center">Dropped</th>
+            <th class="center">Destroyed</th>
             <th>Image</th>
-            <th>Cost Per</th>
+            <th>Cost</th>
         </tr>
     </thead>
     <tbody>
@@ -50,15 +74,16 @@
             <td class="center">-</td>
             <td class="center">-</td>
             <td class="load_image" img_src="http://image.eveonline.com/Type/{{ js['victim']['shipType']['id'] }}_64.png"></td>
-            <td class="load_price" id="{{ js['victim']['shipType']['id'] }}"></td>
+            <td><span class="load_price" id="{{ js['victim']['shipType']['id'] }}" qty="1"></td>
         </tr>
         {% for item in js['victim']['items'] %}
-        <tr>
-            <td class="{% if 'quantityDropped' in item or not 'quantityDestroyed' in item and item['quantityDropped'] > item['quantityDestroyed'] %}bg-success{% else %}bg-danger{% endif %}">{{ item['itemType']['name'] }}</td>
-            <td class="center">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
-            <td class="center">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
+        <tr class="{% if 'quantityDropped' in item or not 'quantityDestroyed' in item and item['quantityDropped'] > item['quantityDestroyed'] %}bg-success{% else %}bg-danger{% endif %}">
+            <td>{{ item['itemType']['name'] }}</td>
+            <td class="center dropped">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
+            <td class="center destroyed">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
             <td class="load_image" img_src="http://image.eveonline.com/Type/{{ item['itemType']['id'] }}_32.png"></td>
-            <td class="load_price" id="{{ item['itemType']['id'] }}"></td>
+            <td class="load_price {% if 'quantityDropped' in item %}dropped{% else %}destroyed{% endif %}" id="{{ item['itemType']['id'] }}" 
+                qty="{% if 'quantityDropped' in item %}{{ item['quantityDropped'] }}{% else %}{{ item['quantityDestroyed'] }}{% endif %}"></td>
         </tr>
         {% endfor %}
         <tr>
@@ -66,14 +91,14 @@
             <td></td>
             <td></td>
             <td class="center"><strong>Total Dropped</strong></td>
-            <td>?</td>
+            <td id="dropped"></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
             <td class="center"><strong>Total Destroyed</strong></td>
-            <td>?</td>
+            <td id="destroyed"></td>
         </tr>
     </tbody>
 </table>
