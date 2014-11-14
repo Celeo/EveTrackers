@@ -4,8 +4,16 @@
 
 <h3>Tower Fuel Tracker</h3>
 
+<br />
+
 <div>
-    <div class="bg-info padding-tiny">
+    <div class="alert alert-warning">
+        <p>
+            If you want your towers to show up here, give Celeo a Character API Key with Notifications enabled 
+            for a character that receives POS tower fuel notifications.
+        </p>
+    </div>
+    <div class="alert alert-info">
     {% for m in message %}
         {{ m }}</br >
     {% endfor %}

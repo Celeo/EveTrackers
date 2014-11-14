@@ -48,11 +48,6 @@
 
 <h2>Kill Page</h2>
 
-<p>
-    <strong>Kill id</strong>: {{ kill_id }}<br />
-    <strong>Hash code</strong>: {{ hashcode }}</br >
-</p>
-
 <div id="overview" class="well" style="padding: 2em;">
     <strong>{{ js['victim']['character']['name'] }}</strong> died to <strong>{{ js['attackerCount'] }}</strong> 
     attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong>
