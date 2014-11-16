@@ -21,7 +21,6 @@ app_settings['ALLIANCE'] = app.config['ALLIANCE']
 app_settings['HOME_SYSTEM'] = app.config['HOME_SYSTEM']
 app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
 app_settings['NOTIFICATION_KEYS'] = app.config['NOTIFICATION_KEYS']
-app_settings['KILLMAIL_KEYS'] = app.config['KILLMAIL_KEYS']
 app_settings['ADMINS'] = app.config['ADMINS']
 
 # import blueprints

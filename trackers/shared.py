@@ -5,13 +5,7 @@ db = SQLAlchemy()
 from flask.ext.socketio import SocketIO
 socketio = SocketIO()
 
-app_settings = {
-    'ALLIANCE': '',
-    'HOME_SYSTEM': '',
-    'SYSTEM_RENAMES': {},
-    'NOTIFICATION_KEYS': (),
-    'ADMINS': []
-}
+app_settings = {}
 
 class InGameBrowser(dict):
 

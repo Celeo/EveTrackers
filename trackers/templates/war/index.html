@@ -4,4 +4,12 @@
 
 <h2>War Tracker</h2>
 
+<h4>Recorded killmails:</h4>
+
+<p>
+{% for kill in kills %}
+    {{ loop.index }}. {{ kill.kill_id }}<br />
+{% endfor %}
+</p>
+
 {% endblock %}
