@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 import requests, json
+from datetime import datetime
 from lxml import etree
 from trackers.shared import db
 from .models import *
@@ -22,10 +23,18 @@ def kill(kill_id, hashcode):
     if ('message' in js and js['message'] == 'Invalid killmail ID or hash'):
         return 'Invalid killmail ID or hash'
     if Killmail.query.filter_by(kill_id=kill_id, hashcode=hashcode).count() == 0:
-        db.session.add(Killmail(kill_id, hashcode))
+        date = datetime.strptime(js['killTime'], '%Y.%m.%d %H:%M:%S')
+        db.session.add(Killmail(kill_id, hashcode, date, js['solarSystem']['name'], js['victim']['character']['name'], js['attackerCount']))
         db.session.commit()
+    # items in js aren't listed together - dropped and destroyed are separate; need to combine
     item_count = len(js['victim']['items'])
     return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js, item_count=item_count)
+
+
+@blueprint.route('/format/<f>')
+def format_price(f):
+    """ AJAX View: Format a number """
+    return '{:,}'.format(float(f))
 
 
 @blueprint.route('/cost/<item_id>/<qty>')

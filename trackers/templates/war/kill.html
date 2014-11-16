@@ -18,16 +18,24 @@
                     data = parseFloat(data);
                     item_count --;
                     if (item_count === -1) {
+                        // $('#table_items tr').children('td.center.dropped').each(function(i) { console.log($(this).text()); })
+                        // $('#table_items tr').each(function(i) { console.log(parseFloat($(this).children('td.dropped.center').text()) * parseFloat($(this).children('td.dropped.load_price').text())); });
+                        // $('#table_items tr').each(function(i) { console.log(parseFloat($(this).children('td.destroyed.center').text()) * parseFloat($(this).children('td.destroyed.load_price').text())); });
+
                         var total = 0.00;
-                        $('.dropped').each(function(index) {
-                            total += parseFloat($(this).text());
+                        $('#table_items tr').each(function(i) {
+                            var row_total = parseFloat($(this).children('td.dropped.center').text()) * parseFloat($(this).children('td.dropped.load_price').text());
+                            if (!isNaN(row_total))
+                                total += row_total;
                         });
-                        $('#dropped').text(total);
+                        $('#dropped').load('/war/format/' + total);
                         total = 0.00;
-                        $('.destroyed').each(function(index) {
-                            total += parseFloat($(this).text());
+                        $('#table_items tr').each(function(i) {
+                            var row_total = parseFloat($(this).children('td.destroyed.center').text()) * parseFloat($(this).children('td.destroyed.load_price').text());
+                            if (!isNaN(row_total))
+                                total += row_total;
                         });
-                        $('#destroyed').text(total);
+                        $('#destroyed').load('/war/format/' + total);
                     }
                 }
             });
@@ -48,12 +56,21 @@
 
 <h2>Kill Page</h2>
 
+<!-- Overview -->
+
+<br />
+
 <div id="overview" class="well" style="padding: 2em;">
     <strong>{{ js['victim']['character']['name'] }}</strong> died to <strong>{{ js['attackerCount'] }}</strong> 
-    attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong>
+    attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong> in <strong>{{ js['solarSystem']['name'] }}</strong> 
+    after taking <strong>{{ js['victim']['damageTaken']|formatcommas }}</strong> damage
 </div>
 
-<table class="table">
+<!-- Items -->
+
+<h3>Items</h3>
+
+<table class="table" id="table_items">
     <thead>
         <tr>
             <th>Item</th>
@@ -66,8 +83,8 @@
     <tbody>
         <tr>
             <td>{{ js['victim']['shipType']['name'] }}</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
+            <td class="center dropped">0</td>
+            <td class="center destroyed">1</td>
             <td class="load_image" img_src="http://image.eveonline.com/Type/{{ js['victim']['shipType']['id'] }}_64.png"></td>
             <td><span class="load_price" id="{{ js['victim']['shipType']['id'] }}" qty="1"></td>
         </tr>
@@ -95,6 +112,31 @@
             <td class="center"><strong>Total Destroyed</strong></td>
             <td id="destroyed"></td>
         </tr>
+    </tbody>
+</table>
+
+<!-- Attackers -->
+
+<h3>Attackers</h3>
+
+<table class="table" id="table_attackers">
+    <thead>
+        <th>Name</th>
+        <th>Corp</th>
+        <th>Ship</th>
+        <th>Weapon</th>
+        <th>Damage Dealt</th>
+    </thead>
+    <tbody>
+    {% for attacker in js['attackers'] %}
+        <tr{% if attacker['finalBlow'] == True %} class="bg-info"{% endif %}>
+            <td>{{ attacker['character']['name'] }}</td>
+            <td>{{ attacker['corporation']['name'] }}</td>
+            <td>{{ attacker['shipType']['name'] }}</td>
+            <td>{{ attacker['weaponType']['name'] }}</td>
+            <td>{{ attacker['damageDone']|formatcommas }}</td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
 

@@ -4,12 +4,27 @@
 
 <h2>War Tracker</h2>
 
-<h4>Recorded killmails:</h4>
+<br />
 
-<p>
-{% for kill in kills %}
-    {{ loop.index }}. {{ kill.kill_id }}<br />
-{% endfor %}
-</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Died</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">System</th>
+            <th class="text-center">Attacker count</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for kill in kills %}
+        <tr>
+            <td><a href="{{ url_for('.kill', kill_id=kill.kill_id, hashcode=kill.hashcode) }}">{{ kill.victim }}</a></td>
+            <td class="text-center">{{ kill.date }}</td>
+            <td class="text-center">{{ kill.system }}</td>
+            <td class="text-center">{{ kill.attacker_count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
