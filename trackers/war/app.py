@@ -19,25 +19,45 @@ def index():
 @blueprint.route('/<kill_id>,<hashcode>')
 def kill(kill_id, hashcode):
     """ View: Killmail page """
+    # get data from CREST
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
+
+    # sanity check
     if ('message' in js and js['message'] == 'Invalid killmail ID or hash'):
         return 'Invalid killmail ID or hash'
+
+    # local storage of id/hash
     if Killmail.query.filter_by(kill_id=kill_id, hashcode=hashcode).count() == 0:
         date = datetime.strptime(js['killTime'], '%Y.%m.%d %H:%M:%S')
         db.session.add(Killmail(kill_id, hashcode, date, js['solarSystem']['name'], js['victim']['character']['name'], js['attackerCount']))
         db.session.commit()
-    # items in js aren't listed together - dropped and destroyed are separate; need to combine
-    item_count = len(js['victim']['items'])
-    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js, item_count=item_count)
 
+    # calculate all needed price data and group items
+    items, item_ids = {}, {}
+    for item in js['victim']['items']:
+        if not item['itemType']['name'] in items:
+            item['quantityDropped'] = item['quantityDropped'] if 'quantityDropped' in item else 0
+            item['quantityDestroyed'] = item['quantityDestroyed'] if 'quantityDestroyed' in item else 0
+            items[item['itemType']['name']] = item
+        else:
+            items[item['itemType']['name']]['quantityDropped'] += item['quantityDropped'] if 'quantityDropped' in item else 0
+            items[item['itemType']['name']]['quantityDestroyed'] += item['quantityDestroyed'] if 'quantityDestroyed' in item else 0
+    for item in items.values():
+        item_ids[item['itemType']['id']] = item['itemType']['name']
+    tree = etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?usesystem=30000142' + ''.join(['&typeid={}'.format(item_id) for item_id in item_ids.keys()])).text))
+    for item in tree.find('marketstat').getchildren():
+        items[item_ids[int(item.attrib['id'])]]['pricePer'] = float(item.find('sell/avg').text)
+    total_dropped, total_destroyed = 0.0, 0.0
+    for item in items.values():
+        total_dropped += float(item['quantityDropped']) * float(item['pricePer'])
+        total_destroyed += float(item['quantityDestroyed']) * float(item['pricePer'])
 
-@blueprint.route('/format/<f>')
-def format_price(f):
-    """ AJAX View: Format a number """
-    return '{:,}'.format(float(f))
+    # price of ship
+    ship_cost = float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(js['victim']['shipType']['id'])).text)).find('marketstat/type/sell/avg').text)
+    total_destroyed += ship_cost
 
-
-@blueprint.route('/cost/<item_id>/<qty>')
-def item_cost(item_id, qty):
-    """ AJAX View: Item cost """
-    return str('{:,}'.format(float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(item_id)).text)).find('marketstat/type/buy/avg').text) * float(qty)))
+    # inject modified JSON into the original, overwriting the previous and incomplete data
+    js['victim']['shipType']['pricePer'] = ship_cost
+    js['totalDropped'], js['totalDestroyed'] = total_dropped, total_destroyed
+    js['victim']['items'] = items.values()
+    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
