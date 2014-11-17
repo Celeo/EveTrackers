@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for, request
 import requests, json
 from datetime import datetime
 from lxml import etree
@@ -61,3 +61,9 @@ def kill(kill_id, hashcode):
     js['totalDropped'], js['totalDestroyed'] = total_dropped, total_destroyed
     js['victim']['items'] = items.values()
     return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
+
+@blueprint.route('/uriconvert')
+def uri_convert():
+    uri = request.args.get('uri', None)
+    if not uri: return redirect(url_for('.index'))
+    return redirect(url_for('.kill', kill_id=uri.split('/')[4], hashcode=uri.split('/')[5]))
