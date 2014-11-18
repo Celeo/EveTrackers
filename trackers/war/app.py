@@ -16,9 +16,14 @@ def index():
     return render_template('war/index.html', kills=Killmail.query.all())
 
 
-@blueprint.route('/<kill_id>,<hashcode>')
+@blueprint.route('/<kill_id>/<hashcode>')
 def kill(kill_id, hashcode):
     """ View: Killmail page """
+    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode)
+
+
+@blueprint.route('/kill_info/<kill_id>/<hashcode>')
+def kill_info(kill_id, hashcode):
     # get data from CREST
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
 
@@ -65,11 +70,12 @@ def kill(kill_id, hashcode):
         if not 'shipType' in attacker:
             attacker['shipType'] = { 'name': '?' }
 
-    # inject modified JSON into the original, overwriting the previous and incomplete data
+    # inject modified JSON into the original, overwriting the previous data
     js['victim']['shipType']['pricePer'] = ship_cost
     js['totalDropped'], js['totalDestroyed'] = total_dropped, total_destroyed
     js['victim']['items'] = items.values()
-    return render_template('war/kill.html', kill_id=kill_id, hashcode=hashcode, js=js)
+    return render_template('war/kill_info.html', js=js)
+
 
 @blueprint.route('/uriconvert')
 def uri_convert():

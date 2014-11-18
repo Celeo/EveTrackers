@@ -3,10 +3,13 @@
 {% block head %}
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#kill-info').load("{{ url_for('.kill_info', kill_id=kill_id, hashcode=hashcode) }}", loadImages);
+    });
+    function loadImages() {
         $('.load_image').each(function(index) {
             $(this).html('<a href="http://eve-central.com/home/quicklook.html?typeid=' + $(this).attr('itemid') + '"><img src="' + $(this).attr('imgsrc') + '"></a>');
         });
-    });
+    }
 </script>
 <style>
     td.center {
@@ -20,87 +23,12 @@
 
 {% block content %}
 
-<!-- Overview -->
-
-<br />
-
-<div id="overview" class="well text-center" style="padding: 2em;">
-    <strong>{{ js['victim']['character']['name'] }}</strong> in a <strong>{{ js['victim']['shipType']['name'] }}</strong> died to <strong>{{ js['attackerCount'] }}</strong> 
-    attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong> in <strong>{{ js['solarSystem']['name'] }}</strong> 
-    after taking <strong>{{ js['victim']['damageTaken']|formatcommas }}</strong> damage
+<div id="kill-info">
+    <div class="jumbotron">
+        <h2 style="font-color: gray;">
+            Loading ...
+        </h2>
+    </div>
 </div>
-
-<!-- Items -->
-
-<h3>Items</h3>
-
-<table class="table" id="table_items">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th></th>
-            <th class="text-center">Dropped</th>
-            <th class="text-center">Destroyed</th>
-            <th>Price Per</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="bg-danger">
-            <td class="load_image" imgsrc="http://image.eveonline.com/Type/{{ js['victim']['shipType']['id'] }}_64.png" itemid="{{ js['victim']['shipType']['id'] }}"></td>
-            <td>{{ js['victim']['shipType']['name'] }}</td>
-            <td class="text-center dropped"></td>
-            <td class="text-center destroyed"></td>
-            <td class="text-center">{{ js['victim']['shipType']['pricePer']|formatcommas }}</td>
-        </tr>
-        {% for item in js['victim']['items'] %}
-        <tr class="{% if item['quantityDropped'] > item['quantityDestroyed'] %}bg-success{% else %}bg-danger{% endif %}">
-            <td class="load_image" imgsrc="http://image.eveonline.com/Type/{{ item['itemType']['id'] }}_32.png" itemid="{{ item['itemType']['id'] }}"></td>
-            <td>{{ item['itemType']['name'] }}</td>
-            <td class="text-center dropped">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
-            <td class="text-center destroyed">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
-            <td class="text-center">{{ item['pricePer']|formatcommas }}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="text-center bg-success"><strong>Total Dropped</strong></td>
-            <td id="dropped" class="bg-success"><strong>{{ js['totalDropped']|formatcommas }}</strong></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="text-center bg-danger"><strong>Total Destroyed</strong></td>
-            <td id="destroyed" class="bg-danger"><strong>{{ js['totalDestroyed']|formatcommas }}</strong></td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- Attackers -->
-
-<h3>Attackers</h3>
-
-<table class="table" id="table_attackers">
-    <thead>
-        <th>Name</th>
-        <th>Corp</th>
-        <th>Ship</th>
-        <th>Weapon</th>
-        <th>Damage Dealt</th>
-    </thead>
-    <tbody>
-    {% for attacker in js['attackers'] %}
-        <tr{% if attacker['finalBlow'] == True %} class="bg-info"{% endif %}>
-            <td>{{ attacker['character']['name'] }}</td>
-            <td>{{ attacker['corporation']['name'] }}</td>
-            <td>{{ attacker['shipType']['name'] }}</td>
-            <td>{{ attacker['weaponType']['name'] }}</td>
-            <td>{{ attacker['damageDone']|formatcommas }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
 
 {% endblock %}
