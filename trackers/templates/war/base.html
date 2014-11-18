@@ -44,6 +44,7 @@
                     </div>
                     <button type="submit" class="btn btn-default">View Kill</button>
                 </form>
+                <li><a onclick="$('#myModal').modal('toggle');">How do I get a URI?</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             {% if not displayname == 'None' %}
@@ -89,6 +90,31 @@
 </footer>
 </div>
 {% block loadLaterJavascript %}{% endblock %}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">How to get a CREST URI</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    While viewing the killmail (from your character panel, corporation panel, or killmail link), click the settings menu 
+                    button on the upper-leftmost corner of the killmail panel. Click the option <i>Copy External Kill Link</i>, and that 
+                    will copy the link you need to your clipboard. Paste that link into the navbar's textbox and click the <i>View Kill</i> button.
+                </p>
+            </div>
+            <div class="modal_info" hidden>
+                <label id="clickedType"></label>
+                <label id="clickedID"></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 
