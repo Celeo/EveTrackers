@@ -25,10 +25,10 @@
     <tbody>
         <tr>
             <td class="load_image" imgsrc="http://image.eveonline.com/Type/{{ js['victim']['shipType']['id'] }}_64.png" itemid="{{ js['victim']['shipType']['id'] }}"></td>
-            <td style="vertical-align: middle;">{{ js['victim']['shipType']['name'] }}</td>
+            <td>{{ js['victim']['shipType']['name'] }}</td>
             <td class="text-center dropped"></td>
             <td class="text-center destroyed"></td>
-            <td class="text-left" style="vertical-align: middle;"><strong>{{ js['victim']['shipType']['pricePer']|formatcommas }}</strong></td>
+            <td class="text-left"><strong>{{ js['victim']['shipType']['pricePer']|formatcommas }}</strong></td>
         </tr>
         {% for item in js['victim']['items'] %}
         <tr>
