@@ -56,6 +56,13 @@ def kill(kill_id, hashcode):
     ship_cost = float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(js['victim']['shipType']['id'])).text)).find('marketstat/type/sell/avg').text)
     total_destroyed += ship_cost
 
+    # fix for npc attackers not having names
+    for attacker in js['attackers']:
+        if not 'character' in attacker:
+            attacker['character'] = { 'name': '' }
+            attacker['corporation'] = attacker['faction']
+            attacker['weaponType'] = { 'name': '?' }
+
     # inject modified JSON into the original, overwriting the previous and incomplete data
     js['victim']['shipType']['pricePer'] = ship_cost
     js['totalDropped'], js['totalDestroyed'] = total_dropped, total_destroyed
