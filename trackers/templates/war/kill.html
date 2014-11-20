@@ -3,7 +3,17 @@
 {% block head %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#kill-info').load("{{ url_for('.kill_info', kill_id=kill_id, hashcode=hashcode) }}", loadImages);
+        $.ajax({
+            url: "{{ url_for('.kill_info', kill_id=kill_id, hashcode=hashcode) }}",
+            type: 'GET',
+            success: function(data) {
+                $('#kill-info').html(data);
+                loadImages();
+            },
+            error: function(data) {
+                $('#kill-info .jumbotron').html('<h2 class="text-center" style="color: darkred">Whoops! Something went wrong with the parsing!</h2>');
+            }
+        });
     });
     function loadImages() {
         $('.load_image').each(function(index) {
