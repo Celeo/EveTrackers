@@ -64,11 +64,14 @@ def kill_info(kill_id, hashcode):
     # fix for missing data
     for attacker in js['attackers']:
         if not 'character' in attacker:
-            attacker['character'] = { 'name': '' }
-            attacker['corporation'] = attacker['faction']
+            attacker['character'] = { 'name': '?' }
+            if 'faction' in attacker:
+                attacker['corporation'] = attacker['faction']
             attacker['weaponType'] = { 'name': '?' }
         if not 'shipType' in attacker:
             attacker['shipType'] = { 'name': '?' }
+        if not 'weaponType' in attacker:
+            attacker['weaponType'] = { 'name': '?' }
 
     # inject modified JSON into the original, overwriting the previous data
     js['victim']['shipType']['pricePer'] = ship_cost
