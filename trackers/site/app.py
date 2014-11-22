@@ -898,6 +898,7 @@ def in_game_player_system():
     # get this user's current system and ship via the Eve IGB
     current = eveigb['Eve-Solarsystemname']
     ship = eveigb['Eve-Shiptypename']
+    shipname = eveigb['Eve-Shipname']
 
     # check if this user has just started using this page
     display_name = _name()
@@ -911,6 +912,7 @@ def in_game_player_system():
         last_system[display_name]['current'] = current
         last_system[display_name]['time'] = datetime.utcnow()
         last_system[display_name]['ship'] = ship
+        last_system[displayname]['shipname'] = shipname
         _notify_change('locations:' + _get_player_locations())
         return 'Tracking starting, with current system = ' + current
     last = last_system[display_name]['current']
@@ -925,6 +927,7 @@ def in_game_player_system():
     # update last_system with current data
     last_system[display_name]['current'] = current
     last_system[display_name]['ship'] = ship
+    last_system[display_name]['shipname'] = shipname
 
     # check if this user has moved in at last 1 w-space system this jump
     if not re.match(r'^J\d{6}$', last) and not re.match(r'^J\d{6}$', current):
@@ -932,7 +935,6 @@ def in_game_player_system():
 
     # notify index page viewers of the change
     _notify_change('locations:' + _get_player_locations())
-    print('Notify locations')
 
     # check if a wormhole for this user's movement already exists
     for wormhole in Wormhole.objects.filter(opened=True, closed=False):
@@ -957,7 +959,7 @@ def _get_player_locations():
         if (datetime.utcnow() - time_).seconds > 60:
             remove.append(entry)
         else:
-            ret.append("{} ({}) in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['current']))
+            ret.append("{} ({} {}) in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['shipname'], last_system[entry]['current']))
     for r in remove:
         last_system.pop(r)
     if len(ret) > 0:
