@@ -3,12 +3,13 @@ from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from shared import *
 
 # flask
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
+app.permanent_session_lifetime = timedelta(days=14)
 
 
 # flask-sqlalchemy
