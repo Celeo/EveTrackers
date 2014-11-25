@@ -920,14 +920,14 @@ def in_game_player_system():
     #  update last_system with current timestamp
     last_system[display_name]['time'] = datetime.utcnow()
 
-    # check if this user has not moved since the last AJAX call
-    if last == current:
-        return 'No movement'
-
     # update last_system with current data
     last_system[display_name]['current'] = current
     last_system[display_name]['ship'] = ship
     last_system[display_name]['shipname'] = shipname
+
+    # check if this user has not moved since the last AJAX call
+    if last == current:
+        return 'No movement. `{}` `{}` `{}`'.format(last_system[display_name]['current'], last_system[display_name]['ship'], last_system[display_name]['shipname'])
 
     # check if this user has moved in at last 1 w-space system this jump
     if not re.match(r'^J\d{6}$', last) and not re.match(r'^J\d{6}$', current):
@@ -959,12 +959,12 @@ def _get_player_locations():
         if (datetime.utcnow() - time_).seconds > 60:
             remove.append(entry)
         else:
-            ret.append("{} ({} {}) in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['shipname'], last_system[entry]['current']))
+            ret.append("{} ({} '{}') in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['shipname'], last_system[entry]['current']))
     for r in remove:
         last_system.pop(r)
     if len(ret) > 0:
         ret[len(ret) - 1] = ret[len(ret) - 1][:-8]
-    return ''.join(r for r in ret)
+    return ''.join(r for r in ret) if ret else 'No players in space'
 
 
 @blueprint.route('/changelog')

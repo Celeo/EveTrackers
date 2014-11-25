@@ -1,11 +1,12 @@
 from flask.ext.sqlalchemy import SQLAlchemy
-
 db = SQLAlchemy()
 
 from flask.ext.socketio import SocketIO
 socketio = SocketIO()
 
+
 app_settings = {}
+
 
 class InGameBrowser(dict):
 
@@ -37,4 +38,3 @@ class InGameBrowser(dict):
 
     def __repr__(self):
         return '<InGameBrowser {} {} {}>'.format(self.is_igb(), self.is_trusted(), self.is_valid())
-
