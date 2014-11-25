@@ -912,7 +912,7 @@ def in_game_player_system():
         last_system[display_name]['current'] = current
         last_system[display_name]['time'] = datetime.utcnow()
         last_system[display_name]['ship'] = ship
-        last_system[displayname]['shipname'] = shipname
+        last_system[display_name]['shipname'] = shipname
         _notify_change('locations:' + _get_player_locations())
         return 'Tracking starting, with current system = ' + current
     last = last_system[display_name]['current']
@@ -920,21 +920,21 @@ def in_game_player_system():
     #  update last_system with current timestamp
     last_system[display_name]['time'] = datetime.utcnow()
 
+    # check if this user has not moved since the last AJAX call
+    if last == current and last_system[display_name]['ship'] == ship and last_system[display_name]['shipname'] == shipname:
+        return 'No change. `{}` `{}` `{}`'.format(last_system[display_name]['current'], last_system[display_name]['ship'], last_system[display_name]['shipname'])
+
     # update last_system with current data
     last_system[display_name]['current'] = current
     last_system[display_name]['ship'] = ship
     last_system[display_name]['shipname'] = shipname
 
-    # check if this user has not moved since the last AJAX call
-    if last == current:
-        return 'No movement. `{}` `{}` `{}`'.format(last_system[display_name]['current'], last_system[display_name]['ship'], last_system[display_name]['shipname'])
+    # notify index page viewers of the change(s)
+    _notify_change('locations:' + _get_player_locations())
 
     # check if this user has moved in at last 1 w-space system this jump
     if not re.match(r'^J\d{6}$', last) and not re.match(r'^J\d{6}$', current):
         return 'Both your last system and your current system are k-space.'
-
-    # notify index page viewers of the change
-    _notify_change('locations:' + _get_player_locations())
 
     # check if a wormhole for this user's movement already exists
     for wormhole in Wormhole.objects.filter(opened=True, closed=False):
