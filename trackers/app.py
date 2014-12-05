@@ -1,9 +1,11 @@
 from flask import Flask, redirect, url_for, request, session, render_template, flash
+from werkzeug.contrib.fixers import ProxyFix
 from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 import requests
 import eveapi
+import logging
 from datetime import datetime, timedelta
 from shared import *
 
@@ -11,6 +13,7 @@ from shared import *
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 app.permanent_session_lifetime = timedelta(days=14)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 # flask-sqlalchemy
@@ -21,6 +24,10 @@ db.init_app(app)
 # eveapi
 api = eveapi.EVEAPIConnection()
 
+# logger
+LOGGING_IP = 60
+logging.addLevelName(LOGGING_IP, 'IP')
+logging.basicConfig(filename='log.txt', level=LOGGING_IP)
 
 # settings
 app_settings['ALLIANCE'] = app.config['ALLIANCE']
@@ -161,6 +168,7 @@ def _preprocess():
     """ Reroute the user to the login prompt page if not logged in """
     if request.path.startswith('/static/'):
         return
+    app.logger.log(LOGGING_IP, 'User "' + _name() + '" viewing page "' + request.path + '" with IP ' + request.environ['REMOTE_ADDR'])
     if request.path in ['/noaccess', '/login', '/oauthauthorized', '/root_login']:
         return
     if not _can_access():
