@@ -3,6 +3,7 @@ from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 import requests
+import eveapi
 from datetime import datetime, timedelta
 from shared import *
 
@@ -17,12 +18,17 @@ db.app = app
 db.init_app(app)
 
 
+# eveapi
+api = eveapi.EVEAPIConnection()
+
+
 # settings
 app_settings['ALLIANCE'] = app.config['ALLIANCE']
 app_settings['HOME_SYSTEM'] = app.config['HOME_SYSTEM']
 app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
 app_settings['NOTIFICATION_KEYS'] = app.config['NOTIFICATION_KEYS']
 app_settings['ADMINS'] = app.config['ADMINS']
+app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 
 # import blueprints
 from trackers.site.app import blueprint as site
@@ -87,6 +93,7 @@ def oauth_authorized(resp):
         return redirect(url_for('site_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
+    session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['user_id']).characters[0].characterID).characters[0].corporationName
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
     return redirect(url_for('site_tracker.index'))
@@ -144,7 +151,8 @@ def _prerender():
 @app.before_request
 def _preprocess():
     """ Reroute the user to the login prompt page if not logged in """
-    print('Full path: ' + request.path)
+    if not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
+        return redirect(url_for('no_access'))
     if request.path.startswith('/static/'):
         return
     if request.path in ['/noaccess', '/login', '/oauthauthorized', '/root_login']:
@@ -176,6 +184,20 @@ def _format_commas(n):
 @app.route('/noaccess')
 def no_access():
     return render_template('no_access.html')
+
+
+@app.route('/update_approved_corporations')
+def update_approved_corporations():
+    app_settings['APPROVED_CORPORATIONS'] = ''
+    alliances = api.eve.AllianceList().alliances
+    corporation_ids = []
+    for alliance in alliances:
+        if alliance.name == app_settings['ALLIANCE']:
+            for corporation in alliance.memberCorporations:
+                corporation_ids.append(corporation.corporationID)
+    corporations = api.eve.CharacterNames(ids=corporation_ids).characters
+    app_settings['APPROVED_CORPORATIONS'] = [str(corporation.name) for corporation in corporations]
+    return 'Done'
 
 
 socketio.app = app
