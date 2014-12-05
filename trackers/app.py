@@ -93,7 +93,7 @@ def oauth_authorized(resp):
         return redirect(url_for('site_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
-    session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['user_id']).characters[0].characterID).characters[0].corporationName
+    session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['main_character']).characters[0].characterID).characters[0].corporationName
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
     return redirect(url_for('site_tracker.index'))
@@ -140,7 +140,8 @@ def _can_access():
     """ Returns if the user can access the resources at that page """
     if _name() == 'None':
         return False
-    if not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
+    if not 'corporation' in session or not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
+        print(session)
         session.clear()
         return False
     return True
