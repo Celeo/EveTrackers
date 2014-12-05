@@ -951,22 +951,23 @@ def in_game_player_system():
 
 def _get_player_locations():
     """ Return a list of all players in space """
-    ret = []
+    players = []
     remove = []
-    if len(last_system) == 0:
-        return ''
-    for entry in last_system:
-        time_ = last_system[entry]['time']
-        if (datetime.utcnow() - time_).seconds > 60:
-            remove.append(entry)
-        else:
-            ret.append("{} ({} '{}') in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['shipname'], last_system[entry]['current']))
-    for r in remove:
-        last_system.pop(r)
-    if len(ret) > 0:
-        ret[len(ret) - 1] = ret[len(ret) - 1][:-8]
-    ret = ''.join(r for r in ret) if ret else 'No players in space'
-    ret += ''.join(user + ', ' for user in set(active_users))[:-2]
+    ret = ''
+    if len(last_system) > 0:
+        for entry in last_system:
+            time_ = last_system[entry]['time']
+            if (datetime.utcnow() - time_).seconds > 60:
+                remove.append(entry)
+            else:
+                players.append("{} ({} '{}') in {}, &nbsp;".format(entry, last_system[entry]['ship'], last_system[entry]['shipname'], last_system[entry]['current']))
+        for r in remove:
+            last_system.pop(r)
+        if len(players) > 0:
+            players[:-1] = players[:-1][:-8]
+        ret += ''.join(r for r in players) if players else 'No players in space'
+    if active_users > 0:
+        ret += ''.join(user + ' [online], ' for user in set(active_users))[:-11]
     return ret
 
 
