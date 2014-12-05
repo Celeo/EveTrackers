@@ -119,6 +119,7 @@ def root_login():
         if (request.form['username'], request.form['password']) == app.config['ROOT_LOGIN']:
             session['oi_auth_token'] = 'root_login_page'
             session['oi_auth_user'] = app.config['ROOT_LOGIN'][0]
+            session['corporation'] = app_settings['APPROVED_CORPORATIONS'][0]
             session.permanent = True
             flash('You used the root login page to log into the trackers as {}'.format(app.config['ROOT_LOGIN'][0]), 'info')
             return redirect(url_for('site_tracker.index'))
@@ -137,7 +138,12 @@ def _name():
 
 def _can_access():
     """ Returns if the user can access the resources at that page """
-    return not _name() == 'None'
+    if _name() == 'None':
+        return False
+    if not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
+        session.clear()
+        return False
+    return True
 
 
 @app.context_processor
@@ -151,9 +157,6 @@ def _prerender():
 @app.before_request
 def _preprocess():
     """ Reroute the user to the login prompt page if not logged in """
-    if not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
-        session.clear()
-        return redirect(url_for('no_access'))
     if request.path.startswith('/static/'):
         return
     if request.path in ['/noaccess', '/login', '/oauthauthorized', '/root_login']:
