@@ -152,6 +152,7 @@ def _prerender():
 def _preprocess():
     """ Reroute the user to the login prompt page if not logged in """
     if not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
+        session.clear()
         return redirect(url_for('no_access'))
     if request.path.startswith('/static/'):
         return
