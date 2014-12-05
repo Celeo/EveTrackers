@@ -10,8 +10,9 @@ import json
 # flask
 blueprint = Blueprint('site_tracker', __name__, template_folder='templates/site', static_folder='static')
 
+
 last_system = {}
-sync_time = datetime.utcnow()
+active_users = []
 
 
 def _name():
@@ -964,7 +965,9 @@ def _get_player_locations():
         last_system.pop(r)
     if len(ret) > 0:
         ret[len(ret) - 1] = ret[len(ret) - 1][:-8]
-    return ''.join(r for r in ret) if ret else 'No players in space'
+    ret = ''.join(r for r in ret) if ret else 'No players in space'
+    ret += ''.join(user + ', ' for user in set(active_users))[:-2]
+    return ret
 
 
 @blueprint.route('/changelog')
@@ -1037,10 +1040,21 @@ def websocket_message(message):
 @socketio.on('connect', namespace='/site')
 def websocket_connect():
     """ Listener: Socket connection made """
-    pass
+    # users can have multiple tabs open - add duplicates to the 
+    # list but only notify first unique additions
+    name = _name()
+    notify = not name in active_users
+    active_users.append(name)
+    if notify:
+        _notify_change('locations:' + _get_player_locations())
 
 
 @socketio.on('disconnect', namespace='/site')
 def websocket_disconnect():
     """ Listener: Socket connection disconnected """
-    pass
+    # only remove the first instance in case the user has multiple tabs open, 
+    # and notify if the user is completely removed from the list
+    name = _name()
+    active_users.remove(name)
+    if not name in active_users:
+        _notify_change('locations:' + _get_player_locations())
