@@ -29,6 +29,7 @@ app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
 app_settings['NOTIFICATION_KEYS'] = app.config['NOTIFICATION_KEYS']
 app_settings['ADMINS'] = app.config['ADMINS']
 app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
+app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
 
 # import blueprints
 from trackers.site.app import blueprint as site
@@ -138,10 +139,10 @@ def _name():
 
 def _can_access():
     """ Returns if the user can access the resources at that page """
-    if _name() == 'None':
+    name = _name()
+    if name == 'None':
         return False
-    if not 'corporation' in session or not session['corporation'] in app_settings['APPROVED_CORPORATIONS']:
-        print(session)
+    if not 'corporation' in session or not session['corporation'] in app_settings['APPROVED_CORPORATIONS'] or name in app_settings['BANNED_USERS']:
         session.clear()
         return False
     return True
@@ -202,6 +203,7 @@ def update_approved_corporations():
                 corporation_ids.append(corporation.corporationID)
     corporations = api.eve.CharacterNames(ids=corporation_ids).characters
     app_settings['APPROVED_CORPORATIONS'] = [str(corporation.name) for corporation in corporations]
+    print(app_settings['APPROVED_CORPORATIONS'])
     return 'Done'
 
 

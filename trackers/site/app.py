@@ -1044,6 +1044,8 @@ def websocket_connect():
     # users can have multiple tabs open - add duplicates to the 
     # list but only notify first unique additions
     name = _name()
+    if name == 'None':
+        return
     notify = not name in active_users
     active_users.append(name)
     if notify:
