@@ -104,6 +104,7 @@ def oauth_authorized(resp):
     session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['main_character']).characters[0].characterID).characters[0].corporationName
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
+    app.logger.log(LOGGING_IP, 'User ' + session['oi_auth_user'] + ' has logged in under IP ' + request.environ['REMOTE_ADDR'])
     return redirect(url_for('site_tracker.index'))
 
 
