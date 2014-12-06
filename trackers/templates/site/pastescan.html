@@ -42,7 +42,11 @@ Paste
                 </tr>
                 {% for p in present %}
                 <tr>
+                    {% if not p.is_site_object() and p.end == system %}
+                    <td>{{ p.o_scanid }}</td>
+                    {% else %}
                     <td>{{ p.scanid }}</td>
+                    {% endif %}
                     {% if p.is_site_object() %}
                         <td><a href="{{ url_for('.site', id=p.id) }}" {% if newTab %}target="_blank"{% endif %}>Link</a></td>
                     {% else %}
@@ -65,7 +69,11 @@ Paste
                 </tr>
                 {% for n in notfound %}
                 <tr>
+                    {% if not n.is_site_object() and n.end == system %}
+                    <td>{{ n.o_scanid }}</td>
+                    {% else %}
                     <td>{{ n.scanid }}</td>
+                    {% endif %}
                     <td>
                     {% if n.is_site_object() %}
                         <a href="{{ url_for('.site', id=n.id) }}"{% if newTab %} target="_blank"{% endif %}>Link</a>
