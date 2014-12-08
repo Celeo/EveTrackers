@@ -98,6 +98,7 @@ def oauth_authorized(resp):
     data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token']).json()['user']
     if not data['auth_status'] in ['Internal', 'Protected']:
         flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
+        app.logger.log(LOGGING_IP, 'User ' + data['user_id'] + ' was denied access through an accountStatus of ' + data['auth_status'])
         return redirect(url_for('site_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
