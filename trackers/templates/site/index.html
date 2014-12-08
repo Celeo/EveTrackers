@@ -21,6 +21,9 @@ Index
             $('#notify_refresh').show();
         if (msg.data.lastIndexOf('update_locations:', 0) === 0)
             $('#graph_players').html(msg.data.split(':')[1]);
+        if (msg.data.lastIndexOf('kick:', 0) === 0)
+            if (msg.data.split(':')[1] == getDisplayName())
+                window.location.href = "{{ url_for('logout_page') }}";
     });
     $(document).ready(function() {
         setTimeout(socket.emit('sitetracker event', { data: 'player_locations' }), 1000);

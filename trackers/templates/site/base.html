@@ -53,6 +53,9 @@
             $("#tracking_progress").html("Tracking");
         {% endif %}
         });
+        function getDisplayName() {
+            return "{{ displayname }}";
+        }
     </script>
     {% block extraHead %}{% endblock %}
 </head>

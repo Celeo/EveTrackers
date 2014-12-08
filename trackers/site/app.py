@@ -1061,3 +1061,12 @@ def websocket_disconnect():
     active_users.remove(name)
     if not name in active_users:
         _notify_change('locations:' + _get_player_locations())
+
+
+@blueprint.route('/kick/<user>')
+def kick_user(user):
+    if not _name() in app_settings['ADMINS']:
+        return redirect(url_for('.index'))
+    socketio.emit('sitetracker response', { 'data': 'kick:' + user }, namespace='/site')
+    flash('User kicked', 'info')
+    return redirect(url_for('.index'))
