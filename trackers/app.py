@@ -203,6 +203,8 @@ def no_access():
 
 @app.route('/update_approved_corporations')
 def update_approved_corporations():
+    if not _name() in app_settings['ADMINS']:
+        return redirect(url_for('no_access'))
     app_settings['APPROVED_CORPORATIONS'] = ''
     alliances = api.eve.AllianceList().alliances
     corporation_ids = []
