@@ -967,6 +967,7 @@ def _get_player_locations():
             players[-1] = players[-1][:-8]
         ret += ''.join(r for r in players) if players else 'No players in space'
     if _name() in app_settings['ADMINS'] and active_users > 0:
+        ret += ' | '
         ret += ''.join(user + ' [online], ' for user in set(active_users))[:-2]
     return ret
 
