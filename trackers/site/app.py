@@ -3,6 +3,7 @@ from trackers.shared import *
 from .models import *
 from datetime import datetime
 from collections import Counter
+from sqlalchemy import and_, or_
 import requests
 import re
 import json
@@ -488,8 +489,8 @@ def paste():
                         notfound.remove(site)
                     found = True
                     present.append(site)
-                elif Wormhole.query.filter_by(scanid=newP.scanid, closed=False).count() > 0:
-                    wormhole = Wormhole.query.filter_by(scanid=newP.scanid, closed=False).first()
+                elif Wormhole.query.filter(and_(Wormhole.closed==False, or_(Wormhole.scanid==newP.scanid, Wormhole.o_scanid==newP.scanid))).count() > 0:
+                    wormhole = Wormhole.query.filter(and_(Wormhole.closed==False, or_(Wormhole.scanid==newP.scanid, Wormhole.o_scanid==newP.scanid))).first()
                     if (wormhole.start == system or wormhole.end == system):
                         if wormhole in notfound:
                             notfound.remove(wormhole)
