@@ -38,7 +38,7 @@ def kill_info(kill_id, hashcode):
         db.session.commit()
 
     # calculate all needed price data and group items
-    items, item_ids = {}, {}
+    items, item_ids, ship_cost, total_destroyed = {}, {}, 0.0, 0.0
     for item in js['victim']['items']:
         if not item['itemType']['name'] in items:
             item['quantityDropped'] = item['quantityDropped'] if 'quantityDropped' in item else 0
@@ -49,17 +49,18 @@ def kill_info(kill_id, hashcode):
             items[item['itemType']['name']]['quantityDestroyed'] += item['quantityDestroyed'] if 'quantityDestroyed' in item else 0
     for item in items.values():
         item_ids[item['itemType']['id']] = item['itemType']['name']
-    tree = etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?usesystem=30000142' + ''.join(['&typeid={}'.format(item_id) for item_id in item_ids.keys()])).text))
+    tree = etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?usesystem=30000142' + ''.join(['&typeid={}'.format(item_id) for item_id in item_ids.keys() + [js['victim']['shipType']['id']]])).text))
     for item in tree.find('marketstat').getchildren():
-        items[item_ids[int(item.attrib['id'])]]['pricePer'] = float(item.find('sell/avg').text)
+        if int(item.attrib['id']) == int(js['victim']['shipType']['id']):
+            ship_cost = float(item.find('sell/avg').text)
+            total_destroyed += ship_cost
+            pass
+        else:
+            items[item_ids[int(item.attrib['id'])]]['pricePer'] = float(item.find('sell/avg').text)
     total_dropped, total_destroyed = 0.0, 0.0
     for item in items.values():
         total_dropped += float(item['quantityDropped']) * float(item['pricePer'])
         total_destroyed += float(item['quantityDestroyed']) * float(item['pricePer'])
-
-    # price of ship
-    ship_cost = float(etree.fromstring(str(requests.get('http://eve-central.com/api/marketstat?typeid={}&usesystem=30000142'.format(js['victim']['shipType']['id'])).text)).find('marketstat/type/sell/avg').text)
-    total_destroyed += ship_cost
 
     # fix for missing data
     for attacker in js['attackers']:
