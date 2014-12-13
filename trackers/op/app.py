@@ -162,7 +162,7 @@ def payouts():
             db.session.commit()
             return 'Done - {} {} {} {}'.format(zero, full, amount, player.id)
     players = Player.query.order_by('-operation_id').order_by('complete').all()
-    names = ['{}-{}'.format(pl.operation.id, pl.name) for pl in players]
+    names = ['{}-{}'.format(pl.operation.id, pl.name) for pl in players if pl and pl.operation]
     return render_template('op/payouts.html', page='payout', players=players, names=names,
         api_enabled=ApiKey.query.count() > 0, apikeys=ApiKey.query.all(),
         operations=Operation.query.order_by('-id').all())

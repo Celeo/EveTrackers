@@ -256,13 +256,13 @@
                     </div>
                 </th>
             {% else %}
-                <td class="text-right">{{ player.get_share() }}</td>
+                <td class="text-right">{{ player.get_share()|formatcommas }}</td>
             {% endif %}
             </tr>
         {% endfor %}
             <tr id="playerrow_total">
                 <td></td>
-                <th class="text-center" id="tabletotalshares">{{ op.total_shares() }}</th>
+                <th class="text-center" id="tabletotalshares">{{ op.total_shares()|formatcommas }}</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -282,7 +282,7 @@
                 <h4>Loot</h4>
                 {% if op.locked or not bursar %}
                     <p>
-                        {{ op.loot }} isk
+                        {{ op.loot|formatcommas }} isk
                     </p>
                 {% else %}
                     <div class="form-inline">
