@@ -24,6 +24,7 @@ def kill(kill_id, hashcode):
 
 @blueprint.route('/kill_info/<kill_id>/<hashcode>')
 def kill_info(kill_id, hashcode):
+    """ AJAX View: Fetch the actual information about a kill to return to the calling page """
     # get data from CREST
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
 
@@ -83,6 +84,7 @@ def kill_info(kill_id, hashcode):
 
 @blueprint.route('/uriconvert')
 def uri_convert():
+    """ Redirect View: Parses the CREST URI, separates the id and hash, and redirects to the page for that kill """
     uri = request.args.get('uri', None)
     if not uri: return redirect(url_for('.index'))
     return redirect(url_for('.kill', kill_id=uri.split('/')[4], hashcode=uri.split('/')[5]))

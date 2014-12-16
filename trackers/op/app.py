@@ -15,6 +15,8 @@ api = eveapi.EVEAPIConnection()
 
 def _name():
     """ Returns the name of the user """
+    # the user's name on the site
+    # either their oauth name, their in-game character's name, or 'None' for users that don't have access
     if 'oi_auth_user' in session:
         return session['oi_auth_user']
     eveigb = InGameBrowser(request)
@@ -25,6 +27,8 @@ def _name():
 
 def _is_bursar():
     """ Returns if the user is a bursar """
+    # this app users character names instead of OAuth names, 
+    # so we need to get that name for the player and store it for later use
     name = _name()
     pan = PlayerAuthName.query.filter_by(username=name).first()
     if not pan:
@@ -53,6 +57,7 @@ def _prerender():
 @blueprint.route('/')
 def index():
     """ View: index page """
+    # show all operations to the user, ordering by their status
     operations = [op for op in Operation.query.filter_by(state='Not started').order_by('-id').all()]
     operations.extend(op for op in Operation.query.filter_by(state='In progress').order_by('-id').all())
     operations.extend(op for op in Operation.query.filter_by(state='Loot Collected').order_by('-id').all())
@@ -69,6 +74,7 @@ def index():
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
 def op(op_id):
     """ View: operation page """
+    # the operation page template is passed the op model and the total shares count initially - other data come from websockets
     operation = Operation.query.filter_by(id=op_id).first_or_404()
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
@@ -135,11 +141,13 @@ def payouts():
         return redirect(url_for('.index'))
     if request.method == 'POST':
         if 'name' in request.form:
+            # unused code?
             player = Player.query.filter_by(id=int(request.form['name'])).first()
             player.complete = player.paid >= player.get_share()
             db.session.commit()
             return player.get_share_formatted() + '-' + str(player.complete)
         if 'player' in request.form:
+            # paying players for an operation
             name = request.form['player']
             amount = float(request.form['amount']) if 'amount' in request.form and not request.form['amount'] == '' else 0.0
             full = 'payfull' in request.form and request.form['payfull'] and request.form['payfull'] == 'true'
@@ -161,6 +169,7 @@ def payouts():
                 player.complete = player.paid >= operation.get_share_for(player)
             db.session.commit()
             return 'Done - {} {} {} {}'.format(zero, full, amount, player.id)
+    # send models of players and their operations to the template
     players = Player.query.order_by('-operation_id').order_by('complete').all()
     names = ['{}-{}'.format(pl.operation.id, pl.name) for pl in players if pl and pl.operation]
     return render_template('op/payouts.html', page='payout', players=players, names=names,
@@ -173,6 +182,7 @@ def api_update():
     """ AJAX View: Update players paid from the api keys """
     if not _is_bursar():
         return redirect(url_for('.index'))
+    # uses the choosen EVE API key to search for payments to players
     keypair = ApiKey.query.filter_by(id=request.form['id'].split(' ')[0][1]).first()
     auth = api.auth(keyID=keypair.key, vCode=keypair.code)
     wallet = auth.corp.WalletJournal(accountKey=keypair.wallet)
@@ -199,6 +209,7 @@ def api_update():
 @blueprint.route('/review')
 def review():
     """ View: show metrics about player participation """
+    # basically the site app's stats page
     isk_per_player = Counter()
     srp = 0
     brg = 0
@@ -239,6 +250,7 @@ def websocket_message(message):
         increment and decrement commands don't simply return the source command;
         instead, they return a command with the now-current share count for the player.
     """
+    # operation page was moved from AJAX calls to websockets - this is that
     op_id = int(message['op_id'])
     operation = Operation.query.filter_by(id=op_id).first_or_404()
     if message['command'] == 'remove':
@@ -319,6 +331,7 @@ def websocket_message(message):
 
 
 def _message_clients(data):
+    """ Sends data to all connected websocket clients """
     socketio.emit('optracker response', data, namespace='/op')
 
 

@@ -49,6 +49,8 @@ from trackers.war.app import blueprint as war
 from trackers.site.models import *
 from trackers.op.models import *
 admin = Admin(app, 'Eve Trackers Admin Panel')
+# the default flask-admin doesn't have any permissions, so it's visible by anyone
+# this extension of ModelView restricts access to only site admins
 class MyModelView(ModelView):
     """ Overwrite default view to include access restrictions """
     def is_accessible(self):
@@ -85,12 +87,14 @@ oi_auth = oauth.remote_app('oi_auth',
 @oi_auth.tokengetter
 def get_oi_auth_token(token=None):
     """ Return oauth token """
+    # required method for flask-oauth
     return session.get('oi_auth_token')
 
 
 @app.route('/oauthauthorized')
 @oi_auth.authorized_handler
 def oauth_authorized(resp):
+    # required method for flask-oauth - performs the actual remote authorization
     """ Perform the "login validation" after oauth """
     if resp is None:
         flash('You denied the request to sign in', 'danger')
@@ -112,12 +116,15 @@ def oauth_authorized(resp):
 @app.route('/login')
 def login_page():
     """ View: Start oauth authorization """
+    # actual url that someone goes to to have flask-oauth attempt to log them in
     return oi_auth.authorize(callback='http://tracker.talkinlocal.org/oauthauthorized')
 
 
 @app.route('/logout')
 def logout_page():
     """ View: Delete the session cookie and redirect """
+    # login information is stored in the session
+    # to log a user out of the site, dump the session cookies
     session.clear()
     return redirect(url_for('no_access'))
 
@@ -125,6 +132,7 @@ def logout_page():
 @app.route('/root_login', methods=['GET', 'POST'])
 def root_login():
     """ View: Administrator login, bypassing the OAUTH login method """
+    # this method is used when debugging locally or when oauth is unaccessible
     if request.method == 'POST':
         if (request.form['username'], request.form['password']) == app.config['ROOT_LOGIN']:
             session['oi_auth_token'] = 'root_login_page'
@@ -138,6 +146,8 @@ def root_login():
 
 def _name():
     """ Returns the name of the user """
+    # the user's name on the site
+    # either their oauth name, their in-game character's name, or 'None' for users that don't have access
     if 'oi_auth_user' in session:
         return session['oi_auth_user']
     eveigb = InGameBrowser(request)
@@ -148,10 +158,12 @@ def _name():
 
 def _can_access():
     """ Returns if the user can access the resources at that page """
+    # checks first for the diplayname of the view (from their session contnents) and their stored corporation
     name = _name()
     if name == 'None':
         return False
     if not 'corporation' in session or not session['corporation'] in app_settings['APPROVED_CORPORATIONS'] or name in app_settings['BANNED_USERS']:
+        # protection against corporations leaving the alliance - we can force logouts of any user in a corporation not in the settings
         session.clear()
         return False
     return True
@@ -168,6 +180,7 @@ def _prerender():
 @app.before_request
 def _preprocess():
     """ Reroute the user to the login prompt page if not logged in """
+    # for any page in the app that isn't a static file or involved in logging in, only allow access to valid users
     if request.path.startswith('/static/'):
         return
     app.logger.log(LOGGING_IP, 'User "' + _name() + '" viewing page "' + request.path + '" with IP ' + request.environ['REMOTE_ADDR'])
@@ -199,11 +212,13 @@ def _format_commas(n):
 
 @app.route('/noaccess')
 def no_access():
+    # the catch-all invalid user notice page
     return render_template('no_access.html')
 
 
 @app.route('/update_approved_corporations')
 def update_approved_corporations():
+    # this method updates the valid corporations for the filtering by corporation security feature
     if not _name() in app_settings['ADMINS']:
         return redirect(url_for('no_access'))
     app_settings['APPROVED_CORPORATIONS'] = ''

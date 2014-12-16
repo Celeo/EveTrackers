@@ -18,6 +18,8 @@ active_users = []
 
 def _name():
     """ Returns the name of the user """
+    # the user's name on the site
+    # either their oauth name, their in-game character's name, or 'None' for users that don't have access
     if 'oi_auth_user' in session:
         return session['oi_auth_user']
     eveigb = InGameBrowser(request)
@@ -52,6 +54,7 @@ def index():
     """ View: index page """
     if request.method == 'POST':
         if 'graph_new_wormhole' in request.form:
+            # the canvas graph has a small wormhole quick-add form that can be used to add wormholes
             w = Wormhole(creator=_name(), scanid=request.form['scanid'].upper() if request.form['scanid'] else '?',
                 start=request.form['start'], end=request.form['end'], opened=True)
             if not _check_existing(_name(), 'wormhole', w):
@@ -60,6 +63,7 @@ def index():
                 _notify_change('tables')
                 _add_edit_counter(request, session)
                 flash('Wormhole added', 'info')
+        # the tables under the graph each have a row at the end of the current data for adding another of that model
         elif request.form['data_type'] == 'wormhole':
             w = Wormhole(creator=_name(), scanid=request.form['scanid'].upper() if request.form['scanid'] else '?',
                 start=request.form['start'], end=request.form['end'],
@@ -91,6 +95,7 @@ def index():
 @blueprint.route('/tables')
 def tables():
     """ AJAX View: Return the tables of sites and wormholes for the index page """
+    # the tables of current data are loaded via AJAX so they can be refreshed without reloading the entire index page
     sites = Site.query.filter_by(closed=False)
     wormholes = Wormhole.query.filter_by(closed=False)
     elapsed_timers = _get_elapsed_timers()
@@ -99,6 +104,7 @@ def tables():
 
 def _get_last_update():
     """ Returns a dict of info for the last time a user made an edit """
+    # internal method for getting the time of and user who made the last edit to the database
     site = Site.query.order_by('-id').first()
     sitesnap = SiteSnapshot.query.order_by('-id').first()
     wormhole = Wormhole.query.order_by('-id').first()
@@ -121,6 +127,7 @@ def _get_last_update():
 
 def _get_elapsed_timers():
     """ Return countdown timers for wormholes on the index page's tables """
+    # internal method for returning the incremental timers shown on the tables on the index page
     ret = {}
     now = datetime.utcnow()
     changed = False
@@ -164,6 +171,8 @@ def add():
     """ Add sites and wormholes to the database """
     if request.method == 'POST':
         if request.form['model_type'] == 'site':
+            # user clicked submit on the site form
+            # as long as that exact site doesn't exist, add the user's submission to the database
             data = [request.form[key] for key in ['scanid', 'name', 'type', 'system', 'notes']]
             opened = 'opened' in request.form
             closed = 'closed' in request.form
@@ -175,6 +184,7 @@ def add():
                 _add_edit_counter(request, session)
                 flash('Site added', 'info')
         else:
+            # like the site code above, but wormholes
             data = [request.form[key] for key in ['scanid', 'start', 'end', 'status', 'o_scanid', 'notes']]
             opened = 'opened' in request.form
             closed = 'closed' in request.form
@@ -186,9 +196,11 @@ def add():
                 _add_edit_counter(request, session)
                 flash('Wormholed added', 'info')
         if _get_settings(_name()).store_multiple:
+            # based on the user's settings, they're either redirected to the index page to see their contribution or back to the add page for more entry
             return redirect(url_for('.add') + '?model_type={}'.format(request.form['model_type']))
         else:
             return redirect(url_for('.index'))
+    # the paste page generates links to this add page with available data parsed from scanned pastes - this handles those values from the URL into the forms
     model_type = request.args.get('model_type', 'site')
     g_scanid = request.args.get('scanid', None)
     g_system = request.args.get('system', None)
@@ -236,6 +248,7 @@ def site(id):
     admin = _name() in app_settings['ADMINS']
     if request.method == 'POST':
         if 'admin_delete' in request.form and admin:
+            # this app allows site admins to immediately delete models from the database instead of the usual "close"
             db.session.delete(site)
             db.session.commit()
             _notify_change('tables')
@@ -249,6 +262,7 @@ def site(id):
 
 def _edit_site(site, request, session, in_line=False):
     """ Performs an edit on a site """
+    # the previous version of the model and the data from the edit are compared and all differences are noted
     changes = []
     if not site.scanid == request.form['scanid'].upper():
         changes.append('<b>Scanid</b>: {} -> {}'.format(site.scanid, request.form['scanid'].upper()))
@@ -272,6 +286,7 @@ def _edit_site(site, request, session, in_line=False):
             changes.append('<b>Closed</b>: {} -> {}'.format(site.closed, 'closed' in request.form))
             site.closed = 'closed' in request.form
     if len(changes) > 0:
+        # as long as the user changed something on the model, we generate a snapshot for their action
         snap = SiteSnapshot(site_id=site.id, snapper=_name(), changed=''.join(c + ', ' for c in changes)[:-2])
         site.snapshots.append(snap)
         db.session.commit()
@@ -279,9 +294,10 @@ def _edit_site(site, request, session, in_line=False):
         _add_edit_counter(request, session)
     return changes
 
+
 def _check_existing(user, model_type, model):
     """
-        Checks if an existing model matching already exists
+        Checks if an existing model matching already exists for closing from the index page
         If it does, then that model is opened if closed and this method returns True
         If no matching models exist, this method returns False
     """
@@ -350,6 +366,7 @@ def wormhole(id):
     wormhole = Wormhole.query.filter_by(id=id).first_or_404()
     admin = _name() in app_settings['ADMINS']
     if request.method == 'POST':
+        # this app allows site admins to immediately delete models from the database instead of the usual "close"
         if 'admin_delete' in request.form and admin:
             db.session.delete(wormhole)
             db.session.commit()
@@ -365,6 +382,7 @@ def wormhole(id):
 def _edit_wormhole(wormhole, request, session, in_line=False):
     """ Performs an edit on a wormhole """
     changes = []
+    # the previous version of the model and the data from the edit are compared and all differences are noted
     originally_open = not wormhole.closed
     if not wormhole.scanid == request.form['scanid'].upper():
         changes.append('<b>Scanid</b>: {} -> {}'.format(wormhole.scanid, request.form['scanid'].upper()))
@@ -398,6 +416,7 @@ def _edit_wormhole(wormhole, request, session, in_line=False):
             changes.append('<b>Tiny</b>: {} -> {}'.format(wormhole.tiny, tiny))
             wormhole.tiny = tiny
     if len(changes) > 0:
+        # as long as the user changed something on the model, we generate a snapshot for their action
         snap = WormholeSnapshot(wormhole_id=wormhole.id, snapper=_name(), changed=''.join(c + ', ' for c in changes)[:-2])
         wormhole.snapshots.append(snap)
         if (app_settings['HOME_SYSTEM'] in [wormhole.start, wormhole.end]) and wormhole.closed and originally_open:
@@ -413,6 +432,7 @@ def _close_chain(user, wormhole):
         Closes all wormholes connected to the system recursively.
         * For performance, this method does not commit changes to the database.
     """
+    # this is the method called to collapse an entire chain of wormholes when someone closes a wormhole
     connected = []
     if not str(app_settings['HOME_SYSTEM']) == wormhole.start:
         connected = [w for w in Wormhole.query.filter_by(start=wormhole.start, opened=True, closed=False).all()]
@@ -461,13 +481,13 @@ def paste():
         return p
 
     if request.method == 'POST':
-        _add_edit_counter(request, session)
-        if (not 'pastedata' in request.form or not 'system' in request.form) or \
-                (request.form['pastedata'].strip() == '' or request.form['system'].strip() == ''):
+        if not 'pastedata' in request.form or not 'system' in request.form or request.form['pastedata'].strip() == '' or request.form['system'].strip() == '':
             flash('You cannot leave the system nor the paste empty', 'danger')
             return render_template('site/pastescan.html')
+        _add_edit_counter(request, session)
         db.session.add(PasteUpdated(_name()))
         db.session.commit()
+        # this method returns the data for the 3 tables on the paste results page
         present = []
         findnew = []
         notfound = []
@@ -507,6 +527,7 @@ def paste():
 @blueprint.route('/graph')
 def graph():
     """ View: return JSON for the graphing feature """
+    # this is all of the data crunching for the JSON output read by the canvas graphing JavaScript
     def get_system_name(system):
         if system in app_settings['SYSTEM_RENAMES']:
             return app_settings['SYSTEM_RENAMES'][system]
@@ -637,6 +658,7 @@ def graph():
 @blueprint.route('/systemlanding')
 def system_landing():
     """ View: show all systems with open models """
+    # also known as the universe page or systems page - it shows all of "active" systems
     systems = []
     def append(system):
         # if system is a stub system, don't append
@@ -654,6 +676,7 @@ def system_landing():
 @blueprint.route('/system/<system>/apiinfo')
 def system_api_info(system):
     """ AJAX View: return information from the EVE API about a system """
+    # returns information about a system for its calling page
     system_data = _get_system_information(system)
     region = system_data['region']
     constellation = system_data['constellation']
@@ -760,6 +783,8 @@ def closest_chain_system(system):
 @blueprint.route('/system/<system>/tradehubjumps')
 def get_tradehub_jumps(system):
     """ AJAX View: return the number of jumps to each of the tradehubs from this system """
+    # this method will first attempt to fetch the desired information from the database
+    # if the data isn't yet stored, it will get the information, store it, and then return it
     systemObject = None
     systemObject = System.query.filter_by(name=system).first()
     if not systemObject:
@@ -825,6 +850,7 @@ def system_kills(system):
 @blueprint.route('/system/<system>')
 def system(system):
     """ View: show information about the specified system """
+    # the sites and wormholes are initially sent to the template to be rendered, the other information is loaded via AJAX
     systemObject = System.query.filter_by(name=system).first()
     if not systemObject:
         return render_template('site/systemnotfound.html', system=system)
@@ -868,6 +894,7 @@ def mass_close():
 @blueprint.route('/inlineeditsite/<id>', methods=['POST'])
 def inline_edit_site(id):
     """ AJAX View: make edits to the site from POST data """
+    # this is used by the index page's table editing
     site = Site.query.filter_by(id=id).first_or_404()
     if _edit_site(site, request, session, True):
         return 'Site edited'
@@ -877,6 +904,7 @@ def inline_edit_site(id):
 @blueprint.route('/inlineeditwormhole/<id>', methods=['POST'])
 def inline_edit_wormhole(id):
     """ AJAX View: make edits to the wormholes from POST data """
+    # this is used by the index page's table editing
     wormhole = Wormhole.query.filter_by(id=id).first_or_404()
     if _edit_wormhole(wormhole, request, session, True):
         return 'Wormhole edited'
@@ -952,6 +980,7 @@ def in_game_player_system():
 
 def _get_player_locations():
     """ Return a list of all players in space """
+    # used by the index page to load in-game players into the area underneath the chain graph
     players = []
     remove = []
     ret = ''
@@ -982,6 +1011,8 @@ def changelog():
 @blueprint.route('/stats')
 def stats():
     """ View: usage stats """
+    # show a bunch of stats that users can brag about
+    # the JSON data is used for a JavaScript chart on that page
     num_sites = Site.query.count()
     num_wormholes = Wormhole.query.count()
     num_edits = SiteSnapshot.query.count() + WormholeSnapshot.query.count()
@@ -1012,6 +1043,7 @@ def stats():
 @blueprint.route('/settings', methods=['GET', 'POST'])
 def settings():
     """ View: change settings for the user """
+    # the page for editing a users's settings that are used in a couple places around the app
     if request.method == 'POST':
         s = _get_settings(_name())
         s.edits_in_new_tabs = 'nt' in request.form
@@ -1025,17 +1057,20 @@ def settings():
 @blueprint.route('/api/<path>/')
 def api_views(path):
     """ View: current data JSON dumps """
+    # current unused; redirect to the index page
     return redirect(url_for('.index'))
 
 
 def _notify_change(changed):
     """ Broadcast change to all connected clients """
+    # used to send messages to clients on the app's index page
     socketio.emit('sitetracker response', { 'data': 'update_' + changed }, namespace='/site')
 
 
 @socketio.on('sitetracker event', namespace='/site')
 def websocket_message(message):
     """ Listener: Normal event """
+    # when the index page loads, it sends this request to the backend to get in-game locations
     if message['data'] == 'player_locations':
         _notify_change('locations:' + _get_player_locations())
 
@@ -1067,6 +1102,9 @@ def websocket_disconnect():
 
 @blueprint.route('/kick/<user>')
 def kick_user(user):
+    """ View: kicks a user on the index page (admin only) """
+    # uses the websockets to redirect a user to the logout page which dumps their session and forces 
+    # them to log back into the app which fetches current data from OAuth (use case: they wouldn't be allowed back in)
     if not _name() in app_settings['ADMINS']:
         return redirect(url_for('.index'))
     socketio.emit('sitetracker response', { 'data': 'kick:' + user }, namespace='/site')
