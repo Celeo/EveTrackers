@@ -9,18 +9,16 @@
 <div>
     <div class="alert alert-warning">
         <p>
-            If you want your towers to show up here, give Celeo a Character API Key with Notifications enabled 
-            for a character that receives POS tower fuel notifications.
+            If you want your towers to show up here, give Celeo a Corporation API Key with Starbase List and Details.
         </p>
     </div>
     <div class="alert alert-info">
-    {% for m in message %}
-        {{ m }}</br >
+    {% for title, info in data %}
+        <b>{{ title }}</b>: {{ info }}</br >
     {% endfor %}
     </div>
     <br />
     It is now {{ now }}<br />
-    Cache delay is set to 2 hours.
 </div>
 
 {% endblock %}
