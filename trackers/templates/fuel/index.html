@@ -2,10 +2,6 @@
 
 {% block content %}
 
-<h3>Tower Fuel Tracker</h3>
-
-<br />
-
 <div>
     <div class="alert alert-warning">
         <p>
@@ -13,12 +9,16 @@
         </p>
     </div>
     <div class="alert alert-info">
-    {% for title, info in data %}
-        <b>{{ title }}</b>: {{ info }}</br >
+    {% for pos in info %}
+    <h3>Tower in {{ pos['Location System ID'] }}</h3>
+    <p>
+        {% for title, data in pos.items() %}
+            <b>{{ title }}</b>: {{ data }}</br >
+        {% endfor %}
+    </p>
     {% endfor %}
     </div>
-    <br />
-    It is now {{ now }}<br />
+    <p>It is now {{ now }}</p>
 </div>
 
 {% endblock %}

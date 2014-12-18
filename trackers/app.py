@@ -33,8 +33,9 @@ logging.basicConfig(filename='log.txt', level=LOGGING_IP)
 app_settings['ALLIANCE'] = app.config['ALLIANCE']
 app_settings['HOME_SYSTEM'] = app.config['HOME_SYSTEM']
 app_settings['SYSTEM_RENAMES'] = app.config['SYSTEM_RENAMES']
-app_settings['NOTIFICATION_KEYS'] = app.config['NOTIFICATION_KEYS']
+app_settings['FUEL_KEYS'] = app.config['FUEL_KEYS']
 app_settings['ADMINS'] = app.config['ADMINS']
+app_settings['LEADERSHIP'] = app.config['LEADERSHIP']
 app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
 
