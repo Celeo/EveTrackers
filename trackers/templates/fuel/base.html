@@ -49,20 +49,20 @@
 
 <div class="container">
 
-<center>
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-            <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
-            {{ message }}<br />
-        </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-</center>
+    <center>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                {{ message }}<br />
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </center>
 
-{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
 <hr>
 
