@@ -9,14 +9,10 @@
 </div>
 
 {% for pos in info %}
-<h3>Tower in {{ pos['Location System ID'] }}</h3>
+<h3>{{ pos['Owner'] }} tower in {{ pos['Location System ID'] }}</h3>
 <table class="table">
     <thead></thead>
     <tbody>
-        <tr>
-            <td><b>Owner</b></td>
-            <td><b>{{ pos['Owner'] }}</b></td>
-        </tr>
         <tr>
             <td><b>Offline on</b></td>
             <td><b>TODO, TODO days</b></td>
