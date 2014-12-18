@@ -124,7 +124,9 @@ def index():
         poses = []
         for pos_basic in auth.corp.StarbaseList().starbases:
             pos_details = auth.corp.StarbaseDetail(itemID=pos_basic.itemID)
+            key_details = auth.account.Characters()
             data = {
+                'Owner': key_details.characters[0].corporationName,
                 'API Tower ID': pos_basic.itemID,
                 'Tower Item Type ID': pos_basic.typeID,
                 'Tower Item Type Name': tower_types[pos_basic.typeID],

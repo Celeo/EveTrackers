@@ -4,7 +4,7 @@
 
 <div class="alert alert-warning">
     <p>
-        If you want your towers to show up here, give Celeo a Corporation API Key witd Starbase List and Starbase Details.
+        If you want your towers to show up here, give Celeo a Corporation API Key with Starbase List and Starbase Details.
     </p>
 </div>
 
@@ -13,6 +13,14 @@
 <table class="table">
     <thead></thead>
     <tbody>
+        <tr>
+            <td><b>Owner</b></td>
+            <td><b>{{ pos['Owner'] }}</b></td>
+        </tr>
+        <tr>
+            <td><b>Offline on</b></td>
+            <td><b>TODO, TODO days</b></td>
+        </tr>
         <tr>
             <td>API ID</td>
             <td>{{ pos['API Tower ID'] }}</td>
@@ -70,10 +78,6 @@
         <tr>
             <td>Attack if at war</td>
             <td>{{ pos['Attack if at war'] }}</td>
-        </tr>
-        <tr>
-            <td>Offline on</td>
-            <td>TODO, TODO days</td>
         </tr>
     </tbody>
 </table>
