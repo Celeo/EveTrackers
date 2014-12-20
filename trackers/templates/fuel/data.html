@@ -1,0 +1,78 @@
+{% for pos in info %}
+<h3>{{ pos['Owner'] }} tower in {{ pos['Location System ID'] }}</h3>
+<table class="table">
+    <thead></thead>
+    <tbody>
+        <tr>
+            <td><b>Offline on</b></td>
+            <td><b>{{ pos['Offline On'] }}</b></td>
+        </tr>
+        <tr>
+            <td>Hours Left</td>
+            <td>{{ pos['Hours Left'] }}</td>
+        </tr>
+        <tr>
+            <td>Fuel / Hour</td>
+            <td>{{ pos['Fuel Used Per Hour'] }}</td>
+        </tr>
+        <tr>
+            <td>API ID</td>
+            <td>{{ pos['API Tower ID'] }}</td>
+        </tr>
+        <tr>
+            <td>Tower Item Type ID</td>
+            <td>{{ pos['Tower Item Type ID'] }}</td>
+        </tr>
+        <tr>
+            <td>Tower Item Type Name</td>
+            <td>{{ pos['Tower Item Type Name'] }}</td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td>{{ pos['State'] }}</td>
+        </tr>
+        <tr>
+            <td>Location System ID</td>
+            <td>{{ pos['Location System ID'] }}</td>
+        </tr>
+        <tr>
+            <td>Location Moon ID</td>
+            <td>{{ pos['Location Moon ID'] }}</td>
+        </tr>
+        {% for fuel_type, fuel_quantity in pos['Fuel'].items() %}
+        <tr>
+            <td>{{ fuel_type }}</td>
+            <td>{{ fuel_quantity|formatcommas }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>Allow corp access</td>
+            <td>{{ pos['Allow corp access'] }}</td>
+        </tr>
+        <tr>
+            <td>Allow alliance access</td>
+            <td>{{ pos['Allow alliance access'] }}</td>
+        </tr>
+        <tr>
+            <td>Use Alliance Standings</td>
+            <td>{{ pos['Use Alliance Standings'] }}</td>
+        </tr>
+        <tr>
+            <td>Attack if standing lower than</td>
+            <td>{{ pos['Attack if standing lower than'] }}</td>
+        </tr>
+        <tr>
+            <td>Attack if security status lower than</td>
+            <td>{{ pos['Attack if security status lower than'] }}</td>
+        </tr>
+        <tr>
+            <td>Attack if other security status is dropping</td>
+            <td>{{ pos['Attack if other security status is dropping'] }}</td>
+        </tr>
+        <tr>
+            <td>Attack if at war</td>
+            <td>{{ pos['Attack if at war'] }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}

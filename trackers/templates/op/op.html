@@ -8,7 +8,6 @@
         console.log("Client connected");
     });
     socket.on("optracker response", function(message) {
-        console.log("From server: " + JSON.stringify(message));
         if (message.op_id !== getOpId())
             return;
         if (message.command == "rename") {

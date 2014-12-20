@@ -1,83 +1,33 @@
 {% extends 'fuel/base.html' %}
 
+{% block head %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#data').load("{{ url_for('.data') }}");
+    });
+</script>
+
+{% endblock %}
+
 {% block content %}
 
-<div class="alert alert-warning">
+<div class="alert alert-info">
     <p>
         If you want your towers to show up here, give Celeo a Corporation API Key with Starbase List and Starbase Details.
     </p>
 </div>
 
-{% for pos in info %}
-<h3>{{ pos['Owner'] }} tower in {{ pos['Location System ID'] }}</h3>
-<table class="table">
-    <thead></thead>
-    <tbody>
-        <tr>
-            <td><b>Offline on</b></td>
-            <td><b>TODO, TODO days</b></td>
-        </tr>
-        <tr>
-            <td>API ID</td>
-            <td>{{ pos['API Tower ID'] }}</td>
-        </tr>
-        <tr>
-            <td>Tower Item Type ID</td>
-            <td>{{ pos['Tower Item Type ID'] }}</td>
-        </tr>
-        <tr>
-            <td>Tower Item Type Name</td>
-            <td>{{ pos['Tower Item Type Name'] }}</td>
-        </tr>
-        <tr>
-            <td>State</td>
-            <td>{{ pos['State'] }}</td>
-        </tr>
-        <tr>
-            <td>Location System ID</td>
-            <td>{{ pos['Location System ID'] }}</td>
-        </tr>
-        <tr>
-            <td>Location Moon ID</td>
-            <td>{{ pos['Location Moon ID'] }}</td>
-        </tr>
-        {% for fuel_type, fuel_quantity in pos['Fuel'].items() %}
-        <tr>
-            <td>{{ fuel_type }}</td>
-            <td>{{ fuel_quantity }}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td>Allow corp access</td>
-            <td>{{ pos['Allow corp access'] }}</td>
-        </tr>
-        <tr>
-            <td>Allow alliance access</td>
-            <td>{{ pos['Allow alliance access'] }}</td>
-        </tr>
-        <tr>
-            <td>Use Alliance Standings</td>
-            <td>{{ pos['Use Alliance Standings'] }}</td>
-        </tr>
-        <tr>
-            <td>Attack if standing lower than</td>
-            <td>{{ pos['Attack if standing lower than'] }}</td>
-        </tr>
-        <tr>
-            <td>Attack if security status lower than</td>
-            <td>{{ pos['Attack if security status lower than'] }}</td>
-        </tr>
-        <tr>
-            <td>Attack if other security status is dropping</td>
-            <td>{{ pos['Attack if other security status is dropping'] }}</td>
-        </tr>
-        <tr>
-            <td>Attack if at war</td>
-            <td>{{ pos['Attack if at war'] }}</td>
-        </tr>
-    </tbody>
-</table>
-{% endfor %}
+<div class="alert alert-warning">
+    <p>
+        <strong>Note</strong>: The "Attack if standing lower than" field doesn't have a corresponding "enabled" field in the API 
+        like "Attack if security status lower than" so ... it's value isn't exactly accurate.
+    </p>
+</div>
+
+<div class="well" id="data">
+    <h2>Loading ...</h2>
+</div>
 
 <p>It is now {{ now }}</p>
 
