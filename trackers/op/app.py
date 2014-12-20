@@ -51,7 +51,7 @@ def _is_bursar():
 @blueprint.context_processor
 def _prerender():
     """ Add variables to all templates """
-    return dict(displayname=_name(), now=datetime.utcnow(), bursar=_is_bursar())
+    return dict(displayname=_name(), now=datetime.utcnow(), bursar=_is_bursar(), eveigb=InGameBrowser(request))
 
 
 @blueprint.route('/')

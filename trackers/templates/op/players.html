@@ -18,10 +18,10 @@
         <td class="text-right"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
         <td class="text-right"><a class="decrement btn btn-warning" playerid="{{ player.id }}">-</a></td>
         <th class="text-right">
-            <form method="POST" action="{{ url_for('.op', op_id=op.id) }}">
+            <div class="form-inline">
                 <input type="hidden" name="remove" value="{{ player.id }}">
-                <input type="submit" class="btn btn-danger" value="X">
-            </form>
+                <button class="btn btn-danger" onclick="removePlayer({{ player.id }});">X</button>
+            </div>
         </th>
         {% else %}
         <td class="text-right">{{ player.get_share() }}</td>
@@ -40,11 +40,10 @@
     <div class="col-lg-4">
         {% if not op.locked %}
         <h4>Add Player</h4>
-            <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                <input type="text" name="playername" placeholder="Player name" value="{{ displayname }}">
-                <input type="hidden" value="site"><br />
-                <input type="submit" class="btn btn-primary" value="Add">
-            </form>
+        <div class="form-inline">
+            <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
+            <button class="btn btn-primary" onclick="addPlayer();">Add</button>
+        </div>
         {% endif %}
     </div>
     <div class="col-lg-4">
@@ -54,10 +53,10 @@
                 {{ op.loot }} isk
             </p>
         {% else %}
-            <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                <input type="text" placeholder="123456789" name="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
-                <input type="submit" class="btn btn-primary" value="Save">
-            </form>
+            <div class="form-inline">
+                <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
+                <button class="btn btn-primary" onclick="changeLoot();">Save</button>
+            </div>
         {% endif %}
     </div>
     <div class="col-lg-4">
@@ -67,10 +66,10 @@
                 {{ op.tax_as_percentage() }}
             </p>
         {% else %}
-            <form action="{{ url_for('.op', op_id=op.id) }}" method="POST" class="form-inline">
-                <input name="tax" id="step" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
-                <input type="submit" class="btn btn-primary" value="Save">
-            </form>
+            <div class="form-inline">
+                <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
+                <button class="btn btn-primary" onclick="changeTax();">Save</button>
+            </div>
         {% endif %}
     </div>
 </div>
