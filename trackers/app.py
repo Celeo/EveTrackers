@@ -7,7 +7,7 @@ import requests
 import eveapi
 import logging
 from datetime import datetime, timedelta
-from shared import *
+from shared import app_settings, db, socketio, InGameBrowser
 
 # flask
 app = Flask(__name__)
@@ -162,9 +162,14 @@ def _can_access():
     # checks first for the diplayname of the view (from their session contnents) and their stored corporation
     name = _name()
     if name == 'None':
+        flash('You are not logged in', 'danger')
         return False
-    if not 'corporation' in session or not session['corporation'] in app_settings['APPROVED_CORPORATIONS'] or name in app_settings['BANNED_USERS']:
+    eveigb = InGameBrowser(request)
+    session_corp = session['corporation'] if 'corporation' in session else None
+    ingame_corp = eveigb['Eve-Corpname'] if eveigb.is_valid() else None
+    if not session_corp in app_settings['APPROVED_CORPORATIONS'] and not ingame_corp in app_settings['APPROVED_CORPORATIONS']:
         # protection against corporations leaving the alliance - we can force logouts of any user in a corporation not in the settings
+        flash('You are in a corporation that does not have access to this tool', 'danger')
         session.clear()
         return False
     return True
@@ -175,7 +180,7 @@ def _prerender():
     """ Add variables to all templates """
     displayname = _name()
     valid_user = not displayname == 'None'
-    return dict(displayname=displayname, valid_user=valid_user, now=datetime.utcnow())
+    return dict(displayname=displayname, valid_user=valid_user, now=datetime.utcnow(), igb=InGameBrowser(request))
 
 
 @app.before_request
@@ -214,6 +219,9 @@ def _format_commas(n):
 @app.route('/noaccess')
 def no_access():
     # the catch-all invalid user notice page
+    if _can_access():
+        flash('Your are already logged in', 'info')
+        return redirect(url_for('site_tracker.index'))
     return render_template('no_access.html')
 
 
@@ -221,6 +229,7 @@ def no_access():
 def update_approved_corporations():
     # this method updates the valid corporations for the filtering by corporation security feature
     if not _name() in app_settings['ADMINS']:
+        flash('You do not have permission to visit this page', 'danger')
         return redirect(url_for('no_access'))
     app_settings['APPROVED_CORPORATIONS'] = ''
     alliances = api.eve.AllianceList().alliances
@@ -231,7 +240,6 @@ def update_approved_corporations():
                 corporation_ids.append(corporation.corporationID)
     corporations = api.eve.CharacterNames(ids=corporation_ids).characters
     app_settings['APPROVED_CORPORATIONS'] = [str(corporation.name) for corporation in corporations]
-    print(app_settings['APPROVED_CORPORATIONS'])
     return 'Done'
 
 

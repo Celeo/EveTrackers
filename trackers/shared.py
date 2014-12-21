@@ -10,8 +10,6 @@ app_settings = {}
 
 class InGameBrowser(dict):
 
-    alliance_name = ''
-
     def __init__(self, request):
         self.request = request
 
@@ -25,8 +23,7 @@ class InGameBrowser(dict):
         return 'Eve-Trusted' in self.request.headers and self.request.headers['Eve-Trusted'] == 'Yes'
 
     def is_valid(self):
-        return self.is_trusted() and 'Eve-Alliancename' in self.request.headers and \
-            self.request.headers['Eve-Alliancename'] == self.alliance_name
+        return self.is_trusted() and 'Eve-Alliancename' in self.request.headers and self.request.headers['Eve-Alliancename'] == app_settings['ALLIANCE']
 
     def all(self):
         ret = {}
