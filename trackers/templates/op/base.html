@@ -47,6 +47,7 @@
             {% if bursar %}
                 <li {% if page == 'payout' %}class="active"{% endif %}><a href="{{ url_for('.payouts') }}">Manage Payouts</a></li>
             {% endif %}
+                <li {% if page == 'loot' %}class="active"{% endif %}><a href="{{ url_for('.loot') }}">Loot</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             {% if not displayname == 'None' %}

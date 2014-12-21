@@ -4,6 +4,8 @@ from .models import *
 from datetime import datetime
 from collections import Counter
 import eveapi
+from lxml import etree
+import requests
 
 
 # flask
@@ -11,6 +13,37 @@ blueprint = Blueprint('op_tracker', __name__, template_folder='templates/op', st
 
 # eveapi
 api = eveapi.EVEAPIConnection()
+
+# data
+loot_items = (
+    (30018, 'Fused Nanomechanical Engines'),
+    (30019, 'Powdered C-540 Graphite'),
+    (30021, 'Modified Fluid Router'),
+    (30022, 'Heuristic Selfassemblers'),
+    (30024, 'Cartesian Temporal Coordinator'),
+    (30251, 'Neurovisual Input Matrix'),
+    (30252, 'Thermoelectric Catalysts'),
+    (30254, 'Electromechanical Hull Sheeting'),
+    (30248, 'Emergent Combat Analyzer'),
+    (30258, 'Resonance Calibration Matrix'),
+    (30259, 'Melted Nanoribbons'),
+    (30268, 'Jump Drive Control Nexus'),
+    (30269, 'Defensive Control Node'),
+    (30270, 'Central System Controller'),
+    (30271, 'Emergent Combat Intelligence'),
+    (30746, 'Ancient Coordinates Database'),
+    (30744, 'Neural Network Analyzer'),
+    (30745, 'Sleeper Data Library'),
+    (30747, 'Sleeper Drone AI Nexus')
+)
+
+tradehubs = {
+    'Amarr': {'region': 'Domain', 'region_id': 10000043},
+    'Dodixie': {'region': 'Sinq Laison', 'region_id': 10000032},
+    'Hek': {'region': 'Metropolis', 'region_id': 10000042},
+    'Jita': {'region': 'The Forge', 'region_id': 10000002},
+    'Rens': {'region': 'Heimatar', 'region_id': 10000030}
+}
 
 
 def _name():
@@ -230,6 +263,19 @@ def review():
         graph.append('{ y: ' + str(amount ) + ', indexLabel: "' + player + '" },')
     return render_template('op/review.html', page='review', isk_per_player=isk_per_player.most_common(),
         srp=srp, brg=brg, graph=graph, total_isk_all=total_isk_all, alliance_tax=alliance_tax)
+
+
+@blueprint.route('/loot')
+def loot():
+    items = {item_id: {'name': item, 'id': item_id, 'Amarr': 0, 'Dodixie': 0, 'Hek': 0, 'Jita': 0, 'Rens': 0, 'highest': None} for item_id, item in loot_items}
+    for tradehub, tradehub_info in tradehubs.items():
+        r = requests.get('http://eve-central.com/api/marketstat?regionlimit={}&typeid='.format(tradehub_info['region_id']) + '&typeid='.join(str(item) for item in items))
+        tree = etree.fromstring(str(r.text))
+        for item in tree.find('marketstat').getchildren():
+            items[int(item.attrib['id'])][tradehub] = float(item.find('buy/avg').text)
+    for item in items:
+        items[item]['highest'] = max(items[item][tradehub] for tradehub in tradehubs)
+    return render_template('op/loot.html', page='loot', items=items)
 
 
 def _log(message):
