@@ -238,7 +238,7 @@ def update_approved_corporations():
         if alliance.name == app_settings['ALLIANCE']:
             for corporation in alliance.memberCorporations:
                 corporation_ids.append(corporation.corporationID)
-    corporations = api.eve.CharacterNames(ids=corporation_ids).characters
+    corporations = api.eve.CharacterName(ids=corporation_ids).characters
     app_settings['APPROVED_CORPORATIONS'] = [str(corporation.name) for corporation in corporations]
     return 'Done'
 
