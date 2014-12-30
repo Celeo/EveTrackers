@@ -98,7 +98,7 @@ def index():
     operations.extend(op for op in Operation.query.filter_by(state='Paid').order_by('-id').all())
     now = datetime.utcnow()
     for operation in Operation.query.filter_by(locked=False):
-        if (now - operation.date).total_seconds() / 3600 >= 6:
+        if (now - operation.last_edited).total_seconds() / 3600 >= 6:
             operation.locked = True
             db.session.commit()
     return render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count())
@@ -299,6 +299,7 @@ def websocket_message(message):
     # operation page was moved from AJAX calls to websockets - this is that
     op_id = int(message['op_id'])
     operation = Operation.query.filter_by(id=op_id).first_or_404()
+    operation.last_edited = datetime.utcnow()
     if message['command'] == 'remove':
         removed = Player.query.filter_by(id=message['player_id']).first()
         if removed:

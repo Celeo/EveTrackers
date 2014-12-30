@@ -21,16 +21,16 @@ class Operation(db.Model):
     players = db.relationship('Player', backref='operation', lazy='dynamic')
 
     def __init__(self, name, date=None, state='Not started', leader='', location='', description='',
-            last_edited=None, loot=0, key=datetime.now().strftime('%Y%m%d%S'), locked=False, tax=.1):
+            last_edited=None, loot=0, key=None, locked=False, tax=.1):
         self.name = name
-        self.date = date if date else datetime.utcnow()
+        self.date = date or datetime.utcnow()
         self.state = state
         self.leader = leader
         self.location = location
         self.description = description
-        self.last_edited = last_edited
+        self.last_edited = last_edited or datetime.utcnow()
         self.loot = loot
-        self.key = key
+        self.key = key or datetime.utcnow().strftime('%Y%m%d%S')
         self.locked = locked
         self.tax = tax
 
