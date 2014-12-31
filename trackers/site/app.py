@@ -566,7 +566,7 @@ def graph():
                 return True
         return False
     def format_class(system, clazz, security):
-        if re.match(r'^J\d{6}$', system):
+        if System.is_wspace(system):
             return clazz
         if re.match(r'^C\d$', system):
             return clazz
@@ -765,7 +765,7 @@ def closest_chain_system(system):
     additional = []
     if not is_in_chain:
         for chain in chain_systems:
-            if re.match(r'^J\d{6}$', chain):
+            if System.is_wspace(chain):
                 continue
             jumps = _get_jumps_between(chain, system)
             if jumps == -1:
@@ -837,7 +837,7 @@ def _get_jumps_between(start, end):
 @blueprint.route('/system/<system>/kills')
 def system_kills(system):
     """ AJAX View: return the number of recent kills in the system """
-    if re.match(r'^J\d{6}$', system):
+    if System.is_wspace(system):
         return ''
     if System.query.filter_by(name=system).count() == 0:
         return ''
@@ -862,8 +862,8 @@ def system(system):
     closedwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])
     closedwormholes.extend([w for w in Wormhole.query.filter_by(end=system, opened=True, closed=True).all()])
     unopenedsites = Site.query.filter_by(system=system, opened=False, closed=False).all()
-    return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if re.match(r'^J\d{6}$', system) else None,
-        security=systemObject.security_level if not re.match(r'^J\d{6}$', system) else None, kspace=not re.match(r'^J\d{6}$', system),
+    return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if System.is_wspace(system) else None,
+        security=systemObject.security_level if not System.is_wspace(system) else None, kspace=not System.is_wspace(system),
         rename=app_settings['SYSTEM_RENAMES'][system] if system in app_settings['SYSTEM_RENAMES'] else None,
         openwormholes=openwormholes, opensites=opensites, closedwormholes=closedwormholes, unopenedsites=unopenedsites)
 
@@ -963,7 +963,7 @@ def in_game_player_system():
     _notify_change('locations:' + _get_player_locations())
 
     # check if this user has moved in at last 1 w-space system this jump
-    if not re.match(r'^J\d{6}$', last) and not re.match(r'^J\d{6}$', current):
+    if not System.is_wspace(last) and not System.is_wspace(current):
         return 'Both your last system and your current system are k-space.'
 
     # check if a wormhole for this user's movement already exists

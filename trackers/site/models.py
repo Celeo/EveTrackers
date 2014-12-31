@@ -227,6 +227,10 @@ class System(db.Model):
     def closed_sites(self):
         return Site.query.filter_by(system=self.name, closed=True).all()
 
+    @staticmethod
+    def is_wspace(systemname):
+        return re.match(r'^J\d{6}$', systemname) or systemname == 'Thera'
+
 
 class WormholeType(db.Model):
 

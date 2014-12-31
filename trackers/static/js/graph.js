@@ -47,6 +47,8 @@ function graph() {
         4: '#114',
         5: '#113',
         6: '#112',
+        12: '#111',
+        13: '#110',
     }
     function drawSystem(system, x, y) {
         var rect = new Kinetic.Rect({
