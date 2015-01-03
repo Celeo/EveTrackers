@@ -14,7 +14,7 @@ class Operation(db.Model):
     location = db.Column(db.String(200))
     description = db.Column(db.Text)
     last_edited = db.Column(db.DateTime)
-    loot = db.Column(db.Integer)
+    loot = db.Column(db.BigInteger)
     key = db.Column(db.String(10))
     locked = db.Column(db.Boolean)
     tax = db.Column(db.Float)
