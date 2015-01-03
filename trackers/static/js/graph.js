@@ -6,7 +6,7 @@ function graph() {
         height: 0,
     });
     var layer = new Kinetic.Layer();
-    var rowHeight = 80;
+    var rowHeight = 65;
     var rectWidth = 80;
     $.getJSON('/graph', function(chains) {
         var y = 75;
@@ -55,7 +55,7 @@ function graph() {
             'x': x - rectWidth / 2,
             'y': y - rectWidth / 1.75 / 2,
             'width': rectWidth,
-            'height': rectWidth / 1.25,
+            'height': rectWidth / 1.40,
             'fill': class_color[system['class']],
             'stroke': '#777',
             'strokeWidth': 2,
@@ -82,8 +82,8 @@ function graph() {
         var sysClassText = new Kinetic.Text({
             'text': sys_class,
             'x': x,
-            'y': y+2,
-            'fontSize': 12,
+            'y': y,
+            'fontSize': 11,
             'fontFamily': 'sans-serif',
             'fill': '#ccc',
         })
@@ -94,8 +94,8 @@ function graph() {
         var sysCountText = new Kinetic.Text({
             'text': system.count + ' in system',
             'x': x - 5,
-            'y': y+20,
-            'fontSize': 12,
+            'y': y+16,
+            'fontSize': 10,
             'fontFamily': 'sans-serif',
             'fill': '#ccc',
         });
