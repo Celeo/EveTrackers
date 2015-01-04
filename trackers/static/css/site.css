@@ -34,10 +34,6 @@ h3 {
     padding-bottom: 4em;
 }
 
-.pad-top {
-    padding-top: 1em;
-}
-
 .sub-brand {
     font-size: 110%;
 }
@@ -140,4 +136,8 @@ hr.break {
 
 .gray {
     color: gray;
+}
+
+.block-padding {
+    padding: 1% 1% 0 1%;
 }

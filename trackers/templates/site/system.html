@@ -27,6 +27,7 @@ System Info
 {% block content %}
 
 <center>
+
 <h1>{{ systemObject.name }}{% if rename %} "{{ rename }}"{% endif %}{% if class_ %}, Class {{ class_ }}
 {% if systemObject.effect %} ({{ systemObject.effect }}){% endif %}{% endif %}{% if security %}, sec {{ security }}{% endif %}</h1>
 
