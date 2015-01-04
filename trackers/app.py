@@ -40,11 +40,12 @@ app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
 
 # import blueprints
-from trackers.site.app import blueprint as site
-from trackers.op.app import blueprint as op
-from trackers.corp.app import blueprint as corp
-from trackers.fuel.app import blueprint as fuel
-from trackers.war.app import blueprint as war
+from trackers.site.app import blueprint as site_tracker
+from trackers.op.app import blueprint as op_tracker
+from trackers.corp.app import blueprint as corp_tracker
+from trackers.fuel.app import blueprint as fuel_tracker
+from trackers.war.app import blueprint as war_tracker
+from trackers.char.app import blueprint as char_tracker
 
 # flask-admin
 from trackers.site.models import *
@@ -246,11 +247,12 @@ def update_approved_corporations():
 socketio.app = app
 socketio.init_app(app)
 
-app.register_blueprint(site)
-app.register_blueprint(op, url_prefix='/operations')
-app.register_blueprint(corp, url_prefix='/corp')
-app.register_blueprint(fuel, url_prefix='/fuel')
-app.register_blueprint(war, url_prefix='/war')
+app.register_blueprint(site_tracker)
+app.register_blueprint(op_tracker, url_prefix='/operations')
+app.register_blueprint(corp_tracker, url_prefix='/corp')
+app.register_blueprint(fuel_tracker, url_prefix='/fuel')
+app.register_blueprint(war_tracker, url_prefix='/war')
+app.register_blueprint(char_tracker, url_prefix='/char')
 
 
 if __name__ == '__main__':
