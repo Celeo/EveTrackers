@@ -64,7 +64,7 @@ def _is_bursar():
     # so we need to get that name for the player and store it for later use
     name = _name()
     pan = PlayerAuthName.query.filter_by(username=name).first()
-    if not pan:
+    if not pan or not pan.character_name:
         pan = PlayerAuthName(username=name)
         result = api.eve.CharacterID(names=name.replace('_', ' '))
         try:
