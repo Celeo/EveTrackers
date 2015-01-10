@@ -68,7 +68,7 @@ def _is_bursar():
         pan = PlayerAuthName(username=name)
         result = api.eve.CharacterID(names=name.replace('_', ' '))
         try:
-            char_name = result.characters[0].characterName
+            char_name = result.characters[0].name
             char_id = result.characters[0].characterID
             result = api.eve.CharacterAffiliation(ids=char_id)
             corp = result.characters[0].corporationName
