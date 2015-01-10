@@ -59,17 +59,13 @@ class EVEAPICache(object):
                 Element - previously stored object as provided to store()
                 file-like object - eveapi will read() XML from the stream.
         """
-        print('Retrieve attempt at host={}, path={}, params={}'.format(host, path, params))
         key = hash((host, path, frozenset(params.items())))
         in_memory = self.cache.get(key, None)
         if not in_memory:
-            print('Retrieve attempt failed - data not in memory')
             return None
-        if time() < in_memory[0]:
-            print('Returning valid in-memory data')
+        if time.time() < in_memory[0]:
             return in_memory[1]
         else:
-            print('Deleting old data and returning None to get fresh data')
             del self.cache[key]
             return None
 
@@ -82,9 +78,7 @@ class EVEAPICache(object):
             unless you pickle the object. Note that this method will only
             be called if you returned None in the retrieve() for this object.
         """
-        print('Storing data of host={}, path={}, params={}'.format(host, path, params))
         self.cache[hash((host, path, frozenset(params.items())))] = (obj.cachedUntil, doc)
-        print('Data stored in memory and is valid until ' + time.ctime(obj.cachedUntil))
 
 
     def __repr__(self):
