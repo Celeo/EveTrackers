@@ -1,15 +1,12 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from datetime import datetime, timedelta
-import eveapi
-from trackers.shared import app_settings
+from trackers.shared import app_settings, api
 from trackers.site.models import System
 
 
 # flask
 blueprint = Blueprint('fuel_tracker', __name__, template_folder='templates/fuel', static_folder='static')
 
-# eveapi
-api = eveapi.EVEAPIConnection()
 pairs = app_settings['FUEL_KEYS']
 tower_status = {
     0: 'Unanchored',

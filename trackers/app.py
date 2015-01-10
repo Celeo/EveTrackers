@@ -4,10 +4,9 @@ from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 import requests
-import eveapi
 import logging
 from datetime import datetime, timedelta
-from shared import app_settings, db, socketio, InGameBrowser
+from trackers.shared import app_settings, db, socketio, InGameBrowser, api
 
 # flask
 app = Flask(__name__)
@@ -20,9 +19,6 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 db.app = app
 db.init_app(app)
 
-
-# eveapi
-api = eveapi.EVEAPIConnection()
 
 # logger
 LOGGING_IP = 60

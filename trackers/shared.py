@@ -89,3 +89,7 @@ class EVEAPICache(object):
 
     def __repr__(self):
         return '<EveAPICache>'
+
+
+import eveapi
+api = eveapi.EVEAPIConnection(cacheHandler=EVEAPICache())

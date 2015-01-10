@@ -1,13 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, session, flash
+from flask import Blueprint, render_template, session
 from datetime import datetime
-import eveapi
 
 
 # flask
 blueprint = Blueprint('corp_tracker', __name__, template_folder='templates/corp', static_folder='static')
-
-# eveapi
-api = eveapi.EVEAPIConnection()
 
 
 def _name():

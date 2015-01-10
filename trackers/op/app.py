@@ -1,18 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from trackers.shared import InGameBrowser, socketio
+from trackers.shared import InGameBrowser, socketio, api
 from .models import *
 from datetime import datetime
 from collections import Counter
-import eveapi
 from lxml import etree
 import requests
 
 
 # flask
 blueprint = Blueprint('op_tracker', __name__, template_folder='templates/op', static_folder='static')
-
-# eveapi
-api = eveapi.EVEAPIConnection()
 
 # data
 loot_items = (

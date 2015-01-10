@@ -1,14 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, session
 from trackers.shared import InGameBrowser, socketio
 from datetime import datetime
-import eveapi
 
 
 # flask
 blueprint = Blueprint('char_tracker', __name__, template_folder='templates/char', static_folder='static')
 
-# eveapi
-api = eveapi.EVEAPIConnection()
 
 def _name():
     """ Returns the name of the user """
