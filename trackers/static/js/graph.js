@@ -41,6 +41,7 @@ function graph() {
         'highsec': '#040',
         'lowsec': '#440',
         'nullsec': '#400',
+        'unknown': '#000',
         1: '#135',
         2: '#124',
         3: '#122',

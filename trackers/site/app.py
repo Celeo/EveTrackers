@@ -571,7 +571,7 @@ def graph():
         if re.match(r'^C\d$', system):
             return clazz
         if '?' in system:
-            return 'nullsec'
+            return 'unknown'
         security = float(security)
         if security >= 0.45:
             return 'highsec'
