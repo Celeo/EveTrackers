@@ -10,6 +10,8 @@ The **fuel** app is for tracking when towers will run out of fuel.
 
 The **corp** app (WIP) is for tracking corporation members.
 
+The **char** app (WIP) is for viewing a character sheet.
+
 The **war** app is for quickly viewing killmails on the web.
 
 # License
