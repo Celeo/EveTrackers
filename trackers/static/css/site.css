@@ -141,3 +141,7 @@ hr.break {
 .block-padding {
     padding: 1% 1% 0 1%;
 }
+
+.modal-open {
+    overflow: visible;
+}
