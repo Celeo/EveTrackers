@@ -28,7 +28,7 @@ function graph() {
         if (node.connections) {
             for (var i = 0; i < node.connections.length; i++) {
                 var child = node.connections[i];
-                drawLink(x, y, x + 100, y + newLines * rowHeight, child.eol, child.mass);
+                drawLink(x, y, x + 100, y + newLines * rowHeight, child.tiny, child.mass);
                 var stats = drawNode(child, x + 100, y + newLines * rowHeight);
                 newLines += stats[0];
                 newCols = Math.max(stats[1], newCols);
@@ -112,7 +112,7 @@ function graph() {
         sysCountText.on('click', _doClick);
         rect.on('click', _doClick);
     }
-    function drawLink(x1, y1, x2, y2, eol, mass) {
+    function drawLink(x1, y1, x2, y2, tiny, mass) {
         var color;
         if (mass == 'good')
             color = '#444';
@@ -127,9 +127,9 @@ function graph() {
             'y': 0,
             'points': [x1+rectWidth/2, y1, x2-rectWidth/2, y2],
             'stroke': color,
-            'strokeWidth': !window.WebSocket && eol ? 1 : 2,
-            'dashArray': [6, 3],
-            'dashArrayEnabled': Boolean(eol),
+            'strokeWidth': !window.WebSocket && tiny ? 1 : 2,
+            'dash': [3, 2, 0.001, 2],
+            'dashEnabled': Boolean(tiny),
         });
         layer.add(line);
     }

@@ -549,6 +549,7 @@ def graph():
                     'id': wh.id,
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.end),
+                    'tiny': wh.tiny,
                 })
                 return True
             if c['name'] == get_system_name(wh.end):
@@ -560,6 +561,7 @@ def graph():
                     'id': wh.id,
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.start),
+                    'tiny': wh.tiny,
                 })
                 return True
             if append_connection(c['connections'], wh):
@@ -580,7 +582,7 @@ def graph():
         else:
             return 'nullsec'
     class GraphWormhole(object):
-        def __init__(self, id=0, start='', end='', status='', start_class='', start_sec='', end_clazz='', end_sec=''):
+        def __init__(self, id=0, start='', end='', status='', start_class='', start_sec='', end_clazz='', end_sec='', tiny=False):
             self.id = id
             self.start = start
             self.end = end
@@ -589,6 +591,7 @@ def graph():
             self.start_sec = start_sec
             self.end_clazz = end_clazz
             self.end_sec = end_sec
+            self.tiny = tiny
         def get_type_js(self):
             if self.status in ['Undecayed', 'Fresh']:
                 return 'good'
@@ -602,7 +605,7 @@ def graph():
 
     wormholes = []
     for wormhole in Wormhole.query.filter_by(opened=True, closed=False):
-        g = GraphWormhole(id=wormhole.id, start=wormhole.start, end=wormhole.end, status=wormhole.status)
+        g = GraphWormhole(id=wormhole.id, start=wormhole.start, end=wormhole.end, status=wormhole.status, tiny=wormhole.tiny)
         s_s = System.query.filter_by(name=wormhole.start).first()
         s_e = System.query.filter_by(name=wormhole.end).first()
         if s_s:
