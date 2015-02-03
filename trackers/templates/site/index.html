@@ -35,7 +35,10 @@ Index
 
 <center>
 
-<div><script src="//fightforthefuture.github.io/countdown-widget/widget.min.js"></script></div><br />
+{% if not settings.dont_show_nn_banner %}
+<div><script src="//fightforthefuture.github.io/countdown-widget/widget.min.js"></script></div>
+<a href="{{ url_for('site_tracker.dont_show_nn_banner') }}">Don't show this again</a><br />
+{% endif %}
 
 <div class="alert alert-warning" id="js_alerts" hidden>
     <button type="button" class="close" onclick="$('#js_alerts').fadeOut(250);">&times;</button>

@@ -35,7 +35,7 @@ def _prerender():
     displayname = _name()
     valid_user = not displayname == 'None'
     return dict(displayname=displayname, valid_user=valid_user, homesystem=app_settings['HOME_SYSTEM'], eveigb=InGameBrowser(request),
-        now=datetime.utcnow(), settings_nt=settings.edits_in_new_tabs, settings_sm=settings.store_multiple, settings_aeg=settings.auto_expand_graph)
+        now=datetime.utcnow(), settings_nt=settings.edits_in_new_tabs, settings_sm=settings.store_multiple, settings_aeg=settings.auto_expand_graph, settings=settings)
 
 
 def _get_settings(username):
@@ -1112,4 +1112,14 @@ def kick_user(user):
         return redirect(url_for('.index'))
     socketio.emit('sitetracker response', { 'data': 'kick:' + user }, namespace='/site')
     flash('User kicked', 'info')
+    return redirect(url_for('.index'))
+
+
+@blueprint.route('/dontshownnbanner')
+def dont_show_nn_banner():
+    """ View: toggle off the Net Neutrality banner """
+    settings = _get_settings(_name())
+    settings.dont_show_nn_banner = True
+    db.session.commit()
+    flash('You will not see the Net Neutrality banned on the SiteTracker homepage', 'info')
     return redirect(url_for('.index'))
