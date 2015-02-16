@@ -102,6 +102,18 @@ def tables():
     return render_template('site/tables.html', sites=sites, wormholes=wormholes, elapsed_timers=elapsed_timers)
 
 
+@blueprint.app_template_filter('hasdscan')
+def _has_dscan(system_name):
+    """ Template filter: checks to see if the system name has a dcan associated with it """
+    try:
+        system = System.query.filter_by(name=system_name).first()
+        if not system:
+            return system_name
+        return system_name + " (P)" if system.dscan else system_name
+    except:
+        return system_name
+
+
 def _get_last_update():
     """ Returns a dict of info for the last time a user made an edit """
     # internal method for getting the time of and user who made the last edit to the database
@@ -850,13 +862,22 @@ def system_kills(system):
             pod1=data['podkills'][0], pod24=data['podkills'][1])
 
 
-@blueprint.route('/system/<system>')
+@blueprint.route('/system/<system>', methods=['GET', 'POST'])
 def system(system):
     """ View: show information about the specified system """
     # the sites and wormholes are initially sent to the template to be rendered, the other information is loaded via AJAX
     systemObject = System.query.filter_by(name=system).first()
     if not systemObject:
         return render_template('site/systemnotfound.html', system=system)
+    if request.method == 'POST':
+        # update dscan and alliance notes from POST
+        if 'systemdscan' in request.form:
+            systemObject.dscan = request.form['systemdscan']
+            systemObject.dscan_date = datetime.utcnow()
+        elif 'systemnote' in rqeuest.form:
+            systemObject.note = request.form['systemnote']
+        db.session.commit()
+        return redirect(url_for('.system', system=system))
     openwormholes = []
     openwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=False).all()])
     openwormholes.extend([w for w in Wormhole.query.filter_by(end=system, opened=True, closed=True).all()])
@@ -865,10 +886,29 @@ def system(system):
     closedwormholes.extend([w for w in Wormhole.query.filter_by(start=system, opened=True, closed=True).all()])
     closedwormholes.extend([w for w in Wormhole.query.filter_by(end=system, opened=True, closed=True).all()])
     unopenedsites = Site.query.filter_by(system=system, opened=False, closed=False).all()
+    if systemObject.dscan_date and (datetime.utcnow() - systemObject.dscan_date).days > 1:
+        systemObject.dscan_date = None
+        systemObject.dscan = None
+        flash('Dscan information was over a day old', 'info')
+        db.session.commit()
     return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if System.is_wspace(system) else None,
         security=systemObject.security_level if not System.is_wspace(system) else None, kspace=not System.is_wspace(system),
         rename=app_settings['SYSTEM_RENAMES'][system] if system in app_settings['SYSTEM_RENAMES'] else None,
         openwormholes=openwormholes, opensites=opensites, closedwormholes=closedwormholes, unopenedsites=unopenedsites)
+
+
+@blueprint.route('/deletedscan/<system_id>')
+def delete_dscan(system_id):
+    try:
+        system = System.query.filter_by(id=system_id).first()
+        if system:
+            system.dscan = None
+            system.dscan_date = None
+            db.session.commit()
+            flash('Dscan data deleted', 'info')
+    except:
+        flash('System not found', 'danger')
+    return redirect(url_for('.index'))
 
 
 @blueprint.route('/mastertable')

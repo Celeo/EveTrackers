@@ -169,6 +169,8 @@ class System(db.Model):
     static = db.Column(db.String(50))
     effect = db.Column(db.String(20))
     is_stub = db.Column(db.Boolean)
+    dscan = db.Column(db.Text)
+    dscan_date = db.Column(db.Text)
 
     def __init__(self, name, map_id=0, class_=0, security_level=0.0, note='', jumps_amarr=0,
             jumps_dodixie=0, jumps_hek=0, jumps_jita=0, jumps_rens=0, static='', effect='', is_stub=False):
@@ -185,6 +187,8 @@ class System(db.Model):
         self.static = static
         self.effect = effect
         self.is_stub = is_stub
+        self.dscan = None
+        self.dscan_date = None
 
     def __repr__(self):
         return '<System {}>'.format(self.name)

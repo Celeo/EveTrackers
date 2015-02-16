@@ -17,8 +17,8 @@
     {% for w in wormholes %}
         <tr class="{% if w.opened %}obj_open {% endif%}wormhole_row" id="wormhole_row_{{ w.id }}">
             <td id="wid{{ w.id }}"><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
-            <td id="wstart{{ w.id }}"><a href="{{ url_for('.system', system=w.start) }}">{{ w.start }}</a></td>
-            <td id="wend{{ w.id }}">{% if w.end == 'Unknown' or w.end == '' or w.end == 'Unopened' or w.end == 'Closed' %}{{ w.end }}{% else %}<a href="{{ url_for('.system', system=w.end) }}">{{ w.end }}</a>{% endif %}</td>
+            <td id="wstart{{ w.id }}"><a href="{{ url_for('.system', system=w.start) }}">{{ w.start|hasdscan }}</a></td>
+            <td id="wend{{ w.id }}">{% if w.end == 'Unknown' or w.end == '' or w.end == 'Unopened' or w.end == 'Closed' %}{{ w.end }}{% else %}<a href="{{ url_for('.system', system=w.end) }}">{{ w.end|hasdscan }}</a>{% endif %}</td>
             <td id="wstatus{{ w.id }}">{{ w.status }}</td>
             <td id="wo_scanid{{ w.id }}">{% if w.o_scanid %}{{ w.o_scanid }}{% else %}?{% endif %}</td>
             <td>{{ w.date|date }}</td>
@@ -74,7 +74,7 @@
             <td id="sid{{ s.id }}"><a href="{{ url_for('.site', id=s.id) }}">{{ s.scanid }}</a></td>
             <td id="sname{{ s.id }}">{{ s.name }}</td>
             <td id="stype{{ s.id }}">{{ s.type_ }}</td>
-            <td><a href="{{ url_for('.system', system=s.system) }}" target="_blank">{{ s.system }}</a></td>
+            <td><a href="{{ url_for('.system', system=s.system) }}" target="_blank">{{ s.system|hasdscan }}</a></td>
             <td>{% if s.opened %}<span class="g">{{ s.opened }}</span>{% else %}<span class="r">{{ s.opened }}</span>{% endif %}</td>
             <td>{{ s.date|date }}</td>
             <td id="slink{{ s.id }}"><a class="label label-warning" onclick="edit('site', {{ s.id }});">Change</a></td>
