@@ -1,4 +1,4 @@
-<table id="wormholetable" class="hovertable">
+<table id="wormholetable" class="bordered">
     <thead>
         <tr>
             <th>ScanID</th>
@@ -24,11 +24,11 @@
             <td>{{ w.date|date }}</td>
             <td>{% if w.tiny %}Yes{% else %}No{% endif %}</td>
             <td class="countup">{% for k,v in elapsed_timers.items() %}{% if k == w.id %}{{ v }}{% endif %}{% endfor %}</td>
-            <td id="wlink{{ w.id }}"><a class="label label-warning" onclick="edit('wormhole', {{ w.id }});">Change</a></td>
+            <td id="wlink{{ w.id }}"><a class="label label-warning" onclick="edit('wormhole', {{ w.id }});"><i class="small mdi-action-dns"></i></a></td>
         {% if w.opened %}
-            <td><a href="#myModal" role="button" class="label label-info" data-toggle="modal" onclick="updateModal('wormhole', '{{ w.id }}');">Close</a><td>
+            <td><a href="#myModal" role="button" class="label label-info" data-toggle="modal" onclick="updateModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-done"></i></a><td>
         {% else %}
-            <td><a href="#myModal2" role="button" class="label label-info" data-toggle="modal" onclick="updateModal2('wormhole', '{{ w.id }}');">Open</a></td>
+            <td><a href="#myModal2" role="button" class="label label-info" data-toggle="modal" onclick="updateModal2('wormhole', '{{ w.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
         {% endif %}
         </tr>
     {% endfor %}
@@ -42,14 +42,14 @@
             <td></td>
             <td></td>
             <td></td>
-            <td><a href="{{ url_for('.mass_close') }}" class="label label-success">Close +</a></td>
+            <td><a href="{{ url_for('.mass_close') }}"><i class="small mdi-action-done-all"></i></a></td>
         </tr>
     </tbody>
 </table>
 
 <br /><br />
 
-<table id="sitetable" class="hovertable">
+<table id="sitetable" class="bordered">
     <thead>
         <tr>
             <th>ScanID</th>
@@ -77,11 +77,11 @@
             <td><a href="{{ url_for('.system', system=s.system) }}" target="_blank">{{ s.system|hasdscan }}</a></td>
             <td>{% if s.opened %}<span class="g">{{ s.opened }}</span>{% else %}<span class="r">{{ s.opened }}</span>{% endif %}</td>
             <td>{{ s.date|date }}</td>
-            <td id="slink{{ s.id }}"><a class="label label-warning" onclick="edit('site', {{ s.id }});">Change</a></td>
+            <td id="slink{{ s.id }}"><a class="label label-warning" onclick="edit('site', {{ s.id }});"><i class="small mdi-action-dns"></i></a></td>
             {% if s.opened %}
-            <td><a href="#myModal" role="button" class="label label-info" data-toggle="modal" onclick="updateModal('site', '{{ s.id }}');">Close</a><td>
+            <td><a href="#myModal" role="button" class="label label-info" data-toggle="modal" onclick="updateModal('site', '{{ s.id }}');"><i class="small mdi-action-done"></i></a><td>
             {% else %}
-            <td><a href="#myModal2" role="button" class="label label-info" data-toggle="modal" onclick="updateModal2('site', '{{ s.id }}');">Open</a></td>
+            <td><a href="#myModal2" role="button" class="label label-info" data-toggle="modal" onclick="updateModal2('site', '{{ s.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
             {% endif %}
         </tr>
     {% endfor %}

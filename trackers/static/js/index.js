@@ -2,6 +2,16 @@ $(document).ready(function() {
     $('.message').bind('click', function() {
        $(this).hide(250);
     });
+    $('body').keydown(function(event) {
+        if (event.target.tagName !== "BODY")
+            return;
+        switch (event.keyCode)
+        {
+            case 82:
+                refreshData();
+                break;
+        }
+    });
     $('#tables').load("/tables");
     $('#sitetable').tablesorter();
     $('#wormholetable').tablesorter();
@@ -111,7 +121,7 @@ function edit(type, n) {
         $('#wend' + n).html('<input type="text" class="short_input" id="wend' + n + '_edit" value="' + end + '">');
         $('#wstatus' + n).html('<input type="text" class="short_input" id="wstatus' + n + '_edit" value="' + status + '">');
         $('#wo_scanid' + n).html('<input type="text" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
-        $('#wlink' + n).html('<a class="label label-danger" onclick="cancel(\'wormhole\', ' + n + ')">Cancel</a> <td><a class="label label-success" onclick="save(\'wormhole\', ' + n + ')">Save</a></td>');
+        $('#wlink' + n).html('<a class="label label-danger" onclick="cancel(\'wormhole\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="label label-success" onclick="save(\'wormhole\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
     }
     else if (type === 'site') {
         var scanid = $('#sid' + n).text();
@@ -120,7 +130,7 @@ function edit(type, n) {
         $('#sid' + n).html('<input type="text" class="uppercase short_input" id="sid' + n + '_edit" value="' + scanid + '">');
         $('#sname' + n).html('<input type="text" class="short_input" id="sname' + n + '_edit" value="' + name + '">');
         $('#stype' + n).html('<input type="text" class="short_input" id="stype' + n + '_edit" value="' + type + '">');
-        $('#slink' + n).html('<a class="label label-danger" onclick="cancel(\'site\', ' + n + ')">Cancel</a> <td><a class="label label-success" onclick="save(\'site\', ' + n + ')">Save</a></td>');
+        $('#slink' + n).html('<a class="label label-danger" onclick="cancel(\'site\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="label label-success" onclick="save(\'site\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
     }
 }
 
@@ -131,7 +141,7 @@ function cancel(type, n) {
         var end = $('#wend' + n).html().split('"')[7];
         var status = $('#wstatus' + n).html().split('"')[7];
         var o_scanid = $('#wo_scanid' + n).html().split('"')[7];
-        $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\', ' + n + ')">Change</a>');
+        $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\', ' + n + ')"><i class="small mdi-action-dns"></i></a>');
         $('#wid' + n).html('<a href="/wormhole/' + n + '">' + scanid + '</a>');
         $('#wstart' + n).html('<a href="/system/' + start +'">' + start + '</a>');
         $('#wend' + n).html('<a href="/system/' + end +'">' + end + '</a>');
@@ -142,7 +152,7 @@ function cancel(type, n) {
         var scanid = $('#sid' + n).html().split('"')[7];
         var name = $('#sname' + n).html().split('"')[7];
         var type = $('#stype' + n).html().split('"')[7];
-        $('#slink' + n).html('<a class="label label-warning" onclick="edit(\'site\', ' + n + ')">Change</a>');
+        $('#slink' + n).html('<a class="label label-warning" onclick="edit(\'site\', ' + n + ')"><i class="small mdi-action-dns"></i></a>');
         $('#sid' + n).html('<a href="/site/' + n + '">' + scanid + '</a>');
         $('#sname' + n).html(name);
         $('#stype' + n).html(type);
