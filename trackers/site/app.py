@@ -53,7 +53,7 @@ def _get_settings(username):
 def index():
     """ View: index page """
     if request.method == 'POST':
-        if 'graph_new_wormhole' in request.form:
+        if 'graph_new_wormhole' in request.form and request.form['start'] and request.form['end']:
             # the canvas graph has a small wormhole quick-add form that can be used to add wormholes
             w = Wormhole(creator=_name(), scanid=request.form['scanid'].upper() if request.form['scanid'] else '?',
                 start=request.form['start'], end=request.form['end'], opened=True)

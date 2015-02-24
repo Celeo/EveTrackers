@@ -29,6 +29,11 @@ Index
         setTimeout(socket.emit('sitetracker event', { data: 'player_locations' }), 1000);
     });
 </script>
+<style>
+    td {
+        padding: 0 0 0 5px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -59,15 +64,13 @@ Index
         <input type="text" name="scanid" id="graph_wormhole_scanid" placeholder="Scan ID" class="uppercase" style="width: 10%;" maxlength="3">
         <input type="text" name="start" id="graph_wormhole_start" placeholder="Start" style="width: 10%;">
         <input type="text" name="end" id="graph_wormhole_end" placeholder="end" style="width: 10%;">
-        <button class="btn btn-primary" onclick="addNewWormholeGraph();">Add</button>
+        <button class="waves-effect waves-light btn btn-primary" onclick="addNewWormholeGraph();">Add</button>
     </div>
     <div id="graph_info"></div>
     <div id="graph_players_container"><span id="graph_players"></span></div>
 </div>
 
-<br /><br />
-
-<div id="tables"></div>
+<div class="card-panel grey lighten-5" id="tables"></div>
 
 {% if not settings.dont_show_nn_banner %}
 <br /><br /><div><script src="//fightforthefuture.github.io/countdown-widget/widget.min.js"></script></div>
@@ -80,47 +83,33 @@ Index
 
 {% block pageEnd %}
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure that you want to close this <span id="modal_message_final"></span>?</p>
-            </div>
-            <div class="modal_info" hidden>
-                <label id="clickedType"></label>
-                <label id="clickedID"></label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" onclick="performClose();">Yes</button>
-            </div>
-        </div>
+<div class="modal" id="modalCloseModel">
+    <div class="modal-content">
+        <h4>Are you sure?</h4>
+        <p>Are you sure that you want to close this <span id="modal_message_final"></span>?</p>
+    </div>
+    <div hidden>
+        <label id="clickedType"></label>
+        <label id="clickedID"></label>
+    </div>
+    <div class="modal-footer">
+        <a onclick="" class="waves-effect waves-blue btn-flat modal-action modal-close">No</a>
+        <a onclick="performClose();" class="waves-effect waves-blue btn-flat modal-action modal-close">Yes</a>
     </div>
 </div>
 
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure that you want to open this <span id="modal_message_final2"></span>?</p>
-            </div>
-            <div class="modal_info" hidden>
-                <label id="clickedType2"></label>
-                <label id="clickedID2"></label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" onclick="performOpen();">Yes</button>
-            </div>
-        </div>
+<div class="modal" id="modalOpenModel">
+    <div class="modal-content">
+        <h4>Are you sure?</h4>
+        <p>Are you sure that you want to close this <span id="modal_message_final2"></span>?</p>
+    </div>
+    <div hidden>
+        <label id="clickedType2"></label>
+        <label id="clickedID2"></label>
+    </div>
+    <div class="modal-footer">
+        <a onclick="" class="waves-effect waves-blue btn-flat modal-action modal-close">No</a>
+        <a onclick="performOpen();" class="waves-effect waves-blue btn-flat modal-action modal-close">Yes</a>
     </div>
 </div>
 

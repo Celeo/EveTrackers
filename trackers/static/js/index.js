@@ -48,7 +48,10 @@ $(document).ready(function() {
 function refreshData() {
     $('#notify_refresh').hide();
     $('#tables').load("/tables");
+    $('#graph_wormhole_start').val('');
+    $('#graph_info').html('');
     graph();
+    $('.modal-trigger').leanModal();
 }
 
 function addNewWormhole() {
@@ -254,29 +257,15 @@ function checkNew(type) {
 }
 
 function updateModal(type, id) {
-    window.scrollTo(0, 0);
     $("#clickedType").text(type);
     $("#clickedID").text(id);
     $("#modal_message_final").text(type);
+    $('#modalOpenModel').openModal();
 }
 
 function updateModal2(type, id) {
-    window.scrollTo(0, 0);
     $("#clickedType2").text(type);
     $("#clickedID2").text(id);
     $("#modal_message_final2").text(type);
-}
-
-function performClose() {
-    $.get("/" + $("#clickedType").text() + "/" + $("#clickedID").text() + "/close", function(data) {
-        refreshData();
-    });
-    $("#myModal").modal("toggle")
-}
-
-function performOpen() {
-    $.get("/" + $("#clickedType2").text() + "/" + $("#clickedID2").text() + "/open", function(data) {
-        refreshData();
-    });
-    $("#myModal2").modal("toggle")
+    $('#modalCloseModel').openModal();
 }
