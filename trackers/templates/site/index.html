@@ -40,14 +40,9 @@ Index
 
 <center>
 
-<div class="alert alert-warning" id="js_alerts" hidden>
-    <button type="button" class="close" onclick="$('#js_alerts').hide(250);">&times;</button>
-    <p id="js_alerts_out"></p>
-</div>
-
 <div class="card-panel amber lighten-3" id="notify_refresh" hidden>
     Someone has made edits since the data here was last refreshed.<br />
-    Press the <b>r</b> key.
+    Press the <b>r</b> key or click <a onclick="refreshData();">here</a>.
 </div>
 
 <div class="card-panel">
@@ -64,7 +59,7 @@ Index
         <input type="text" name="scanid" id="graph_wormhole_scanid" placeholder="Scan ID" class="uppercase" style="width: 10%;" maxlength="3">
         <input type="text" name="start" id="graph_wormhole_start" placeholder="Start" style="width: 10%;">
         <input type="text" name="end" id="graph_wormhole_end" placeholder="end" style="width: 10%;">
-        <button class="waves-effect waves-light btn btn-primary" onclick="addNewWormholeGraph();">Add</button>
+        <button class="waves-effect waves-light btn btn-primary tooltipped"  data-position="bottom" data-delay="50" data-tooltip="Add new wormhole" onclick="addNewWormholeGraph();">Add</button>
     </div>
     <div id="graph_info"></div>
     <div id="graph_players_container"><span id="graph_players"></span></div>

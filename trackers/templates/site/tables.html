@@ -24,11 +24,11 @@
             <td>{{ w.date|date }}</td>
             <td>{% if w.tiny %}Yes{% else %}No{% endif %}</td>
             <td class="countup">{% for k,v in elapsed_timers.items() %}{% if k == w.id %}{{ v }}{% endif %}{% endfor %}</td>
-            <td id="wlink{{ w.id }}"><a class="label label-warning" onclick="edit('wormhole', {{ w.id }});"><i class="small mdi-action-dns"></i></a></td>
+            <td id="wlink{{ w.id }}"><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit('wormhole', {{ w.id }});"><i class="small mdi-action-dns"></i></a></td>
         {% if w.opened %}
-            <td><a href="#modalCloseModel" role="button" class="label label-info" onclick="updateModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-done"></i></a><td>
+            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this wormhole" onclick="updateModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-done"></i></a><td>
         {% else %}
-            <td><a href="#modalOpenModel" role="button" class="label label-info" onclick="updateModal2('wormhole', '{{ w.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
+            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this wormhole" onclick="updateModal2('wormhole', '{{ w.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
         {% endif %}
         </tr>
     {% endfor %}
@@ -38,11 +38,11 @@
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_end" name="end" class="short_input" placeholder="end"></td>
             <td><select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 10em;" id="w_new_status" name="status"><option>Undecayed</option><option>Fresh</option><option>&#60 50% mass</option><option>VoC</option><option>EoL</option><option>VoC and EoL</option><option>Unknown</option></select></td>
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_o_scanid" name="o_scanid" class="uppercase short_input" placeholder="ID2" maxlength="3"></td>
-            <td><button id="w_new_submit" type="submit" class="btn btn-xs btn-primary" onclick="addNewWormhole();" disabled>Add New</button></td>
+            <td><button id="w_new_submit" type="submit" class="btn btn-primary tooltipped" data-position="bottom" data-delay="50" data-tooltip="Add new wormhole" onclick="addNewWormhole();" disabled>Add New</button></td>
             <td></td>
             <td></td>
             <td></td>
-            <td><a href="{{ url_for('.mass_close') }}"><i class="small mdi-action-done-all"></i></a></td>
+            <td><a href="{{ url_for('.mass_close') }}" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close multiple wormholes"><i class="small mdi-action-done-all"></i></a></td>
         </tr>
     </tbody>
 </table>
@@ -77,11 +77,11 @@
             <td><a href="{{ url_for('.system', system=s.system) }}" target="_blank">{{ s.system|hasdscan }}</a></td>
             <td>{% if s.opened %}<span class="g">{{ s.opened }}</span>{% else %}<span class="r">{{ s.opened }}</span>{% endif %}</td>
             <td>{{ s.date|date }}</td>
-            <td id="slink{{ s.id }}"><a class="label label-warning" onclick="edit('site', {{ s.id }});"><i class="small mdi-action-dns"></i></a></td>
+            <td id="slink{{ s.id }}"><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit('site', {{ s.id }});"><i class="small mdi-action-dns"></i></a></td>
             {% if s.opened %}
-            <td><a href="#modalCloseModel" role="button" class="label label-info" onclick="updateModal('site', '{{ s.id }}');"><i class="small mdi-action-done"></i></a><td>
+            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this site" onclick="updateModal('site', '{{ s.id }}');"><i class="small mdi-action-done"></i></a><td>
             {% else %}
-            <td><a href="#modalOpenModel" role="button" class="label label-info" onclick="updateModal2('site', '{{ s.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
+            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this site" onclick="updateModal2('site', '{{ s.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
             {% endif %}
         </tr>
     {% endfor %}
@@ -91,7 +91,7 @@
             <td><select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 100%;" id="s_new_type" name="type"><option>Combat</option><option>Relic</option><option>Gas</option><option>Data</option><option>Ore</option></select></td>
             <td><input onkeyup="checkNew('site');" type="text" id="s_new_system" class="short_input" name="system" placeholder="{{ homesystem }}" value="{{ homesystem }}"></td>
             <td><input type="checkbox" name="opened"></td>
-            <td><button id="s_new_submit" type="submit" class="btn btn-xs btn-primary" onclick="addNewSite();" disabled>Add New</button></td>
+            <td><button id="s_new_submit" type="submit" class="btn btn-primary tooltipped" data-position="bottom" data-delay="50" data-tooltip="Add new site" onclick="addNewSite();" disabled>Add New</button></td>
             <td></td>
         </tr>
     </tbody>

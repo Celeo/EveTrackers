@@ -9,26 +9,25 @@ Paste
 <center>
 
 <h3>Paste data from your system scanner here:</h3><br />
-<form action="" method="POST">
-
-    <table class="no-border">
-        <tr class="no-border">
-            <td>
-                <span><b>System</b>:</span>
-            </td>
-            <td style="padding-left: 5px;">
-                <input type="text" name="system" value="{% if system %}{{ system }}{% elif eveigb.is_igb() %}{{ eveigb['solarsystemname'] }}{% else %}{{ homesystem }}{% endif %}">
-            </td>
-        </tr>
-    </table><br />
-    <textarea name="pastedata" rows="20" id="ta_pastedata">{% if raw %}{{ raw }}{% endif %}</textarea><br />
-    <input type="submit" value="Parse" class="btn btn-primary" data-loading-text="Parsing..." onclick="$(this).button('loading');"> 
-</form>
+<div class="container">
+    <form action="" method="POST">
+        <div class="input-field">
+            <input type="text" style="width: 50%;" id="tb_system" name="system" value="{% if system %}{{ system }}{% elif eveigb.is_igb() %}{{ eveigb['solarsystemname'] }}{% else %}{{ homesystem }}{% endif %}">
+            <label for="tb_system" style="width: 50%;" >System</label>
+          </div>
+        <br />
+        <div class="input-field">
+            <textarea name="pastedata" rows="20" id="ta_pastedata" class="materialize-textarea">{% if raw %}{{ raw }}{% endif %}</textarea><br />
+            <label for="ta_pastedata">Paste your scanner data here</label>
+          </div>
+        <input type="submit" value="Parse" class="btn btn-primary" data-loading-text="Parsing..." onclick="$(this).button('loading');"> 
+    </form>
+</div>
 
 <hr>
 
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col l4">
         <strong>The following already exist in the database:</strong>
         {% if present %}
             <table class="table-striped">
@@ -59,7 +58,7 @@ Paste
             <p>None</p>
         {% endif %}
     </div>
-    <div class="col-lg-4">
+    <div class="col l4">
         <strong>The following are not in your paste, but<br />are in the database for this system. Please review:</strong>
         {% if notfound %}
             <table class="table-striped">
@@ -88,7 +87,7 @@ Paste
             <p>None</p>
         {% endif %}
     </div>
-    <div class="col-lg-4">
+    <div class="col l4">
         <strong>The following are in your paste, but<br />are not in the database. Please add:</strong>
         {% if findnew %}
             <table class="table-striped">

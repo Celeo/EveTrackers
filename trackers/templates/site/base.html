@@ -48,6 +48,7 @@
             $("#add_new_model").on("click", function() {
                 window.location.href = "{{ url_for('.add') }}";
             });
+            $('.tooltipped').tooltip({delay: 50});
         });
         function getDisplayName() {
             return "{{ displayname }}";
@@ -90,8 +91,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                <div class="card-panel">
                     <p>
                         {{ message }}
                     </p>
@@ -107,7 +107,7 @@
 </div>
 
 <div class="fixed-action-btn" style="bottom: 20px; right: 20px;" id="add_new_model">
-    <a class="waves-effect waves-light btn btn-floating btn-large red">
+    <a class="waves-effect waves-light btn btn-floating btn-large red tooltipped" data-position="top" data-delay="50" data-tooltip="Add new">
         <i class="large mdi-content-add"></i>
     </a>
 </div>

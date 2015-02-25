@@ -2,19 +2,6 @@ body {
     background-color: #E6E6E6;
 }
 
-input[type="checkbox"] {
-    text-align: left;
-    vertical-align: center;
-}
-
-h3 {
-    margin-top: 0;
-}
-
-hr.break {
-    margin: 0 1em 0 1em;
-}
-
 .extracellspacing td {
     padding: 0 5px 0 5px;
 }
@@ -37,10 +24,6 @@ hr.break {
 
 .r {
     color: red;
-}
-
-#ta_pastedata {
-    width: 60%;
 }
 
 .link_big {
@@ -85,20 +68,8 @@ hr.break {
     text-transform: uppercase;
 }
 
-.wideinput input,textarea,select {
-    width: 150%;
-}
-
-.short_input {
-    width: 10em;
-}
-
 .gray {
     color: gray;
-}
-
-.block-padding {
-    padding: 1% 1% 0 1%;
 }
 
 .modal-open {

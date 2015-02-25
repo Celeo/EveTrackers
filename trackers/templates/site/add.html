@@ -7,6 +7,7 @@ Add
 {% block extraHead %}
 <script type="text/javascript">
     $(document).ready(function() {
+        $('select').material_select();
         validate();
     });
     function validate() {
@@ -30,21 +31,23 @@ Add
 
 <center>
 
-<ul class="nav nav-pills" role="tablist" style="margin-left: auto; width: 50%;">
-    <li{% if model_type == 'site' %} class="active"{% endif %}><a href="#site" role="tab" data-toggle="tab">Site</a></li>
-    <li{% if model_type == 'wormhole' %} class="active"{% endif %}><a href="#wormhole" role="tab" data-toggle="tab">Wormhole</a></li>
-</ul>
+<div class="row">
+    <div class="col l12">
+        <ul class="tabs">
+            <li class="tab col l6"><a {% if model_type == 'site' %}class="active" {% endif %}href="#site">Site</a></li>
+            <li class="tab col l6"><a {% if model_type == 'wormhole' %}class="active" {% endif %}href="#wormhole">Wormhole</a></li>
+        </ul>
+    </div>
+</div>
 
-<br /><br />
-
-<div class="tab-content">
-    <div class="tab-pane fade{% if model_type == 'site' %} in active{% endif %}" id="site">
-        <form action="" method="POST" class="wideinput extracellspacing">
+<div class="card-panel">
+    <div id="site">
+        <form action="" method="POST" class="extracellspacing">
             {% include 'site/siteform.html' %}
         </form>
     </div>
-    <div class="tab-pane fade{% if model_type == 'wormhole' %} in active{% endif %}" id="wormhole">
-        <form action="" method="POST" class="wideinput extracellspacing">
+    <div id="wormhole">
+        <form action="" method="POST" class="extracellspacing">
             {% include 'site/wormholeform.html' %}
         </form>
     </div>

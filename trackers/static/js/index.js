@@ -12,7 +12,9 @@ $(document).ready(function() {
                 break;
         }
     });
-    $('#tables').load("/tables");
+    $('#tables').load("/tables", "", function(data) {
+        $('.tooltipped').tooltip({delay: 50});
+    });
     $('#sitetable').tablesorter();
     $('#wormholetable').tablesorter();
     var counter = setInterval(timer, 1000);
@@ -47,11 +49,13 @@ $(document).ready(function() {
 
 function refreshData() {
     $('#notify_refresh').hide();
-    $('#tables').load("/tables");
+    $('#tables').load("/tables", "", function(data) {
+        $('.modal-trigger').leanModal();
+        $('.tooltipped').tooltip({delay: 50});
+    });
     $('#graph_wormhole_start').val('');
     $('#graph_info').html('');
     graph();
-    $('.modal-trigger').leanModal();
 }
 
 function addNewWormhole() {
@@ -84,6 +88,7 @@ function addNewSite() {
         },
         success: function(data) {
             $('#tables').load("/tables");
+            $('.tooltipped').tooltip({delay: 50});
         }
     });
 }
@@ -103,6 +108,7 @@ function addNewWormholeGraph() {
             $('#graph_wormhole_start').val('');
             $('#graph_wormhole_end').val('');
             $('#tables').load("/tables");
+            $('.tooltipped').tooltip({delay: 50});
             graph();
         }
     });
@@ -124,7 +130,7 @@ function edit(type, n) {
         $('#wend' + n).html('<input type="text" class="short_input" id="wend' + n + '_edit" value="' + end + '">');
         $('#wstatus' + n).html('<input type="text" class="short_input" id="wstatus' + n + '_edit" value="' + status + '">');
         $('#wo_scanid' + n).html('<input type="text" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
-        $('#wlink' + n).html('<a class="label label-danger" onclick="cancel(\'wormhole\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="label label-success" onclick="save(\'wormhole\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
+        $('#wlink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Cancel" onclick="cancel(\'wormhole\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Save" onclick="save(\'wormhole\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
     }
     else if (type === 'site') {
         var scanid = $('#sid' + n).text();
@@ -133,8 +139,9 @@ function edit(type, n) {
         $('#sid' + n).html('<input type="text" class="uppercase short_input" id="sid' + n + '_edit" value="' + scanid + '">');
         $('#sname' + n).html('<input type="text" class="short_input" id="sname' + n + '_edit" value="' + name + '">');
         $('#stype' + n).html('<input type="text" class="short_input" id="stype' + n + '_edit" value="' + type + '">');
-        $('#slink' + n).html('<a class="label label-danger" onclick="cancel(\'site\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="label label-success" onclick="save(\'site\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
+        $('#slink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Cancel" onclick="cancel(\'site\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Save" onclick="save(\'site\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
     }
+    $('.tooltipped').tooltip({delay: 50});
 }
 
 function cancel(type, n) {
@@ -163,7 +170,7 @@ function cancel(type, n) {
 }
 
 function save(type, n) {
-    $('#js_alerts_out').text('Saving...');
+    toast('Saving', 5000);
     $('#js_alerts').fadeIn(250);
     if (type === 'wormhole') {
         var id = n;
@@ -190,7 +197,7 @@ function save(type, n) {
             $('#wend' + n).html('<a href="/system/' + end +'">' + end + '</a>');
             $('#wstatus' + n).html(status);
             $('#wo_scanid' + n).html(o_scanid.toUpperCase());
-            $('#js_alerts_out').text('Saved');
+            toast('Saved', 5000);
             $('#js_alerts').fadeOut(3000);
           },
           fail: function(data) {
@@ -224,7 +231,7 @@ function save(type, n) {
                 $('#sid' + n).html('<a href="/site/' + n + '">' + scanid.toUpperCase() + '</a>');
                 $('#sname' + n).html(name);
                 $('#stype' + n).html(type);
-                $('#js_alerts_out').text('Saved');
+                toast('Saved', 5000);
                 $('#js_alerts').fadeOut(3000);
             },
             fail: function(data) {
