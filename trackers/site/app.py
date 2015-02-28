@@ -1153,13 +1153,3 @@ def kick_user(user):
     socketio.emit('sitetracker response', { 'data': 'kick:' + user }, namespace='/site')
     flash('User kicked', 'info')
     return redirect(url_for('.index'))
-
-
-@blueprint.route('/dontshownnbanner')
-def dont_show_nn_banner():
-    """ View: toggle off the Net Neutrality banner """
-    settings = _get_settings(_name())
-    settings.dont_show_nn_banner = True
-    db.session.commit()
-    flash('You will not see the Net Neutrality banned on the SiteTracker homepage', 'info')
-    return redirect(url_for('.index'))
