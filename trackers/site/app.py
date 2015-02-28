@@ -34,8 +34,7 @@ def _prerender():
     settings = _get_settings(_name())
     displayname = _name()
     valid_user = not displayname == 'None'
-    return dict(displayname=displayname, valid_user=valid_user, homesystem=app_settings['HOME_SYSTEM'], eveigb=InGameBrowser(request),
-        now=datetime.utcnow(), settings_nt=settings.edits_in_new_tabs, settings_sm=settings.store_multiple, settings_aeg=settings.auto_expand_graph, settings=settings)
+    return dict(displayname=displayname, valid_user=valid_user, homesystem=app_settings['HOME_SYSTEM'], eveigb=InGameBrowser(request), now=datetime.utcnow(), settings=settings)
 
 
 def _get_settings(username):

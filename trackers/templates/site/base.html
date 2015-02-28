@@ -69,7 +69,11 @@
                 <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
                 <li><a href="{{ url_for('.mastertable') }}">Master List</a></li>
                 <li><a href="{{ url_for('.stats') }}">Stats</a></li>
-                <li><a href="#">Login</a></li>
+            {% if displayname == 'none' %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('.settings') }}">{{ displayname }}</a></li>
+            {% endif %}
             </ul>
             <ul id="nav-mobile" class="side-nav">
                 <li><a href="{{ url_for('.index') }}">Home</a></li>
@@ -78,7 +82,11 @@
                 <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
                 <li><a href="{{ url_for('.mastertable') }}">Master List</a></li>
                 <li><a href="{{ url_for('.stats') }}">Stats</a></li>
-                <li><a href="#">Login</a></li>
+            {% if displayname == 'none' %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('.settings') }}">{{ displayname }}</a></li>
+            {% endif %}
             </ul>
             <a href="#" data-activities="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
         </div>
@@ -91,7 +99,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="card-panel">
+                <div class="card-panel{% if category == 'info' %}green{% elif category == 'warning' %}yellow{% else %}red{% endif %}">
                     <p>
                         {{ message }}
                     </p>

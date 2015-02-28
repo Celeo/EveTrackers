@@ -12,9 +12,7 @@ $(document).ready(function() {
                 break;
         }
     });
-    $('#tables').load("/tables", "", function(data) {
-        $('.tooltipped').tooltip({delay: 50});
-    });
+    refreshData();
     $('#sitetable').tablesorter();
     $('#wormholetable').tablesorter();
     var counter = setInterval(timer, 1000);
@@ -52,6 +50,7 @@ function refreshData() {
     $('#tables').load("/tables", "", function(data) {
         $('.modal-trigger').leanModal();
         $('.tooltipped').tooltip({delay: 50});
+        $('select').material_select();
     });
     $('#graph_wormhole_start').val('');
     $('#graph_info').html('');
@@ -125,11 +124,11 @@ function edit(type, n) {
         var end = $('#wend' + n).text();
         var status = $('#wstatus' + n).text();
         var o_scanid = $('#wo_scanid' + n).text();
-        $('#wid' + n).html('<input type="text" class="uppercase short_input" id="wid' + n + '_edit" value="' + scanid + '">');
+        $('#wid' + n).html('<input type="text" maxlength="3" class="uppercase short_input" id="wid' + n + '_edit" value="' + scanid + '">');
         $('#wstart' + n).html('<input type="text" class="short_input" id="wstart' + n + '_edit" value="' + start + '">');
         $('#wend' + n).html('<input type="text" class="short_input" id="wend' + n + '_edit" value="' + end + '">');
         $('#wstatus' + n).html('<input type="text" class="short_input" id="wstatus' + n + '_edit" value="' + status + '">');
-        $('#wo_scanid' + n).html('<input type="text" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
+        $('#wo_scanid' + n).html('<input type="text" maxlength="3" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
         $('#wlink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Cancel" onclick="cancel(\'wormhole\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Save" onclick="save(\'wormhole\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
     }
     else if (type === 'site') {

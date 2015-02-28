@@ -33,7 +33,7 @@ Add
 
 <div class="row">
     <div class="col l12">
-        <ul class="tabs">
+        <ul class="tabs" style="margin-top: 1em;">
             <li class="tab col l6"><a {% if model_type == 'site' %}class="active" {% endif %}href="#site">Site</a></li>
             <li class="tab col l6"><a {% if model_type == 'wormhole' %}class="active" {% endif %}href="#wormhole">Wormhole</a></li>
         </ul>
@@ -42,14 +42,10 @@ Add
 
 <div class="card-panel">
     <div id="site">
-        <form action="" method="POST" class="extracellspacing">
-            {% include 'site/siteform.html' %}
-        </form>
+        {% include 'site/siteform.html' %}
     </div>
     <div id="wormhole">
-        <form action="" method="POST" class="extracellspacing">
-            {% include 'site/wormholeform.html' %}
-        </form>
+        {% include 'site/wormholeform.html' %}
     </div>
 </div>
 

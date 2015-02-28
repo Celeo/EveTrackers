@@ -1,6 +1,6 @@
-<input type="hidden" name="model_type" value="site">
 <div class="row">
-    <form action="" class="col l12">
+    <form action="" method="POST" class="col l12">
+        <input type="hidden" name="model_type" value="site">
         <div class="row">
             <div class="input-field col l12">
                 <input type="text" id="site_creator" name="creator" value="{% if site %}{{ site.creator }}{% else %}{{ displayname }}{% endif %}" readonly>
@@ -35,8 +35,8 @@
         </div>
         <div class="row">
             <div class="input-field col l12">
-            <select>
-                <option value="" disabled selected>Select type</option>
+            <select name="type">
+                <option value="" disabled selected>Select site type</option>
             {% if site %}
                 <option value="1">{{ site.type_ }}</option>
             {% elif g_type %}
@@ -52,14 +52,18 @@
         </div>
         <div class="row">
             <div class="input-field col l12">
-                <input type="checkbox" id="site_opened" name="opened" {% if site and site.opened %}checked="checked"{% endif %}>
-                <label for="site_opened">Has the site been opened</label>
+                <p>
+                    <input type="checkbox" id="site_opened" name="opened" {% if site and site.opened %}checked="checked"{% endif %}>
+                    <label for="site_opened">Has the site been opened</label>
+                </p>
             </div>
         </div>
         <div class="row">
             <div class="input-field col l12">
-                <input type="checkbox" id="site_closed" name="closed" {% if site and site.closed %}checked="checked"{% endif %}>
-                <label for="site_closed">Has the site despawned</label>
+                <p>
+                    <input type="checkbox" id="site_closed" name="closed" {% if site and site.closed %}checked="checked"{% endif %}>
+                    <label for="site_closed">Has the site despawned</label>
+                </p>
             </div>
         </div>
         <div class="row">
@@ -70,7 +74,9 @@
         </div>
         <div class="row">
             <div class="input-field col l12">
-                <input type="submit" id="site_submit_button" value="Store" class="btn btn-primary" data-loading-text="Storing..." onclick="$(this).button('loading');">
+                <button class="btn waves-effect waves-light" type="submit" id="site_submit_button" name="action">Submit
+                    <i class="mdi-content-send right"></i>
+                </button>
             </div>
         </div>
     </form>
