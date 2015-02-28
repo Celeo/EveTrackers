@@ -37,6 +37,17 @@ def _prerender():
     return dict(displayname=displayname, valid_user=valid_user, homesystem=app_settings['HOME_SYSTEM'], eveigb=InGameBrowser(request), now=datetime.utcnow(), settings=settings)
 
 
+def _render_template(template_name, **kwargs):
+    """
+        Because the in-game browser doesn't process newer technologies,
+        we render those requests on the pre-materail deign templates.
+    """
+    if InGameBrowser(request).is_igb():
+        return render_template('old_{}'.format(template_name), **kwargs)
+    else:
+        return render_template(template_name, **kwargs)
+
+
 def _get_settings(username):
     """ Return the settings for a user """
     settings = None
@@ -86,7 +97,7 @@ def index():
         return redirect(url_for('.index'))
     now = datetime.utcnow()
     last_edit = _get_last_update()
-    return render_template('site/index.html', homepage=True, 
+    return _render_template('site/index.html', homepage=True, 
         last_update_diff=_get_time_diff_formatted(last_edit['time'].replace(tzinfo=None), now) if last_edit['time'] else '-never-',
         last_update_user=last_edit['user'])
 
@@ -98,7 +109,7 @@ def tables():
     sites = Site.query.filter_by(closed=False)
     wormholes = Wormhole.query.filter_by(closed=False)
     elapsed_timers = _get_elapsed_timers()
-    return render_template('site/tables.html', sites=sites, wormholes=wormholes, elapsed_timers=elapsed_timers)
+    return _render_template('site/tables.html', sites=sites, wormholes=wormholes, elapsed_timers=elapsed_timers)
 
 
 @blueprint.app_template_filter('hasdscan')
@@ -219,7 +230,7 @@ def add():
     g_name = request.args.get('name', None)
     g_start = request.args.get('start', None)
     g_end = request.args.get('end', None)
-    return render_template('site/add.html', model_type=model_type, g_scanid=g_scanid, g_system=g_system, g_type=g_type, g_name=g_name, g_start=g_start, g_end=g_end)
+    return _render_template('site/add.html', model_type=model_type, g_scanid=g_scanid, g_system=g_system, g_type=g_type, g_name=g_name, g_start=g_start, g_end=g_end)
 
 
 @blueprint.route('/site/<id>/close')
@@ -268,7 +279,7 @@ def site(id):
         if _edit_site(site, request, session):
             flash('Site edited', 'info')
             return redirect(url_for('.site', id=id))
-    return render_template('site/editsite.html', site=site, admin=admin)
+    return _render_template('site/editsite.html', site=site, admin=admin)
 
 
 def _edit_site(site, request, session, in_line=False):
@@ -387,7 +398,7 @@ def wormhole(id):
         if _edit_wormhole(wormhole, request, session):
             flash('Wormhole edited', 'info')
             return redirect(url_for('.wormhole', id=id))
-    return render_template('site/editwormhole.html', wormhole=wormhole, admin=admin)
+    return _render_template('site/editwormhole.html', wormhole=wormhole, admin=admin)
 
 
 def _edit_wormhole(wormhole, request, session, in_line=False):
@@ -494,7 +505,7 @@ def paste():
     if request.method == 'POST':
         if not 'pastedata' in request.form or not 'system' in request.form or request.form['pastedata'].strip() == '' or request.form['system'].strip() == '':
             flash('You cannot leave the system nor the paste empty', 'danger')
-            return render_template('site/pastescan.html')
+            return _render_template('site/pastescan.html')
         _add_edit_counter(request, session)
         db.session.add(PasteUpdated(_name()))
         db.session.commit()
@@ -531,8 +542,8 @@ def paste():
                     findnew.append(newP)
             except:
                 flash('Unknown error with line "{}"'.format(line), 'danger')
-        return render_template('site/pastescan.html', raw=paste, present=present, notfound=notfound, findnew=findnew, system=system)
-    return render_template('site/pastescan.html')
+        return _render_template('site/pastescan.html', raw=paste, present=present, notfound=notfound, findnew=findnew, system=system)
+    return _render_template('site/pastescan.html')
 
 
 @blueprint.route('/graph')
@@ -684,7 +695,7 @@ def system_landing():
         append(w.end)
     for s in Site.query.filter_by(closed=False).all():
         append(s.system)
-    return render_template('site/systemlanding.html', systems=systems)
+    return _render_template('site/systemlanding.html', systems=systems)
 
 
 @blueprint.route('/system/<system>/apiinfo')
@@ -697,7 +708,7 @@ def system_api_info(system):
     faction = system_data['faction']
     pirates = system_data['pirates']
     activityjumps = system_data['jumps']
-    return render_template('site/systemapiinfo.html', region=region, constellation=constellation,
+    return _render_template('site/systemapiinfo.html', region=region, constellation=constellation,
         faction=faction, pirates=pirates, jumps1=activityjumps[0], jumps24=activityjumps[1])
 
 def _get_system_information(system):
@@ -791,7 +802,7 @@ def closest_chain_system(system):
     for add in additional:
         if add[0] == closest_chain:
             additional.pop(additional.index(add))
-    return render_template('site/closestchainsystem.html', is_in_chain=is_in_chain, closest_chain=closest_chain, closest_jumps=closest_jumps, additional=additional)
+    return _render_template('site/closestchainsystem.html', is_in_chain=is_in_chain, closest_chain=closest_chain, closest_jumps=closest_jumps, additional=additional)
 
 
 @blueprint.route('/system/<system>/tradehubjumps')
@@ -834,7 +845,7 @@ def get_tradehub_jumps(system):
                     systemObject.jumps_rens = distance
                     rens = distance
         db.session.commit()
-    return render_template('site/tradehubjumps.html', system=system, amarr=amarr, dodixie=dodixie, hek=hek, jita=jita, rens=rens)
+    return _render_template('site/tradehubjumps.html', system=system, amarr=amarr, dodixie=dodixie, hek=hek, jita=jita, rens=rens)
 
 
 def _get_jumps_between(start, end):
@@ -856,7 +867,7 @@ def system_kills(system):
     if System.query.filter_by(name=system).count() == 0:
         return ''
     data = _get_system_information(system)
-    return render_template('site/systemkills.html', npc1=data['npckills'][0], npc24=data['npckills'][1],
+    return _render_template('site/systemkills.html', npc1=data['npckills'][0], npc24=data['npckills'][1],
             ship1=data['shipkills'][0], ship24=data['shipkills'][1],
             pod1=data['podkills'][0], pod24=data['podkills'][1])
 
@@ -867,7 +878,7 @@ def system(system):
     # the sites and wormholes are initially sent to the template to be rendered, the other information is loaded via AJAX
     systemObject = System.query.filter_by(name=system).first()
     if not systemObject:
-        return render_template('site/systemnotfound.html', system=system)
+        return _render_template('site/systemnotfound.html', system=system)
     if request.method == 'POST':
         # update dscan and alliance notes from POST
         if 'systemdscan' in request.form:
@@ -890,7 +901,7 @@ def system(system):
         systemObject.dscan = None
         flash('Dscan information was over a day old', 'info')
         db.session.commit()
-    return render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if System.is_wspace(system) else None,
+    return _render_template('site/system.html', systemObject=systemObject, class_=systemObject.class_ if System.is_wspace(system) else None,
         security=systemObject.security_level if not System.is_wspace(system) else None, kspace=not System.is_wspace(system),
         rename=app_settings['SYSTEM_RENAMES'][system] if system in app_settings['SYSTEM_RENAMES'] else None,
         openwormholes=openwormholes, opensites=opensites, closedwormholes=closedwormholes, unopenedsites=unopenedsites)
@@ -913,7 +924,7 @@ def delete_dscan(system_id):
 @blueprint.route('/mastertable')
 def mastertable():
     """ View: show all sites and wormholes in the database """
-    return render_template('site/mastertable.html', sites=Site.query.all(), wormholes=Wormhole.query.all())
+    return _render_template('site/mastertable.html', sites=Site.query.all(), wormholes=Wormhole.query.all())
 
 
 @blueprint.route('/massclose', methods=['GET', 'POST'])
@@ -930,7 +941,7 @@ def mass_close():
                 _close_chain(_name(), wormhole)
         db.session.commit()
         return redirect(url_for('.mass_close'))
-    return render_template('site/massclose.html', wormholes=Wormhole.query.filter_by(closed=False).all())
+    return _render_template('site/massclose.html', wormholes=Wormhole.query.filter_by(closed=False).all())
 
 
 @blueprint.route('/inlineeditsite/<id>', methods=['POST'])
@@ -1047,7 +1058,7 @@ def _get_player_locations():
 @blueprint.route('/changelog')
 def changelog():
     """ View: changelog """
-    return render_template('site/changelog.html')
+    return _render_template('site/changelog.html')
 
 
 @blueprint.route('/stats')
@@ -1078,7 +1089,7 @@ def stats():
     graph = []
     for player, count in con_list[:30]:
         graph.append('{ y: ' + str(count) + ', label: "' + player + '" },')
-    return render_template('site/stats.html', num_sites=num_sites, num_wormholes=num_wormholes, num_pastes=num_pastes,
+    return _render_template('site/stats.html', num_sites=num_sites, num_wormholes=num_wormholes, num_pastes=num_pastes,
         num_edits=num_edits, num_contributors=num_contributors, all_contributors=con_list, graph=graph)
 
 
@@ -1093,7 +1104,7 @@ def settings():
         s.auto_expand_graph = 'aeg' in request.form
         db.session.commit()
         return redirect(url_for('.settings'))
-    return render_template('site/settings.html')
+    return _render_template('site/settings.html')
 
 
 @blueprint.route('/api/<path>/')
