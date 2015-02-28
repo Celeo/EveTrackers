@@ -1,0 +1,46 @@
+{% extends 'site/old/old_base.html' %}
+
+{% block subtitle %}
+Edit Site
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<h1>Edit site #{{ site.id }}</h1>
+
+<form action="" method="POST" class="wideinput extracellspacing">
+    {% include 'site/siteform.html' %}
+</form>
+
+{% if admin %}
+<br />
+<form action="{{ url_for('.site', id=site.id) }}" method="POST">
+    <input type="hidden" name="admin_delete" value="admin_delete">
+    <input type="submit" class="btn btn-danger" value="Delete site">
+</form>
+{% endif %}
+
+<br /><hr>
+
+<h3>Snapshots</h3>
+
+<table class="table-striped">
+    <tr>
+        <th>Saved By</th>
+        <th>Date</th>
+        <th>Changed</th>
+    </tr>
+{% for snap in site.snapshots %}
+    <tr>
+        <td>{{ snap.snapper }}</td>
+        <td>{{ snap.date|date }}</td>
+        <td>{{ snap.changed|safe }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+</center>
+
+{% endblock %}

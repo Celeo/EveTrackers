@@ -1,0 +1,44 @@
+{% extends 'site/old/old_base.html' %}
+
+{% block subtitle %}
+Table View
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<table class="table-striped extracellspacing">
+    <tr>
+        <th>Site/WH</th>
+        <th>Scan id</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Open</th>
+        <th>Closed</th>
+    </tr>
+    {% for s in sites %}
+    <tr>
+        <td>Site</td>
+        <td><a href="{{ url_for('.site', id=s.id) }}">{{ s.scanid }}</a></td>
+        <td>{{ s.date }}</td>
+        <td>{{ s.name }} ({{ s.type_ }})</td>
+        <td>{{ s.opened }}</td>
+        <td>{{ s.closed }}</td>
+    </tr>
+    {% endfor %}
+    {% for w in wormholes %}
+    <tr>
+        <td>WH</td>
+        <td><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
+        <td>{{ w.date }}</td>
+        <td>{{ w.start }} -> {{ w.end }}</td>
+        <td>{{ w.opened }}</td>
+        <td>{{ w.closed }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</center>
+
+{% endblock %}

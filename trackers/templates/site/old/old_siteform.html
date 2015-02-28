@@ -1,0 +1,60 @@
+<input type="hidden" name="model_type" value="site">
+<table class="contenttable">
+    <tr>
+        <td><label>Creator</label></td>
+        <td><input type="text" name="creator" value="{% if site %}{{ site.creator }}{% else %}{{ displayname }}{% endif %}" readonly></td>
+    </tr>
+    {% if site %}
+    <tr>
+        <td><label>Date</label></td>
+        <td><input type="text" name="date" value="{% if site %}{{ site.date }}{% endif %}" {% if isForm %}{% else %}readonly{% endif %}></td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td><label id="l_scanid">Scan ID</label></td>
+        <td><input type="text" id="site_scanid" onkeyup="validate();" class="uppercase" name="scanid" placeholder="AAA, BBB, LOL ..." value="{% if site %}{{ site.scanid }}{% elif g_scanid %}{{ g_scanid }}{% endif %}" maxlength="3"></td>
+    </tr>
+    <tr>
+        <td><label>Location of site</label></td>
+        <td><input type="text" id="site_system" onkeyup="validate();" name="system" placeholder="Jita, J123456 ..." value="{% if site %}{{ site.system }}{% elif g_system %}{{ g_system }}{% else %}{{ eveigb.solarsystemname }}{% endif %}"></td>
+    </tr>
+    <tr>
+        <td><label>Name of site</label></td>
+        <td><input type="text" id="site_name" onkeyup="validate();" name="name" placeholder="Core Stronghold, Quarantine Area ..." value="{% if site %}{{ site.name }}{% elif g_name %}{{ g_name }}{% endif %}"></td>
+    </tr>
+    <tr>
+        <td><label>Type of site</label></td>
+        <td>
+            <select name="type">
+                {% if site %}
+                    <option>{{ site.type_ }}</option>
+                {% elif g_type %}
+                    <option>{{ g_type }}</option>
+                {% endif %}
+                <option>Combat</option>
+                <option>Relic</option>
+                <option>Gas</option>
+                <option>Data</option>
+                <option>Ore</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><label>Has the site been opened</label></td>
+        <td><input type="checkbox" name="opened" {% if site and site.opened %}checked="checked"{% endif %}></td>
+    </tr>
+    <tr>
+        <td><label>Has the site despawned</label></td>
+        <td><input type="checkbox" name="closed" {% if site and site.closed %}checked="checked"{% endif %}></td>
+    </tr>
+    <tr>
+        <td><label>Notes</label></td>
+        <td><textarea name="notes">{% if site %}{{ site.notes }}{% endif %}</textarea></td>
+    </tr>
+    <tr>
+        <td><label>{% if finish_msg %}{{ finish_msg }}{% endif %}</label></td>
+        <td>
+            <input type="submit" id="site_submit_button" value="Store" class="btn btn-primary" data-loading-text="Storing..." onclick="$(this).button('loading');">
+        </td>
+    </tr>
+</table>

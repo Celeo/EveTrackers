@@ -1,0 +1,204 @@
+{% extends 'site/old/old_base.html' %}
+
+{% block subtitle %}
+System Info
+{% endblock %}
+
+{% block extraHead %}
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+    {% if kspace %}
+        $("#jumps").load("{{ url_for('.get_tradehub_jumps', system=systemObject.name) }}");
+        $("#kills").load("{{ url_for('.system_kills', system=systemObject.name) }}");
+        $("#system_api_info").load("{{ url_for('.system_api_info', system=systemObject.name) }}");
+    {% endif %}
+        $("#closest_system").load("{{ url_for('.closest_chain_system', system=systemObject.name) }}", function() {
+            $("#toggle_additional").on("click", function()
+            {
+                console.log("toggle");
+                $("#additional_entrances").fadeToggle(500);
+            });
+        });
+        $("#deletedscan").on("click", function(event)
+        {
+            event.preventDefault();
+            window.location = "{{ url_for('.delete_dscan', system_id=systemObject.id) }}";
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<h1>{{ systemObject.name }}{% if rename %} "{{ rename }}"{% endif %}{% if class_ %}, Class {{ class_ }}
+{% if systemObject.effect %} ({{ systemObject.effect }}){% endif %}{% endif %}{% if security %}, sec {{ security }}{% endif %}</h1>
+
+{% if eveigb['solarsystemname'] == systemObject.name %}
+    <h3>You are currently in this system</h3>
+{% endif %}
+
+{% if kspace %}
+<span id="closest_system">
+    <span class="text-left gray">Loading closest system ...</span>
+</span>
+
+<span id="system_api_info">
+    <span class="text-left gray"><br /><br />Loading api data ...</span>
+</span>
+{% endif %}
+
+<div class="row">
+    {% if kspace %}
+        <div class="col-lg-6">
+            <p id="kills"><span class="text-left gray">Loading recent kills in this system ...</span></p>
+        </div>
+        <div class="col-lg-6">
+            <div style="width: 100%; margin-bottom: 20px;" id="jumps"><span class="text-left gray">Loading jumps to major tradehubs ...</span></div>
+        </div>
+    {% else %}
+    <div class="span12">
+        <h4><b>Statics</b>:<br />{{ systemObject.static }}</h4>
+    </div>
+    {% endif %}
+</div>
+
+<div style="width: 50%; padding: 1em 0 1em 0; border: 1px solid gray;">
+    <h4>{% if systemObject.dscan %}DScan from {{ systemObject.dscan_date }}{% else %}Paste DScan Data{% endif %}</h4>
+    <form action="" method="POST" id="notesform">
+        <textarea name="systemdscan" id="systemdscan" style="width: 90%;" rows="10">{{ systemObject.dscan }}</textarea><br />
+        <input class="btn btn-primary" type="submit" value="Save">
+        <button class="btn btn-danger" id="deletedscan">Delete</button>
+    </form>
+</div>
+<br />
+<div style="width: 50%; padding: 1em 0 1em 0; border: 1px solid gray;">
+    <h4>Alliance Notes</h4>
+    <form action="" method="POST" id="notesform">
+        <textarea name="systemnote" id="systemnote" style="width: 90%;" rows="10">{{ systemObject.note }}</textarea><br />
+        <input class="btn btn-primary" type="submit" value="Save">
+    </form>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-lg-3">
+        <h3>Open wormholes</h3>
+        {% if openwormholes %}
+            <table class="extracellspacing">
+                <tr>
+                    <th>Scan id</th>
+                    <th>Date entered</th>
+                    <th>From</th>
+                    <th>Leads to</th>
+                </tr>
+                {% for w in openwormholes %}
+                    {% if w.opened %}
+                    <tr class="open">
+                    {% else %}
+                    <tr class="closed">
+                    {% endif %}
+                        <td><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
+                        <td>{{ w.date|date }}</td>
+                        <td>
+                            {% if systemObject.name == w.start %}
+                               <i>{{ w.start }}</i>
+                            {% else %}
+                                <a href="{{ url_for('.system', system=w.start) }}">{{ w.start }}</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if systemObject.name == w.end %}
+                                <i>{{ w.end }}</i>
+                            {% else %}
+                                <a href="{{ url_for('.system', system=w.end) }}">{{ w.end }}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-3">
+        <h3>Currently open sites</h3>
+        {% if opensites %}
+            <table class="extracellspacing">
+                <tr>
+                    <th>Scan id</th>
+                    <th>Date entered</th>
+                    <th>Name</th>
+                </tr>
+                {% for s in opensites %}
+                    {% if s.isAnom %}
+                    <tr class="anom">
+                    {% elif s.opened %}
+                    <tr class="open">
+                    {% else %}
+                    <tr class="closed">
+                    {% endif %}
+                        <td><a href="{{ url_for('.site', id=s.id) }}">{{ s.scanid }}</a></td>
+                        <td>{{ s.date|date }}</td>
+                        <td>{{ s.name }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-3">
+        <h3>Unopened sites</h3>
+        {% if unopenedsites %}
+            <table class="extracellspacing">
+                <tr>
+                    <th>Scan id</th>
+                    <th>Date entered</th>
+                    <th>Name</th>
+                </tr>
+                {% for s in unopenedsites %}
+                    {% if s.isAnom %}
+                    <tr class="anom">
+                    {% elif s.opened %}
+                    <tr class="open">
+                    {% else %}
+                    <tr class="closed">
+                    {% endif %}
+                        <td><a href="{{ url_for('.site', id=s.id) }}">{{ s.scanid }}</a></td>
+                        <td>{{ s.date|date }}</td>
+                        <td>{{ s.name }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>None</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-3">
+    <h3>Closed wormholes</h3>
+    {% if closedwormholes %}
+        <table class="extracellspacing">
+            <tr>
+            <th>Scan id</th>
+            <th>Date entered</th>
+        </tr>
+        {% for w in closedwormholes %}
+            <tr>
+                <td><a href="{{ url_for('.wormhole', id=w.id) }}">{{ w.scanid }}</a></td>
+                <td>{{ w.date|date }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>None</p>
+    {% endif %}
+    </div>
+</div>
+
+</center>
+
+{% endblock %}

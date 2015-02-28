@@ -43,7 +43,7 @@ def _render_template(template_name, **kwargs):
         we render those requests on the pre-materail deign templates.
     """
     if InGameBrowser(request).is_igb():
-        return render_template('old_{}'.format(template_name), **kwargs)
+        return render_template('{}/old/old_{}'.format(*template_name.split('/')), **kwargs)
     else:
         return render_template(template_name, **kwargs)
 
