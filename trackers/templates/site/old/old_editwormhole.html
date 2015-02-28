@@ -1,4 +1,4 @@
-{% extends 'site/base.html' %}
+{% extends 'site/old/old_base.html' %}
 
 {% block subtitle %}
 Edit Wormhole
@@ -8,7 +8,7 @@ Edit Wormhole
 
 <center>
 
-<h2>Edit wormhole #{{ wormhole.id }}</h2>
+<h1>Edit wormhole #{{ wormhole.id }}</h1>
 
 <form action="" method="POST" class="wideinput extracellspacing">
     {% include 'site/wormholeform.html' %}

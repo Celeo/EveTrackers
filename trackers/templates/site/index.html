@@ -29,142 +29,77 @@ Index
         setTimeout(socket.emit('sitetracker event', { data: 'player_locations' }), 1000);
     });
 </script>
+<style>
+    td {
+        padding: 0 0 0 5px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 
 <center>
 
-<div class="alert alert-warning" id="js_alerts" hidden>
-    <button type="button" class="close" onclick="$('#js_alerts').fadeOut(250);">&times;</button>
-    <p id="js_alerts_out"></p>
+<div class="card-panel amber lighten-3" id="notify_refresh" hidden>
+    Someone has made edits since the data here was last refreshed.<br />
+    Press the <b>r</b> key or click <a onclick="refreshData();">here</a>.
 </div>
 
-<div class="alert alert-warning" id="notify_refresh" hidden>
-    <p>
-        Someone has made edits since the data here was last refreshed.<br />
-        Click the green refresh button or press the <i>r</i> key when not typing into a textbox.
-    </p>
-</div>
-
-<p><strong>
+<div class="card-panel">
     This page loaded at Eve time {{ now|date }}.<br />
-    Last edit: {{ last_update_diff }} ago, by {{ last_update_user }}<br />
-</strong></p>
-
-<div class="btn-group" id="button_nav">
-    <button id="b_nav_tables" class="btn btn-primary active" onclick="toggleSection('tables');" data-toggle="button">Tables (t)</button>
-    <button id="b_nav_graph" class="btn btn-primary{% if settings_aeg %} active{% endif %}" onclick="toggleSection('graph_all');" data-toggle="button">Graph (g)</button>
-    <button id="b_nav_paste" class="btn btn-primary" onclick="toggleSection('index_paste');" data-toggle="button">Paste (p)</button>
-    <button id="b_wormholes" class="btn btn-primary" onclick="toggleSection('wormholes');" data-toggle="button">wh.pasta.gg (w)</button>
-    <button id="b_refresh" class="btn btn-success" onclick="refreshData();">Refresh Data (r)</button>
+    Last edit: {{ last_update_diff }} ago, by {{ last_update_user }}
 </div>
 
-<div id="wormholes" style="border: 1px solid black; padding-top: 10px; display: none;">
-    <iframe src="http://wh.pasta.gg/" style="width: 100%; height: 50em;"></iframe>
-</div>
-<div id="graph_all" style="border: 1px solid gray;{% if not settings_aeg %}display: none;{% endif %}">
+<div id="graph_all" class="card-panel light-blue lighten-5">
     <div id="graph_top">
-        <p style="background-color: rgba(196, 196, 196, 0.7); padding: 5px 0 5px;">
-            Clicking on a rectange will 1) show a link to the system, 2) set the "start" field in the mini-form, and 3) highlight the corresponding wormhole in the tables below.<br />
-        </p>
+        Clicking on a rectange will 1) show a link to the system, 2) set the "start" field in the mini-form, and 3) highlight the corresponding wormhole in the tables below.<br />
     </div>
     <div id="graph"></div>
     <div class="form-inline">
         <input type="text" name="scanid" id="graph_wormhole_scanid" placeholder="Scan ID" class="uppercase" style="width: 10%;" maxlength="3">
         <input type="text" name="start" id="graph_wormhole_start" placeholder="Start" style="width: 10%;">
         <input type="text" name="end" id="graph_wormhole_end" placeholder="end" style="width: 10%;">
-        <button class="btn btn-sm btn-primary" onclick="addNewWormholeGraph();">Add</button>
+        <button class="waves-effect waves-light btn btn-primary tooltipped light-blue accent-4"  data-position="bottom" data-delay="50" data-tooltip="Add new wormhole" onclick="addNewWormholeGraph();">Add</button>
     </div>
-    <div id="graph_info" style="font-size: 125%; font-weight: bolder; background-color: rgba(196, 196, 196, 0.7); padding: 5px 0 5px;"></div>
-    <div id="graph_players_container" style="background-color: rgba(196, 196, 196, 0.7); padding: 0 3% 0 3%;">
-        <span id="graph_players"></span>
-    </div>
-</div>
-<div id="index_paste" style="border: 1px solid gray; display: none;">
-    <h4>This is the same function as on the <a href="{{ url_for('.paste') }}">paste page</a></h4>
-    <form action="{{ url_for('.paste') }}" method="POST">
-        <table class="no-border">
-            <tr class="no-border">
-                <td>
-                    <span><b>System</b></span>
-                </td>
-                <td style="padding-left: 5px;">
-                    <input type="text" name="system" value="{% if system %}{{ system }}{% elif eveigb.is_igb() %}{{ eveigb.solarsystemname }}{% else %}{{ homesystem }}{% endif %}">
-                </td>
-            </tr>
-        </table><br />
-        <textarea name="pastedata" rows="20" id="ta_pastedata">{% if raw %}{{ raw }}{% endif %}</textarea><br />
-        <input type="submit" value="Parse" class="btn btn-primary" data-loading-text="Parsing..." onclick="$(this).button('loading');"> 
-    </form>
+    <div id="graph_info"></div>
+    <div id="graph_players_container"><span id="graph_players"></span></div>
 </div>
 
-<br /><br />
-
-<div id="tables"></div>
-
-<hr />
+<div class="card-panel grey lighten-5" id="tables"></div>
 
 </center>
-
-<footer>
-    <p class="footer">
-        App &copy; <a href="https://github.com/Celeo">Celeo</a> 2013-14 <a href="https://github.com/Celeo/EveTrackers">Open source</a>
-        <br />
-        EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual
-        property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts
-        or other recognizable features of the intellectual property relating to these trademarks are
-        likewise the intellectual property of CCP hf. EVE Online and the EVE logo are the registered
-        trademarks of CCP hf. All rights are reserved worldwide. All other trademarks are the property
-        of their respective owners.
-    </p>
-</footer>
 
 {% endblock %}
 
 {% block pageEnd %}
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure that you want to close this <span id="modal_message_final"></span>?</p>
-            </div>
-            <div class="modal_info" hidden>
-                <label id="clickedType"></label>
-                <label id="clickedID"></label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" onclick="performClose();">Yes</button>
-            </div>
-        </div>
+<div class="modal" id="modalCloseModel">
+    <div class="modal-content">
+        <h4>Are you sure?</h4>
+        <p>Are you sure that you want to close this <span id="modal_message_final"></span>?</p>
+    </div>
+    <div hidden>
+        <label id="clickedType"></label>
+        <label id="clickedID"></label>
+    </div>
+    <div class="modal-footer">
+        <a onclick="" class="waves-effect waves-blue btn-flat modal-action modal-close">No</a>
+        <a onclick="performClose();" class="waves-effect waves-blue btn-flat modal-action modal-close">Yes</a>
     </div>
 </div>
 
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure that you want to open this <span id="modal_message_final2"></span>?</p>
-            </div>
-            <div class="modal_info" hidden>
-                <label id="clickedType2"></label>
-                <label id="clickedID2"></label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" onclick="performOpen();">Yes</button>
-            </div>
-        </div>
+<div class="modal" id="modalOpenModel">
+    <div class="modal-content">
+        <h4>Are you sure?</h4>
+        <p>Are you sure that you want to close this <span id="modal_message_final2"></span>?</p>
+    </div>
+    <div hidden>
+        <label id="clickedType2"></label>
+        <label id="clickedID2"></label>
+    </div>
+    <div class="modal-footer">
+        <a onclick="" class="waves-effect waves-blue btn-flat modal-action modal-close">No</a>
+        <a onclick="performOpen();" class="waves-effect waves-blue btn-flat modal-action modal-close">Yes</a>
     </div>
 </div>
 

@@ -1,0 +1,19 @@
+{% if is_in_chain %}
+    <h3>This system is directly in the chain</h3>
+{% elif closest_chain %}
+    <h3 style="margin-bottom: 0;">
+        Closest chain system to this is <a href="{{ url_for('.system', system=closest_chain) }}">{{ closest_chain }}</a>, {{ closest_jumps }} 
+        jump{% if closest_jumps != 1 %}s{% endif %}, <a href="#" id="toggle_additional">or <span class="caret"></a>
+    </h3>
+    <div id="additional_entrances" style="border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 1em; margin: 0.5em; width: 75%; display: none;">
+        <p>
+        {% for system, distance in additional %}
+            <a href="{{ url_for('.system', system=system) }}">{{ system }} - {{ distance }} jumps</a><br />
+        {% else %}
+            No other entrances
+        {% endfor %}
+        </p>
+    </div>
+{% else %}
+    <h3>There is no direct access to this system with the current wormhole chain.</h3>
+{% endif %}

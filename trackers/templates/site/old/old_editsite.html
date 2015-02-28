@@ -1,24 +1,24 @@
-{% extends 'site/base.html' %}
+{% extends 'site/old/old_base.html' %}
 
 {% block subtitle %}
-Edit Wormhole
+Edit Site
 {% endblock %}
 
 {% block content %}
 
 <center>
 
-<h2>Edit wormhole #{{ wormhole.id }}</h2>
+<h1>Edit site #{{ site.id }}</h1>
 
 <form action="" method="POST" class="wideinput extracellspacing">
-    {% include 'site/wormholeform.html' %}
+    {% include 'site/siteform.html' %}
 </form>
 
 {% if admin %}
 <br />
-<form action="{{ url_for('.wormhole', id=wormhole.id) }}" method="POST">
+<form action="{{ url_for('.site', id=site.id) }}" method="POST">
     <input type="hidden" name="admin_delete" value="admin_delete">
-    <input type="submit" class="btn btn-danger" value="Delete wormhole">
+    <input type="submit" class="btn btn-danger" value="Delete site">
 </form>
 {% endif %}
 
@@ -32,7 +32,7 @@ Edit Wormhole
         <th>Date</th>
         <th>Changed</th>
     </tr>
-{% for snap in wormhole.snapshots %}
+{% for snap in site.snapshots %}
     <tr>
         <td>{{ snap.snapper }}</td>
         <td>{{ snap.date|date }}</td>

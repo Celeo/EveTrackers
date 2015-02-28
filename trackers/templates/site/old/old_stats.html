@@ -1,11 +1,11 @@
-{% extends 'site/base.html' %}
+{% extends 'site/old/old_base.html' %}
 
 {% block subtitle %}
 Stats
 {% endblock %}
 
 {% block extraHead %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/canvasjs.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='old/js/canvasjs.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -61,21 +61,21 @@ Total number of contributors: {{ num_contributors }}</strong>
     <div class="col-lg-4">
         {% for a, b in all_contributors %}
             {% if loop.index0 <= loop.length / 3 %}
-                <span class="badge green darken-2 black-text">{{ b }} additions</span> <span class="badge blue darken-2 black-text">{{ a }}</span><br />
+                <span class="label label-primary">{{ a }}</span> <span class="label label-success">{{ b }} additions</span><br />
             {% endif %}
         {% endfor %}
     </div>
     <div class="col-lg-4">
         {% for a, b in all_contributors %}
             {% if loop.index0 <= (2 * loop.length / 3) and loop.index0 > loop.length / 3 %}
-                <span class="badge green darken-2 black-text">{{ b }} additions</span> <span class="badge blue darken-2 black-text">{{ a }}</span><br />
+                <span class="label label-primary">{{ a }}</span> <span class="label label-success">{{ b }} additions</span><br />
             {% endif %}
         {% endfor %}
     </div>
     <div class="col-lg-4">
         {% for a, b in all_contributors %}
             {% if loop.index0 > (2 * loop.length / 3) %}
-                <span class="badge green darken-2 black-text">{{ b }} additions</span> <span class="badge blue darken-2 black-text">{{ a }}</span><br />
+                <span class="label label-primary">{{ a }}</span> <span class="label label-success">{{ b }} additions</span><br />
             {% endif %}
         {% endfor %}
     </div>

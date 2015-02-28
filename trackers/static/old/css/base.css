@@ -1,3 +1,21 @@
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    padding: 5px 0 5px 0;
+}
+
+th {
+    font-size: 120%;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+input {
+    text-align: center;
+}
+
 p .footer {
     font-size: 80%;
 }
@@ -44,8 +62,4 @@ div .padding-tiny {
 
 .text-plus {
     font-size: 125%;
-}
-
-.cursor-pointer {
-    cursor: pointer;
 }

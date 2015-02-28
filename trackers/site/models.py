@@ -136,7 +136,6 @@ class Settings(db.Model):
     store_multiple = db.Column(db.Boolean)
     auto_expand_graph = db.Column(db.Boolean)
     edits_made = db.Column(db.Integer)
-    dont_show_nn_banner = db.Column(db.Boolean)
 
     def __init__(self, user, edits_in_new_tabs=True, store_multiple=True, auto_expand_graph=True,
         edits_made=0, dont_show_nn_banner=False):
@@ -145,7 +144,6 @@ class Settings(db.Model):
         self.store_multiple = store_multiple
         self.auto_expand_graph = auto_expand_graph
         self.edits_made = edits_made
-        self.dont_show_nn_banner = dont_show_nn_banner
 
     def __repr__(self):
         return '<Settings {}>'.format(self.user)

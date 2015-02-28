@@ -4,19 +4,23 @@
 <head>
     <meta charset="utf-8">
     <title>{% block subtitle %}{% endblock %} | Site{% block titleAdd %}{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta name="description" content="EveTrackers - Site">
     <meta name="author" content="Celeo">
 
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
-{% if eveigb.is_igb() %}
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-{% else %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-{% endif %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    <script>
+    (function($) {
+        $(function() {
+            $('.button-collapse').sideNav();
+        });
+    })(jQuery);
+    </script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('body').keydown(function(event) {
@@ -24,23 +28,8 @@
                     return;
                 switch (event.keyCode)
                 {
-                    case 71:
-                        $("#b_nav_graph").click();
-                        break;
                     case 72:
                         window.location.href = "{{ url_for('.index') }}";
-                        break;
-                    case 80:
-                        $("#b_nav_paste").click();
-                        break;
-                    case 82:
-                        $("#b_refresh").click();
-                        break;
-                    case 84:
-                        $("#b_nav_tables").click();
-                        break;
-                    case 87:
-                        $("#b_wormholes").click();
                         break;
                 }
             });
@@ -52,6 +41,10 @@
             setInterval(getIGBSystem, 5000);
             $("#tracking_progress").html("Tracking");
         {% endif %}
+            $("#add_new_model").on("click", function() {
+                window.location.href = "{{ url_for('.add') }}";
+            });
+            $('.tooltipped').tooltip({delay: 50});
         });
         function getDisplayName() {
             return "{{ displayname }}";
@@ -62,55 +55,47 @@
 
 <body>
 
-<nav class="navbar navbar-default container" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Site Tracker <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="{{ url_for('op_tracker.index') }}">Op</a></li>
-                <li><a href="{{ url_for('corp_tracker.index') }}">Corp</a></li>
-                <li><a href="{{ url_for('fuel_tracker.index') }}">Fuel</a></li>
-                <li><a href="{{ url_for('war_tracker.index') }}">War</a></li>
-                <li><a href="{{ url_for('char_tracker.index') }}">Char</a></li>
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="container">
+        <div class="nav-wrapper">
+            <a id="logo-container" href="{{ url_for('.index') }}" class="brand-logo">Site Tracker</a>
+            <ul class="right">
+                <li><a href="{{ url_for('.add') }}">Add</a></li>
+                <li><a href="{{ url_for('.paste') }}">Paste</a></li>
+                <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
+                <li><a href="{{ url_for('.mastertable') }}">Master List</a></li>
+                <li><a href="{{ url_for('.stats') }}">Stats</a></li>
+            {% if displayname == 'none' %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('.settings') }}">{{ displayname }}</a></li>
+            {% endif %}
             </ul>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav" style="margin-left: 15em;">
+            <ul id="nav-mobile" class="side-nav">
                 <li><a href="{{ url_for('.index') }}">Home</a></li>
                 <li><a href="{{ url_for('.add') }}">Add</a></li>
                 <li><a href="{{ url_for('.paste') }}">Paste</a></li>
                 <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
                 <li><a href="{{ url_for('.mastertable') }}">Master List</a></li>
                 <li><a href="{{ url_for('.stats') }}">Stats</a></li>
+            {% if displayname == 'none' %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('.settings') }}">{{ displayname }}</a></li>
+            {% endif %}
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayname }} <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{ url_for('.settings') }}">Settings</a></li>
-                        <li><a href="{{ url_for('logout_page') }}">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <a href="#" data-activities="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid shadowall" id="page_proper">
+<div class="container-fluid" id="page_proper">
     <div class="block-padding">
         <center>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                <div class="card-panel{% if category == 'info' %}green{% elif category == 'warning' %}yellow{% else %}red{% endif %}">
                     <p>
                         {{ message }}
                     </p>
@@ -119,8 +104,16 @@
             {% endif %}
         {% endwith %}
         </center>
-        {% block content %}{% endblock %}
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
     </div>
+</div>
+
+<div class="fixed-action-btn" style="bottom: 20px; right: 20px;" id="add_new_model">
+    <a class="waves-effect waves-light btn btn-floating btn-large red tooltipped" data-position="top" data-delay="50" data-tooltip="Add new">
+        <i class="large mdi-content-add"></i>
+    </a>
 </div>
 
 {% block loadLaterJavascript %}{% endblock %}

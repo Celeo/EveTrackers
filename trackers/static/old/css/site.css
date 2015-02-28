@@ -1,9 +1,63 @@
 body {
     background-color: #E6E6E6;
+    background-image: url(http://tracker.talkinlocal.org/static/img/background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+tr {
+    padding: 5px 0 5px 0;
+    text-align: center;
+}
+
+th {
+    font-size: 120%;
+    border: 1px solid gray;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
+}
+
+input[type="checkbox"] {
+    text-align: left;
+    vertical-align: center;
+}
+
+h3 {
+    margin-top: 0;
+}
+
+.shadowall {
+    background-color: white;
+    background-color: rgba(250, 250, 250, 0.8);
+    margin: 0 4em 4em 4em;
+    padding-bottom: 4em;
+}
+
+.sub-brand {
+    font-size: 110%;
+}
+
+hr.break {
+    margin: 0 1em 0 1em;
 }
 
 .extracellspacing td {
     padding: 0 5px 0 5px;
+}
+
+.hovertable tr {
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+}
+
+.hovertable tr:hover td {
+    background-color: #F5F5F5;
+}
+
+.hovertable th.bottom-border {
+    border: none;
+    border-bottom: 1px solid gray;
 }
 
 .contenttable {
@@ -24,6 +78,10 @@ body {
 
 .r {
     color: red;
+}
+
+#ta_pastedata {
+    width: 60%;
 }
 
 .link_big {
@@ -68,8 +126,20 @@ body {
     text-transform: uppercase;
 }
 
+.wideinput input,textarea,select {
+    width: 150%;
+}
+
+.short_input {
+    width: 10em;
+}
+
 .gray {
     color: gray;
+}
+
+.block-padding {
+    padding: 1% 1% 0 1%;
 }
 
 .modal-open {

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block subtitle %}{% endblock %} | Site{% block titleAdd %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EveTrackers - Site">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='old/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='old/css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='old/css/site.css') }}">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='old/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('body').keydown(function(event) {
+                if (event.target.tagName !== "BODY")
+                    return;
+                switch (event.keyCode)
+                {
+                    case 71:
+                        $("#b_nav_graph").click();
+                        break;
+                    case 72:
+                        window.location.href = "{{ url_for('.index') }}";
+                        break;
+                    case 80:
+                        $("#b_nav_paste").click();
+                        break;
+                    case 82:
+                        $("#b_refresh").click();
+                        break;
+                    case 84:
+                        $("#b_nav_tables").click();
+                        break;
+                    case 87:
+                        $("#b_wormholes").click();
+                        break;
+                }
+            });
+        {% if eveigb.is_igb() %}
+            function getIGBSystem() {
+                $.get("{{ url_for('.in_game_player_system') }}", function(data) {});
+            }
+            getIGBSystem();
+            setInterval(getIGBSystem, 5000);
+            $("#tracking_progress").html("Tracking");
+        {% endif %}
+        });
+        function getDisplayName() {
+            return "{{ displayname }}";
+        }
+    </script>
+    {% block extraHead %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-default container" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Site Tracker <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ url_for('op_tracker.index') }}">Op</a></li>
+                <li><a href="{{ url_for('corp_tracker.index') }}">Corp</a></li>
+                <li><a href="{{ url_for('fuel_tracker.index') }}">Fuel</a></li>
+                <li><a href="{{ url_for('war_tracker.index') }}">War</a></li>
+                <li><a href="{{ url_for('char_tracker.index') }}">Char</a></li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" style="margin-left: 15em;">
+                <li><a href="{{ url_for('.index') }}">Home</a></li>
+                <li><a href="{{ url_for('.add') }}">Add</a></li>
+                <li><a href="{{ url_for('.paste') }}">Paste</a></li>
+                <li><a href="{{ url_for('.system_landing') }}">Systems</a></li>
+                <li><a href="{{ url_for('.mastertable') }}">Master List</a></li>
+                <li><a href="{{ url_for('.stats') }}">Stats</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayname }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ url_for('.settings') }}">Settings</a></li>
+                        <li><a href="{{ url_for('logout_page') }}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid shadowall" id="page_proper">
+    <div class="block-padding">
+        <center>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+                    <p>
+                        {{ message }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </center>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+{% block loadLaterJavascript %}{% endblock %}
+{% block pageEnd %}{% endblock %}
+
+</body>
+
+</html>

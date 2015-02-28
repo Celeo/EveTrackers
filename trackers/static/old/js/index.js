@@ -2,17 +2,7 @@ $(document).ready(function() {
     $('.message').bind('click', function() {
        $(this).hide(250);
     });
-    $('body').keydown(function(event) {
-        if (event.target.tagName !== "BODY")
-            return;
-        switch (event.keyCode)
-        {
-            case 82:
-                refreshData();
-                break;
-        }
-    });
-    refreshData();
+    $('#tables').load("/tables");
     $('#sitetable').tablesorter();
     $('#wormholetable').tablesorter();
     var counter = setInterval(timer, 1000);
@@ -47,13 +37,7 @@ $(document).ready(function() {
 
 function refreshData() {
     $('#notify_refresh').hide();
-    $('#tables').load("/tables", "", function(data) {
-        $('.modal-trigger').leanModal();
-        $('.tooltipped').tooltip({delay: 50});
-        $('select').material_select();
-    });
-    $('#graph_wormhole_start').val('');
-    $('#graph_info').html('');
+    $('#tables').load("/tables");
     graph();
 }
 
@@ -87,7 +71,6 @@ function addNewSite() {
         },
         success: function(data) {
             $('#tables').load("/tables");
-            $('.tooltipped').tooltip({delay: 50});
         }
     });
 }
@@ -107,7 +90,6 @@ function addNewWormholeGraph() {
             $('#graph_wormhole_start').val('');
             $('#graph_wormhole_end').val('');
             $('#tables').load("/tables");
-            $('.tooltipped').tooltip({delay: 50});
             graph();
         }
     });
@@ -124,12 +106,12 @@ function edit(type, n) {
         var end = $('#wend' + n).text();
         var status = $('#wstatus' + n).text();
         var o_scanid = $('#wo_scanid' + n).text();
-        $('#wid' + n).html('<input type="text" maxlength="3" class="uppercase short_input" id="wid' + n + '_edit" value="' + scanid + '">');
+        $('#wid' + n).html('<input type="text" class="uppercase short_input" id="wid' + n + '_edit" value="' + scanid + '">');
         $('#wstart' + n).html('<input type="text" class="short_input" id="wstart' + n + '_edit" value="' + start + '">');
         $('#wend' + n).html('<input type="text" class="short_input" id="wend' + n + '_edit" value="' + end + '">');
         $('#wstatus' + n).html('<input type="text" class="short_input" id="wstatus' + n + '_edit" value="' + status + '">');
-        $('#wo_scanid' + n).html('<input type="text" maxlength="3" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
-        $('#wlink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Cancel" onclick="cancel(\'wormhole\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Save" onclick="save(\'wormhole\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
+        $('#wo_scanid' + n).html('<input type="text" class="uppercase short_input" id="wo_scanid' + n + '_edit" value="' + o_scanid + '">');
+        $('#wlink' + n).html('<a class="label label-danger" onclick="cancel(\'wormhole\', ' + n + ')">Cancel</a> <td><a class="label label-success" onclick="save(\'wormhole\', ' + n + ')">Save</a></td>');
     }
     else if (type === 'site') {
         var scanid = $('#sid' + n).text();
@@ -138,9 +120,8 @@ function edit(type, n) {
         $('#sid' + n).html('<input type="text" class="uppercase short_input" id="sid' + n + '_edit" value="' + scanid + '">');
         $('#sname' + n).html('<input type="text" class="short_input" id="sname' + n + '_edit" value="' + name + '">');
         $('#stype' + n).html('<input type="text" class="short_input" id="stype' + n + '_edit" value="' + type + '">');
-        $('#slink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Cancel" onclick="cancel(\'site\', ' + n + ')"><i class="small mdi-action-delete"></i></a> <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Save" onclick="save(\'site\', ' + n + ')"><i class="small mdi-content-save"></i></a></td>');
+        $('#slink' + n).html('<a class="label label-danger" onclick="cancel(\'site\', ' + n + ')">Cancel</a> <td><a class="label label-success" onclick="save(\'site\', ' + n + ')">Save</a></td>');
     }
-    $('.tooltipped').tooltip({delay: 50});
 }
 
 function cancel(type, n) {
@@ -150,7 +131,7 @@ function cancel(type, n) {
         var end = $('#wend' + n).html().split('"')[7];
         var status = $('#wstatus' + n).html().split('"')[7];
         var o_scanid = $('#wo_scanid' + n).html().split('"')[7];
-        $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\', ' + n + ')"><i class="small mdi-action-dns"></i></a>');
+        $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\', ' + n + ')">Change</a>');
         $('#wid' + n).html('<a href="/wormhole/' + n + '">' + scanid + '</a>');
         $('#wstart' + n).html('<a href="/system/' + start +'">' + start + '</a>');
         $('#wend' + n).html('<a href="/system/' + end +'">' + end + '</a>');
@@ -161,7 +142,7 @@ function cancel(type, n) {
         var scanid = $('#sid' + n).html().split('"')[7];
         var name = $('#sname' + n).html().split('"')[7];
         var type = $('#stype' + n).html().split('"')[7];
-        $('#slink' + n).html('<a class="label label-warning" onclick="edit(\'site\', ' + n + ')"><i class="small mdi-action-dns"></i></a>');
+        $('#slink' + n).html('<a class="label label-warning" onclick="edit(\'site\', ' + n + ')">Change</a>');
         $('#sid' + n).html('<a href="/site/' + n + '">' + scanid + '</a>');
         $('#sname' + n).html(name);
         $('#stype' + n).html(type);
@@ -169,7 +150,7 @@ function cancel(type, n) {
 }
 
 function save(type, n) {
-    toast('Saving', 5000);
+    $('#js_alerts_out').text('Saving...');
     $('#js_alerts').fadeIn(250);
     if (type === 'wormhole') {
         var id = n;
@@ -196,7 +177,7 @@ function save(type, n) {
             $('#wend' + n).html('<a href="/system/' + end +'">' + end + '</a>');
             $('#wstatus' + n).html(status);
             $('#wo_scanid' + n).html(o_scanid.toUpperCase());
-            toast('Saved', 5000);
+            $('#js_alerts_out').text('Saved');
             $('#js_alerts').fadeOut(3000);
           },
           fail: function(data) {
@@ -230,7 +211,7 @@ function save(type, n) {
                 $('#sid' + n).html('<a href="/site/' + n + '">' + scanid.toUpperCase() + '</a>');
                 $('#sname' + n).html(name);
                 $('#stype' + n).html(type);
-                toast('Saved', 5000);
+                $('#js_alerts_out').text('Saved');
                 $('#js_alerts').fadeOut(3000);
             },
             fail: function(data) {
@@ -263,15 +244,29 @@ function checkNew(type) {
 }
 
 function updateModal(type, id) {
+    window.scrollTo(0, 0);
     $("#clickedType").text(type);
     $("#clickedID").text(id);
     $("#modal_message_final").text(type);
-    $('#modalOpenModel').openModal();
 }
 
 function updateModal2(type, id) {
+    window.scrollTo(0, 0);
     $("#clickedType2").text(type);
     $("#clickedID2").text(id);
     $("#modal_message_final2").text(type);
-    $('#modalCloseModel').openModal();
+}
+
+function performClose() {
+    $.get("/" + $("#clickedType").text() + "/" + $("#clickedID").text() + "/close", function(data) {
+        refreshData();
+    });
+    $("#myModal").modal("toggle")
+}
+
+function performOpen() {
+    $.get("/" + $("#clickedType2").text() + "/" + $("#clickedID2").text() + "/open", function(data) {
+        refreshData();
+    });
+    $("#myModal2").modal("toggle")
 }

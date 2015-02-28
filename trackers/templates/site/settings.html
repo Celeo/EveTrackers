@@ -8,7 +8,10 @@ Settings
 
 <center>
 
-<h1>Settings</h1>
+
+<div class="right-align">
+    <a href="{{ url_for('logout_page') }}" class="btn waves-effect waves-light red">Logout</a>
+</div>
 
 {% if message %}
     <div class="alert alert-success" id="notice">
@@ -17,33 +20,44 @@ Settings
     </div>
 {% endif %}
 
-<div class="" style="padding: 1em 25% 0 25%;">
-    <form action="" method="POST">
-        <table class="extracellspacing">
-            <tr>
-                <td>Edit links open into a new tab</td>
-                <td><input type="checkbox" name="nt" {% if settings_nt %}checked="checked"{% endif %}></td>
-            </tr>
-            <tr>
-                <td>Store buttons redirect to the same page</td>
-                <td><input type="checkbox" name="sm" {% if settings_sm %}checked="checked"{% endif %}></td>
-            </tr>
-            <tr>
-                <td>Automatically open the index page's wormhole map</td>
-                <td><input type="checkbox" name="aeg" {% if settings_aeg %}checked="checked"{% endif %}></td>
-            </tr>
-            <tr>
-                <td><input type="submit" value="Save" class="btn btn-primary" data-loading-text="Saving..." onclick="$(this).button('loading');" style="margin-top: 1em;"></td>
-            </tr>
-        </table>
-    </form>
-    <br />
-    <p class="text-left">
+<h1>Settings</h1>
+
+<div class="card-panel">
+    <div class="row">
+        <form action="" class="col l12">
+            <div class="input-field col l12">
+                <p>
+                    <input type="checkbox" id="nt" name="nt" {% if settings.edits_in_new_tabs %}checked="checked"{% endif %}>
+                    <label for="nt">Edit links open into a new tab</label>
+                </p>
+            </div>
+            <div class="input-field col l12">
+                <p>
+                    <input type="checkbox" id="sm" name="sm" {% if settings.store_multiple %}checked="checked"{% endif %}>
+                    <label for="sm">Store buttons redirect to the same page</label>
+                </p>
+            </div>
+            <div class="input-field col l12">
+                <p>
+                    <input type="checkbox" id="aeg" name="aeg" {% if settings.auto_expand_graph %}checked="checked"{% endif %}>
+                    <label for="aeg">Automatically open the index page's wormhole map</label>
+                </p>
+            </div>
+            <div class="row">
+                <div class="input-field col l12">
+                    <button class="btn waves-effect waves-light light-blue accent-4" type="submit" id="site_submit_button" name="action">Save
+                        <i class="mdi-content-send right"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p class="text-left card-panel">
         The <strong>edit links open into a new tab</strong> setting changes whether EDIT links 
         on the index and paste pages open into a new tab (<i>True</i>), or into the same page (<i>False</i>).<br />
         The <strong>store buttons redirect to the same page</strong> setting changes whether 
         the Store buttons on add pages redirects back to the store page (<i>True</i>), allowing the 
-        quick entering of many sigs, or back to the index page (<i>False</i>).
+        quick entering of many sigs, or back to the index page (<i>False</i>).<br />
     </p>
 </div>
 

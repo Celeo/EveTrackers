@@ -1,0 +1,52 @@
+{% extends 'site/old/old_base.html' %}
+
+{% block subtitle %}
+Settings
+{% endblock %}
+
+{% block content %}
+
+<center>
+
+<h1>Settings</h1>
+
+{% if message %}
+    <div class="alert alert-success" id="notice">
+        <button type="button" class="close" onclick="$('#notice').fadeOut(250);">&times;</button>
+        {{ message }}
+    </div>
+{% endif %}
+
+<div class="" style="padding: 1em 25% 0 25%;">
+    <form action="" method="POST">
+        <table class="extracellspacing">
+            <tr>
+                <td>Edit links open into a new tab</td>
+                <td><input type="checkbox" name="nt" {% if settings_nt %}checked="checked"{% endif %}></td>
+            </tr>
+            <tr>
+                <td>Store buttons redirect to the same page</td>
+                <td><input type="checkbox" name="sm" {% if settings_sm %}checked="checked"{% endif %}></td>
+            </tr>
+            <tr>
+                <td>Automatically open the index page's wormhole map</td>
+                <td><input type="checkbox" name="aeg" {% if settings_aeg %}checked="checked"{% endif %}></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Save" class="btn btn-primary" data-loading-text="Saving..." onclick="$(this).button('loading');" style="margin-top: 1em;"></td>
+            </tr>
+        </table>
+    </form>
+    <br />
+    <p class="text-left">
+        The <strong>edit links open into a new tab</strong> setting changes whether EDIT links 
+        on the index and paste pages open into a new tab (<i>True</i>), or into the same page (<i>False</i>).<br />
+        The <strong>store buttons redirect to the same page</strong> setting changes whether 
+        the Store buttons on add pages redirects back to the store page (<i>True</i>), allowing the 
+        quick entering of many sigs, or back to the index page (<i>False</i>).
+    </p>
+</div>
+
+</center>
+
+{% endblock %}
