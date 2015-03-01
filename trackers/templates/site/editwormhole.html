@@ -4,43 +4,52 @@
 Edit Wormhole
 {% endblock %}
 
+{% block extraHead %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 
 <center>
+<div class="container">
 
-<h2>Edit wormhole #{{ wormhole.id }}</h2>
+    <h2>Edit wormhole #{{ wormhole.id }}</h2>
 
-<form action="" method="POST" class="wideinput extracellspacing">
-    {% include 'site/wormholeform.html' %}
-</form>
+    <form action="" method="POST" class="wideinput extracellspacing">
+        {% include 'site/wormholeform.html' %}
+    </form>
 
-{% if admin %}
-<br />
-<form action="{{ url_for('.wormhole', id=wormhole.id) }}" method="POST">
-    <input type="hidden" name="admin_delete" value="admin_delete">
-    <input type="submit" class="btn btn-danger" value="Delete wormhole">
-</form>
-{% endif %}
+    {% if admin %}
+    <form action="{{ url_for('.wormhole', id=wormhole.id) }}" method="POST">
+        <input type="hidden" name="admin_delete" value="admin_delete">
+        <button class="waves-effect waves-light btn btn-primary red" type="submit">Delete</button>
+    </form>
+    {% endif %}
 
-<br /><hr>
+    <br /><hr>
 
-<h3>Snapshots</h3>
+    <h3>Snapshots</h3>
 
-<table class="table-striped">
-    <tr>
-        <th>Saved By</th>
-        <th>Date</th>
-        <th>Changed</th>
-    </tr>
-{% for snap in wormhole.snapshots %}
-    <tr>
-        <td>{{ snap.snapper }}</td>
-        <td>{{ snap.date|date }}</td>
-        <td>{{ snap.changed|safe }}</td>
-    </tr>
-{% endfor %}
-</table>
-
+    <table class="bordered striped hoverable">
+        <tr>
+            <th>Saved By</th>
+            <th>Date</th>
+            <th>Changed</th>
+        </tr>
+    {% for snap in wormhole.snapshots %}
+        <tr>
+            <td>{{ snap.snapper }}</td>
+            <td>{{ snap.date|date }}</td>
+            <td>{{ snap.changed|safe }}</td>
+        </tr>
+    {% endfor %}
+    </table>
 </center>
+<br />
+</div>
 
 {% endblock %}

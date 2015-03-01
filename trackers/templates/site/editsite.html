@@ -6,15 +6,16 @@ Edit Site
 
 {% block extraHead %}
 <script type="text/javascript">
-$('select').material_select();
+    $(document).ready(function() {
+        $('select').material_select();
+    });
 </script>
 {% endblock %}
 
 {% block content %}
 
+<center>
 <div class="container">
-    <center>
-
     <h2>Edit site #{{ site.id }}</h2>
 
     <form action="" method="POST">
@@ -25,7 +26,7 @@ $('select').material_select();
     <br />
     <form action="{{ url_for('.site', id=site.id) }}" method="POST">
         <input type="hidden" name="admin_delete" value="admin_delete">
-        <input type="submit" class="btn btn-danger" value="Delete site">
+        <button class="waves-effect waves-light btn btn-primary red" type="submit">Delete</button>
     </form>
     {% endif %}
 
@@ -33,7 +34,7 @@ $('select').material_select();
 
     <h3>Snapshots</h3>
 
-    <table class="table-striped">
+    <table class="bordered striped hoverable">
         <tr>
             <th>Saved By</th>
             <th>Date</th>
@@ -47,8 +48,8 @@ $('select').material_select();
         </tr>
     {% endfor %}
     </table>
-
-    </center>
 </div>
+<br />
+</center>
 
 {% endblock %}

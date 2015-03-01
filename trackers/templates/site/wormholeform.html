@@ -1,5 +1,5 @@
 <div class="row">
-    <form action="" method="POST" class="col l12">'
+    <form action="" method="POST" class="col l12">
         <input type="hidden" name="model_type" value="wormhole">
         <div class="row">
             <div class="input-field col l12">
@@ -42,9 +42,12 @@
         <div class="row">
             <div class="input-field col l12">
                 <select name="status">
-                    <option value="" disabled selected>Wormhole status</option>
                 {% if wormhole %}
                     <option value="1">{{ wormhole.status }}</option>
+                {% elif g_type %}
+                    <option value="1">{{ g_type }}</option>
+                {% else %}
+                    <option value="" disabled selected>Wormhole status</option>
                 {% endif %}
                     <option value="2">Undecayed</option>
                     <option value="3">Unopened</option>

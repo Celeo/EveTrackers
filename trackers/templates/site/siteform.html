@@ -36,11 +36,12 @@
         <div class="row">
             <div class="input-field col l12">
             <select name="type">
-                <option value="" disabled selected>Select site type</option>
             {% if site %}
                 <option value="1">{{ site.type_ }}</option>
             {% elif g_type %}
                 <option value="1">{{ g_type }}</option>
+            {% else %}
+                <option value="" disabled selected>Select site type</option>
             {% endif %}
                 <option value="2">Combat</option>
                 <option value="3">Relic</option>
