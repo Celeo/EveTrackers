@@ -69,15 +69,15 @@ System Info
     <h4>{% if systemObject.dscan %}DScan from {{ systemObject.dscan_date }}{% else %}Paste DScan Data{% endif %}</h4>
     <form action="" method="POST" id="notesform">
         <textarea name="systemdscan" id="systemdscan" style="width: 90%;" rows="10">{{ systemObject.dscan }}</textarea><br />
-        <input class="btn btn-primary" type="submit" value="Save">
-        <button class="btn btn-danger" id="deletedscan">Delete</button>
+        <button class="waves-effect waves-light btn btn-primary tooltipped light-blue accent-4" type="submit">Save</button>
+        <button class="waves-effect waves-light btn btn-primary tooltipped red">Delete</button>
     </form>
 </div>
 <div class="card-panel">
     <h4>Alliance Notes</h4>
     <form action="" method="POST" id="notesform">
         <textarea name="systemnote" id="systemnote" style="width: 90%;" rows="10">{{ systemObject.note }}</textarea><br />
-        <input class="btn btn-primary" type="submit" value="Save">
+        <button class="waves-effect waves-light btn btn-primary tooltipped light-blue accent-4" type="submit">Save</button>
     </form>
 </div>
 

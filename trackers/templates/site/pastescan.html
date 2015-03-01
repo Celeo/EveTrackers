@@ -20,7 +20,9 @@ Paste
             <textarea name="pastedata" rows="20" id="ta_pastedata" class="materialize-textarea">{% if raw %}{{ raw }}{% endif %}</textarea><br />
             <label for="ta_pastedata">Paste your scanner data here</label>
           </div>
-        <input type="submit" value="Parse" class="btn btn-primary" data-loading-text="Parsing..." onclick="$(this).button('loading');"> 
+        <button class="btn waves-effect waves-light light-blue accent-4" type="Parse" name="action">Submit
+            <i class="mdi-content-send right"></i>
+        </button>
     </form>
 </div>
 
