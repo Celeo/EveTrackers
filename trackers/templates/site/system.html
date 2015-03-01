@@ -33,39 +33,39 @@ System Info
 
 <center>
 
-<h1>{{ systemObject.name }}{% if rename %} "{{ rename }}"{% endif %}{% if class_ %}, Class {{ class_ }}
-{% if systemObject.effect %} ({{ systemObject.effect }}){% endif %}{% endif %}{% if security %}, sec {{ security }}{% endif %}</h1>
+<h2>{{ systemObject.name }}{% if rename %} "{{ rename }}"{% endif %}{% if class_ %}, Class {{ class_ }}
+{% if systemObject.effect %} ({{ systemObject.effect }}){% endif %}{% endif %}{% if security %}, sec {{ security }}{% endif %}</h2>
 
 {% if eveigb['solarsystemname'] == systemObject.name %}
     <h3>You are currently in this system</h3>
 {% endif %}
 
 {% if kspace %}
-<span id="closest_system">
+<div class="card-panel" id="closest_system">
     <span class="text-left gray">Loading closest system ...</span>
-</span>
+</div>
 
-<span id="system_api_info">
+<div class="card-panel" id="system_api_info">
     <span class="text-left gray"><br /><br />Loading api data ...</span>
-</span>
+</div>
 {% endif %}
 
 <div class="row">
-    {% if kspace %}
-        <div class="col-lg-6">
-            <p id="kills"><span class="text-left gray">Loading recent kills in this system ...</span></p>
+{% if kspace %}
+        <div class="col l6">
+            <p class="card-panel" id="kills"><span class="text-left gray">Loading recent kills in this system ...</span></p>
         </div>
-        <div class="col-lg-6">
-            <div style="width: 100%; margin-bottom: 20px;" id="jumps"><span class="text-left gray">Loading jumps to major tradehubs ...</span></div>
+        <div class="col l6">
+            <div class="card-panel" id="jumps"><span class="text-left gray">Loading jumps to major tradehubs ...</span></div>
         </div>
-    {% else %}
-    <div class="span12">
-        <h4><b>Statics</b>:<br />{{ systemObject.static }}</h4>
+{% else %}
+    <div class="col l6 offset-l3 card-panel">
+        <h5><b>Statics</b>:<br />{{ systemObject.static }}</h5>
     </div>
-    {% endif %}
+{% endif %}
 </div>
 
-<div style="width: 50%; padding: 1em 0 1em 0; border: 1px solid gray;">
+<div class="card-panel">
     <h4>{% if systemObject.dscan %}DScan from {{ systemObject.dscan_date }}{% else %}Paste DScan Data{% endif %}</h4>
     <form action="" method="POST" id="notesform">
         <textarea name="systemdscan" id="systemdscan" style="width: 90%;" rows="10">{{ systemObject.dscan }}</textarea><br />
@@ -73,8 +73,7 @@ System Info
         <button class="btn btn-danger" id="deletedscan">Delete</button>
     </form>
 </div>
-<br />
-<div style="width: 50%; padding: 1em 0 1em 0; border: 1px solid gray;">
+<div class="card-panel">
     <h4>Alliance Notes</h4>
     <form action="" method="POST" id="notesform">
         <textarea name="systemnote" id="systemnote" style="width: 90%;" rows="10">{{ systemObject.note }}</textarea><br />
@@ -82,13 +81,11 @@ System Info
     </form>
 </div>
 
-<br />
-
 <div class="row">
-    <div class="col-lg-3">
-        <h3>Open wormholes</h3>
+    <div class="col l3 card-panel">
+        <h4>Open wormholes</h4>
         {% if openwormholes %}
-            <table class="extracellspacing">
+            <table class="bordered striped hoverable">
                 <tr>
                     <th>Scan id</th>
                     <th>Date entered</th>
@@ -124,10 +121,10 @@ System Info
             <p>None</p>
         {% endif %}
     </div>
-    <div class="col-lg-3">
-        <h3>Currently open sites</h3>
+    <div class="col l3 card-panel">
+        <h4>Currently open sites</h4>
         {% if opensites %}
-            <table class="extracellspacing">
+            <table class="bordered striped hoverable">
                 <tr>
                     <th>Scan id</th>
                     <th>Date entered</th>
@@ -151,10 +148,10 @@ System Info
             <p>None</p>
         {% endif %}
     </div>
-    <div class="col-lg-3">
-        <h3>Unopened sites</h3>
+    <div class="col l3 card-panel">
+        <h4>Unopened sites</h4>
         {% if unopenedsites %}
-            <table class="extracellspacing">
+            <table class="bordered striped hoverable">
                 <tr>
                     <th>Scan id</th>
                     <th>Date entered</th>
@@ -178,10 +175,10 @@ System Info
             <p>None</p>
         {% endif %}
     </div>
-    <div class="col-lg-3">
-    <h3>Closed wormholes</h3>
+    <div class="col l3 card-panel">
+    <h4>Closed wormholes</h4>
     {% if closedwormholes %}
-        <table class="extracellspacing">
+        <table class="bordered striped hoverable">
             <tr>
             <th>Scan id</th>
             <th>Date entered</th>

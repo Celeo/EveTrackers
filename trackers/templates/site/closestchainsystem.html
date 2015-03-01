@@ -1,11 +1,11 @@
 {% if is_in_chain %}
-    <h3>This system is directly in the chain</h3>
+    <h4>This system is directly in the chain</h4>
 {% elif closest_chain %}
-    <h3 style="margin-bottom: 0;">
+    <h4 style="margin-bottom: 0;">
         Closest chain system to this is <a href="{{ url_for('.system', system=closest_chain) }}">{{ closest_chain }}</a>, {{ closest_jumps }} 
-        jump{% if closest_jumps != 1 %}s{% endif %}, <a href="#" id="toggle_additional">or <span class="caret"></a>
-    </h3>
-    <div id="additional_entrances" style="border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 1em; margin: 0.5em; width: 75%; display: none;">
+        jump{% if closest_jumps != 1 %}s{% endif %}, <a href="#" id="toggle_additional">or ...</a>
+    </h4>
+    <div id="additional_entrances" class="card-panel light-blue lighten-5" style="padding: 1em; margin: 0.5em; width: 75%; display: none;">
         <p>
         {% for system, distance in additional %}
             <a href="{{ url_for('.system', system=system) }}">{{ system }} - {{ distance }} jumps</a><br />
@@ -15,5 +15,5 @@
         </p>
     </div>
 {% else %}
-    <h3>There is no direct access to this system with the current wormhole chain.</h3>
+    <h4>There is no direct access to this system with the current wormhole chain.</h4>
 {% endif %}

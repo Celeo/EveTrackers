@@ -1,4 +1,4 @@
-trackers.sublime-*
+eve_trackers.sublime-*
 *.pyc
 *.db
 config_deploy.cfg
