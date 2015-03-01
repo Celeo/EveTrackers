@@ -1114,6 +1114,11 @@ def api_views(path):
     return redirect(url_for('.index'))
 
 
+@blueprint.route('/about')
+def about():
+    return _render_template('site/about.html')
+
+
 def _notify_change(changed):
     """ Broadcast change to all connected clients """
     # used to send messages to clients on the app's index page
