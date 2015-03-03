@@ -60,7 +60,7 @@ class Operation(db.Model):
         try:
             share = self.loot * (float(player.sites) / float(self.total_shares()))
             share -= float(self.tax) * float(share)
-            return share
+            return round(share, 2)
         except:
             return -1
 
