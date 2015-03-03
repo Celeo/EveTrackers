@@ -3,6 +3,7 @@
 {% block head %}
 <script type="text/javascript">
     $(document).ready(function() {
+        $('select').material_select();
         $("input:checkbox.money").on("click", function() {
             if ($(this).prop("checked"))
                 $("#payamount").attr("disabled", "disabled");

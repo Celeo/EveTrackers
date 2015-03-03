@@ -89,7 +89,11 @@ def _prerender():
 def index():
     """ View: index page """
     # show all operations to the user, ordering by their status
-    operations = Operation.query.all()
+    operations = [op for op in Operation.query.filter_by(state='Not started').order_by('-id').all()]
+    operations.extend(op for op in Operation.query.filter_by(state='In progress').order_by('-id').all())
+    operations.extend(op for op in Operation.query.filter_by(state='Loot Collected').order_by('-id').all())
+    operations.extend(op for op in Operation.query.filter_by(state='Loot Sold').order_by('-id').all())
+    operations.extend(op for op in Operation.query.filter_by(state='Paid').order_by('-id').all())
     now = datetime.utcnow()
     for operation in Operation.query.filter_by(locked=False):
         if (now - operation.last_edited).total_seconds() / 3600 >= 6:

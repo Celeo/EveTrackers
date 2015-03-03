@@ -177,13 +177,13 @@
                 <option>Paid</option>
             </select>
         </div><br />
-        <button class="btnlight-green accent-4waves-effect waves-light" onclick="changeState();">Change state</button>
+        <button class="btn light-green accent-4 waves-effect waves-light" onclick="changeState();">Change state</button>
     </div>
 {% endif %}
 {% if bursar %}
     <br />
-    <a {% if not op.locked %}onclick="lock('1');"{% endif %}class="btn red" {% if op.locked %}disabled="disabed"{% endif %}>Lock</a>
-    <a {% if op.locked %}onclick="lock('0');"{% endif %}class="btn green" {% if not op.locked %}disabled="disabed"{% endif %}>Unlock</a>
+    <a {% if not op.locked %}onclick="lock('1');"{% endif %}class="btn red waves-effect waves-light" {% if op.locked %}disabled="disabed"{% endif %}>Lock</a>
+    <a {% if op.locked %}onclick="lock('0');"{% endif %}class="btn green waves-effect waves-light" {% if not op.locked %}disabled="disabed"{% endif %}>Unlock</a>
 {% endif %}
 {% if op.locked %}
     <p>
@@ -281,7 +281,7 @@
                 <h4>Add Player</h4>
                 <div class="form-inline">
                     <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
-                    <button class="btnlight-green accent-4waves-effect waves-light" onclick="addPlayer();">Add</button>
+                    <button class="btn light-green accent-4 waves-effect waves-light" onclick="addPlayer();">Add</button>
                 </div>
             {% endif %}
             </div>
@@ -294,7 +294,7 @@
                 {% else %}
                     <div class="form-inline">
                         <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
-                        <button class="btn blue" onclick="changeLoot();">Save</button>
+                        <button class="btn light-green accent-4" onclick="changeLoot();">Save</button>
                     </div>
                 {% endif %}
             </div>
@@ -307,7 +307,7 @@
                 {% else %}
                     <div class="form-inline">
                         <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
-                        <button class="btn blue" onclick="changeTax();">Save</button>
+                        <button class="btn light-green accent-4" onclick="changeTax();">Save</button>
                     </div>
                 {% endif %}
             </div>
