@@ -2,7 +2,28 @@
 
 {% block content %}
 
-<table class="table">
+<div class="row">
+    <div class="card blue-grey lighten-5">
+        <div class="card-content black-text">
+            <form action="{{ url_for('.uri_convert') }}" method="GET">
+                <div class="input-field">
+                    <input type="text" name="uri" id="uri">
+                    <label for="uri">CREST URI</label><br />
+                </div>
+                <button class="btn waves-effect waves-light orange darken-1" type="submit" name="action">View Kill
+                    <i class="mdi-content-send right"></i>
+                </button>
+            </form>
+            <p>
+                While viewing the killmail (from your character panel, corporation panel, or killmail link), click the settings menu 
+                button on the upper-leftmost corner of the killmail panel. Click the option <i>Copy External Kill Link</i>, and that 
+                will copy the link you need to your clipboard. Paste that link into the navbar's textbox and click the <i>View Kill</i> button.
+            </p>
+        </div>
+    </div>
+</div>
+
+<table class="bordered striped hoverable">
     <thead>
         <tr>
             <th>Died</th>

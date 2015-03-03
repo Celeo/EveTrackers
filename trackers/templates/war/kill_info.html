@@ -2,7 +2,7 @@
 
 <br />
 
-<div id="overview" class="well text-center" style="padding: 2em;">
+<div id="overview" class="card-panel orange lighten-5 text-center" style="padding: 2em;">
     <strong>{{ js['victim']['character']['name'] }}</strong> in a <strong>{{ js['victim']['shipType']['name'] }}</strong> died to <strong>{{ js['attackerCount'] }}</strong> 
     attacker{% if js['attackerCount'] != 1 %}s{% endif %} at <strong>{{ js['killTime'] }}</strong> in <strong>{{ js['solarSystem']['name'] }}</strong> 
     after taking <strong>{{ js['victim']['damageTaken']|formatcommas }}</strong> damage
@@ -12,7 +12,7 @@
 
 <h3>Items</h3>
 
-<table class="table" id="table_items">
+<table class="bordered striped hoverable" id="table_items">
     <thead>
         <tr>
             <th>Item</th>
@@ -34,8 +34,8 @@
         <tr>
             <td class="load_image" imgsrc="http://image.eveonline.com/Type/{{ item['itemType']['id'] }}_32.png" itemid="{{ item['itemType']['id'] }}"></td>
             <td>{{ item['itemType']['name'] }}</td>
-            <td class="text-center dropped {% if item['quantityDropped'] > 0 %}bg-success{% endif %}">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
-            <td class="text-center destroyed {% if item['quantityDestroyed'] > 0 %}bg-danger{% endif %}">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
+            <td class="text-center dropped {% if item['quantityDropped'] > 0 %}light-green{% endif %}">{% if 'quantityDropped' in item %}{{ item['quantityDropped']|formatcommas }}{% else %}0{% endif %}</td>
+            <td class="text-center destroyed {% if item['quantityDestroyed'] > 0 %}red lighten-1{% endif %}">{% if 'quantityDestroyed' in item %}{{ item['quantityDestroyed']|formatcommas }}{% else %}0{% endif %}</td>
             <td class="text-left" style="padding-left: 2%;">{{ item['pricePer']|formatcommas }}</td>
         </tr>
         {% endfor %}
@@ -43,15 +43,15 @@
             <td></td>
             <td></td>
             <td></td>
-            <td class="text-center bg-success"><strong>Total Dropped</strong></td>
-            <td id="dropped" class="bg-success"><strong>{{ js['totalDropped']|formatcommas }}</strong></td>
+            <td class="text-center light-green"><strong>Total Dropped</strong></td>
+            <td id="dropped" class="light-green"><strong>{{ js['totalDropped']|formatcommas }}</strong></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td class="text-center bg-danger"><strong>Total Destroyed</strong></td>
-            <td id="destroyed" class="bg-danger"><strong>{{ js['totalDestroyed']|formatcommas }}</strong></td>
+            <td class="text-center red lighten-1"><strong>Total Destroyed</strong></td>
+            <td id="destroyed" class="red lighten-1"><strong>{{ js['totalDestroyed']|formatcommas }}</strong></td>
         </tr>
     </tbody>
 </table>
@@ -60,7 +60,7 @@
 
 <h3>Attackers</h3>
 
-<table class="table" id="table_attackers">
+<table class="bordered striped hoverable" id="table_attackers">
     <thead>
         <th>Name</th>
         <th>Corp</th>
