@@ -37,17 +37,17 @@
             <div class="input-field col l12">
             <select name="type">
             {% if site %}
-                <option value="1">{{ site.type_ }}</option>
+                <option value="{{ site.type_ }}">{{ site.type_ }}</option>
             {% elif g_type %}
-                <option value="1">{{ g_type }}</option>
+                <option value="{{ g_type }}">{{ g_type }}</option>
             {% else %}
                 <option value="" disabled selected>Select site type</option>
             {% endif %}
-                <option value="2">Combat</option>
-                <option value="3">Relic</option>
-                <option value="4">Gas</option>
-                <option value="5">Data</option>
-                <option value="6">Ore</option>
+                <option value="Combat">Combat</option>
+                <option value="Relic">Relic</option>
+                <option value="Gas">Gas</option>
+                <option value="Data">Data</option>
+                <option value="Ore">Ore</option>
             </select>
             </div>
         </div>

@@ -43,21 +43,21 @@
             <div class="input-field col l12">
                 <select name="status">
                 {% if wormhole %}
-                    <option value="1">{{ wormhole.status }}</option>
+                    <option value="{{ wormhole.status }}">{{ wormhole.status }}</option>
                 {% elif g_type %}
-                    <option value="1">{{ g_type }}</option>
+                    <option value="{{ g_type }}">{{ g_type }}</option>
                 {% else %}
                     <option value="" disabled selected>Wormhole status</option>
                 {% endif %}
-                    <option value="2">Undecayed</option>
-                    <option value="3">Unopened</option>
-                    <option value="4">Fresh</option>
-                    <option value="5">&#60 50% mass</option>
-                    <option value="6">VoC</option>
-                    <option value="7">EoL</option>
-                    <option value="8">VoC and EoL</option>
-                    <option value="9">Unknown</option>
-                    <option value="10">Closed</option>
+                    <option value="Undecayed">Undecayed</option>
+                    <option value="Unopened">Unopened</option>
+                    <option value="Fresh">Fresh</option>
+                    <option value="&#60 50% mass">&#60 50% mass</option>
+                    <option value="VoC">VoC</option>
+                    <option value="EoL">EoL</option>
+                    <option value="VoC and EoL">VoC and EoL</option>
+                    <option value="Unknown">Unknown</option>
+                    <option value="Closed">Closed</option>
                 </select>
             </div>
         </div>
