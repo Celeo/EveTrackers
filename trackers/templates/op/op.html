@@ -163,7 +163,7 @@
     <b>Started</b>: {{ op.date }}<br />
     <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" class="font-half">WHAT IS THIS?</a><br />
 {% if op.locked %}
-    <b>State</b>: <span class="badge green-text" id="opstate">{{ op.state }}</span>
+    <b>State</b>: <span class="green-text" id="opstate">{{ op.state }}</span>
 {% else %}
     <div class="row">
         <div class="col l3">
@@ -181,8 +181,9 @@
     </div>
 {% endif %}
 {% if bursar %}
-    <a {% if not op.locked %}onclick="lock('1');"{% endif %}class="btn btn-danger" {% if op.locked %}disabled="disabed"{% endif %}>Lock</a>
-    <a {% if op.locked %}onclick="lock('0');"{% endif %}class="btn btn-success" {% if not op.locked %}disabled="disabed"{% endif %}>Unlock</a>
+    <br />
+    <a {% if not op.locked %}onclick="lock('1');"{% endif %}class="btn red" {% if op.locked %}disabled="disabed"{% endif %}>Lock</a>
+    <a {% if op.locked %}onclick="lock('0');"{% endif %}class="btn green" {% if not op.locked %}disabled="disabed"{% endif %}>Unlock</a>
 {% endif %}
 {% if op.locked %}
     <p>
