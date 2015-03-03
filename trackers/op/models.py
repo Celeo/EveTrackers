@@ -39,13 +39,13 @@ class Operation(db.Model):
 
     def get_state_label(self):
         if self.state == 'Not started':
-            return 'label-warning'
+            return 'yellow'
         elif self.state == 'In progress':
-            return 'label-success'
+            return 'green'
         elif self.state == 'Loot collected' or self.state == 'Loot sold':
-            return 'label-info'
+            return 'blue'
         elif self.state == 'Paid':
-            return 'label-default'
+            return 'white'
 
     def get_all_players(self):
         return Player.query.filter_by(operation_id=self.id).all()

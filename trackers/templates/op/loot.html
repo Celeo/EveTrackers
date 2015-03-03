@@ -4,7 +4,7 @@
 
 <h2>Loot Page</h2>
 
-<table class="table">
+<table class="bordered striped hoverable">
     <thead>
         <tr>
             <th>Name</th>
@@ -21,11 +21,11 @@
     <tr>
         <td>{{ item['name'] }}</td>
         <td><a href="https://eve-central.com/home/quicklook.html?typeid={{ item['id'] }}" target="_blank">{{ item['id'] }}</a></td>
-        <td{% if item['highest'] == item['Amarr'] %} class="bg-success"{% endif %}>{{ item['Amarr']|formatcommas }}</td>
-        <td{% if item['highest'] == item['Dodixie'] %} class="bg-success"{% endif %}>{{ item['Dodixie']|formatcommas }}</td>
-        <td{% if item['highest'] == item['Hek'] %} class="bg-success"{% endif %}>{{ item['Hek']|formatcommas }}</td>
-        <td{% if item['highest'] == item['Jita'] %} class="bg-success"{% endif %}>{{ item['Jita']|formatcommas }}</td>
-        <td{% if item['highest'] == item['Rens'] %} class="bg-success"{% endif %}>{{ item['Rens']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Amarr'] %} class="light-green"{% endif %}>{{ item['Amarr']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Dodixie'] %} class="light-green"{% endif %}>{{ item['Dodixie']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Hek'] %} class="light-green"{% endif %}>{{ item['Hek']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Jita'] %} class="light-green"{% endif %}>{{ item['Jita']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Rens'] %} class="light-green"{% endif %}>{{ item['Rens']|formatcommas }}</td>
     </tr>
     {% endfor %}
     </tbody>

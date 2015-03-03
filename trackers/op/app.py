@@ -41,6 +41,8 @@ tradehubs = {
     'Rens': {'region': 'Heimatar', 'region_id': 10000030}
 }
 
+show_api_warning = True
+
 
 def _name():
     """ Returns the name of the user """
@@ -87,17 +89,13 @@ def _prerender():
 def index():
     """ View: index page """
     # show all operations to the user, ordering by their status
-    operations = [op for op in Operation.query.filter_by(state='Not started').order_by('-id').all()]
-    operations.extend(op for op in Operation.query.filter_by(state='In progress').order_by('-id').all())
-    operations.extend(op for op in Operation.query.filter_by(state='Loot Collected').order_by('-id').all())
-    operations.extend(op for op in Operation.query.filter_by(state='Loot Sold').order_by('-id').all())
-    operations.extend(op for op in Operation.query.filter_by(state='Paid').order_by('-id').all())
+    operations = Operation.query.all()
     now = datetime.utcnow()
     for operation in Operation.query.filter_by(locked=False):
         if (now - operation.last_edited).total_seconds() / 3600 >= 6:
             operation.locked = True
             db.session.commit()
-    return render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count())
+    return render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count(), show_api_warning=show_api_warning)
 
 
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
@@ -272,6 +270,13 @@ def loot():
     for item in items:
         items[item]['highest'] = max(items[item][tradehub] for tradehub in tradehubs)
     return render_template('op/loot.html', page='loot', items=items)
+
+
+@blueprint.route('/dismiss_api_warning')
+def dismiss_api_warning():
+    global show_api_warning
+    show_api_warning = False
+    return 'Hidden'
 
 
 def _log(message):

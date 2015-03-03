@@ -1,24 +1,56 @@
 {% extends 'op/base.html' %}
 
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 
-<div class="well">
+<div class="card-panel">
     <h4>Start an Operation</h4>
-    <form action="{{ url_for('.add_op') }}" method="POST" role="form">
-        <input class="form-control width-quarter" type="text" placeholder="Operation name ..." name="name">
-        <input class="form-control width-quarter" type="text" placeholder="FC ..." name="fc">
-        <input class="form-control width-quarter" type="text" placeholder="Location ..." name="location">
-        <textarea class="form-control width-half" name="description" placeholder="Description ..." rows="5"></textarea>
-        <select class="form-control width-quarter" name="state">
-            <option>Not started</option>
-            <option>In progress</option>
-            <option>Loot collected</option>
-            <option>Loot sold</option>
-            <option>Buyins pending</option>
-            <option>Paid</option>
-        </select>
-        <input type="submit" class="btn btn-primary" value="Store">
-    </form>
+    <div class="row">
+        <form action="{{ url_for('.add_op') }}" method="POST" role="form" class="col l12">
+            <div class="row">
+                <div class="input-field col l12">
+                    <input type="text" name="name" id="name">
+                    <label for="name">Operation name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l12">
+                    <input type="text" name="fc" id="fc">
+                    <label for="fc">Fleet commander</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l12">
+                    <input type="text" name="location" id="location">
+                    <label for="location">Location</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l12">
+                    <textarea class="materialize-textarea" name="description" id="description"></textarea>
+                    <label for="description">Description</label>
+                </div>
+            </div>
+            <select name="state">
+                <option value="Not started">Not started</option>
+                <option value="In progress">In progress</option>
+                <option value="Loot collected">Loot collected</option>
+                <option value="Loot sold">Loot sold</option>
+                <option value="Buyins pending">Buyins pending</option>
+                <option value="Paid">Paid</option>
+            </select>
+            <button class="btn waves-effect waves-light light-green accent-4" type="submit" name="action">Add
+                <i class="mdi-content-send right"></i>
+            </button>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

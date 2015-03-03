@@ -4,45 +4,48 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/collapse.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        setTimeout('$("#no_keys_warning").fadeOut(2500)', 10000);
+        setTimeout('$("#no_keys_warning").slideUp(250)', 10000);
+        $('#dismiss_api_warning').on('click', function(data) {
+            $(this).parent().parent().slideUp(250);
+            $.ajax({ url: "{{ url_for('.dismiss_api_warning') }}" });
+        });
     });
 </script>
 {% endblock %}
 
 {% block content %}
 
-<h3>Operation Listing</h3>
+<h3>Operations Listing</h3>
 
-{% if not apikeys and bursar %}
-<div class="alert alert-warning" id="no_keys_warning">
-    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
-    <h4>No API Keys</h4>
-    Hey, Bursar: there aren't any API keys in storage; Eve authentification for payment completion will not work.
+{% if not apikeys and bursar and show_api_warning %}
+<div class="card amber lighten-3" id="no_keys_warning">
+    <div class="card-content">
+        <h4>No API Keys</h4>
+        Hey, Bursar: there aren't any API keys in storage; Eve authentification for payment completion will not work.
+    </div>
+    <div class="card-action black-text">
+        <a href="#" id="dismiss_api_warning" class="blue-text">Dismiss</a>
+    </div>
 </div>
 {% endif %}
-
-<div class="alert alert-info">
-    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
-    <h4>Using the status field</h4>
-    Use the status dropdown and the Change Status button to change the operation's status.
-    Take note that the <i>Loot Collected</i>, <i>Loot Sold</i>, and <i>Paid</i> statuses
-    should be used appropriately, as the index page sorts operations by the status field.
-</div>
 
 {% for op in operations %}
 <div class="cellholder">
     <div>
         <div class="celltop" for="cb_{{ op.id }}">
             <a href="#">{{ op.name }}</a>
-            <label class="pull-right label {{ op.get_state_label() }}">{{ op.state }}</label>
+            <span class="right-align label {{ op.get_state_label() }} green" style="float: right!important;">{{ op.state }}</span>
         </div>
         <div class="cellbottom" id="cb_{{ op.id }}" hidden>
             <p>
                 <b>FC</b>: {{ op.leader }}<br>
                 <b>Location</b>: {{ op.location }}<br>
                 <b>Start</b>: {{ op.date }}<br>
-                <b>Descrption</b>: {{ op.description|safe }}
-                <br><a href="{{ url_for('.op', op_id=op.id) }}" class="btn btn-primary" style="margin: 1% 0 0 0;">View</a>
+                <b>Descrption</b>: {{ op.description|safe }}<br>
+                <a class="btn waves-effect waves-light light-green accent-4" href="{{ url_for('.op', op_id=op.id) }}"
+                    style="margin: 5px 0 0 0;">View
+                    <i class="mdi-content-send right"></i>
+                </a>
             </p>
         </div>
     </div>
