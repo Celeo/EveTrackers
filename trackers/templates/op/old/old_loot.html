@@ -1,0 +1,34 @@
+{% extends 'op/base.html' %}
+
+{% block content %}
+
+<h2>Loot Page</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Amarr</th>
+            <th>Dodixie</th>
+            <th>Hek</th>
+            <th>Jita</th>
+            <th>Rens</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item_id, item in items.items() %}
+    <tr>
+        <td>{{ item['name'] }}</td>
+        <td><a href="https://eve-central.com/home/quicklook.html?typeid={{ item['id'] }}" target="_blank">{{ item['id'] }}</a></td>
+        <td{% if item['highest'] == item['Amarr'] %} class="bg-success"{% endif %}>{{ item['Amarr']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Dodixie'] %} class="bg-success"{% endif %}>{{ item['Dodixie']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Hek'] %} class="bg-success"{% endif %}>{{ item['Hek']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Jita'] %} class="bg-success"{% endif %}>{{ item['Jita']|formatcommas }}</td>
+        <td{% if item['highest'] == item['Rens'] %} class="bg-success"{% endif %}>{{ item['Rens']|formatcommas }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

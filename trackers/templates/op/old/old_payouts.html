@@ -1,0 +1,151 @@
+{% extends 'op/base.html' %}
+
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("input:checkbox.money").on("click", function() {
+            if ($(this).prop("checked"))
+                $("#payamount").attr("disabled", "disabled");
+            else
+                $("#payamount").removeAttr("disabled");
+            if ($("#payfull").prop("checked"))
+            {
+                if ($(this).attr("id") == "payfull")
+                { }
+                else
+                    $("#payfull").prop("checked", false);
+            }
+            if ($("#payzero").prop("checked"))
+            {
+                if ($(this).attr("id") == "payzero")
+                { }
+                else
+                    $("#payzero").prop("checked", false);
+            }
+        });
+        $("#operation").change(function() {
+            chooseOperation();
+            setTimeout(function() { choosePlayer(); }, 500);
+        });
+        $("#player").change(function() {
+            choosePlayer();
+        });
+        chooseOperation();
+        setTimeout(function() { choosePlayer(); }, 500);
+    });
+    function chooseOperation() {
+        var op = $("#operation").val();
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.player_names') }}",
+            data: {
+                op: op
+            },
+            success: function(data) {
+                $("#player").html(data);
+                $("#player_info").html("");
+                $("#biglist").load("payoutplayerlist/" + op.split(' ')[0]);
+            }
+        });
+    }
+    function choosePlayer() {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.player_op_data') }}",
+            data: {
+                op: $("#operation").val(),
+                player: $("#player").val()
+            },
+            success: function(data) {
+                $("#player_info").html(data);
+            }
+        });
+    }
+    function updateAPI() {
+        $("#b_apiupdate").attr("disabled", "disabled");
+        $("#b_apiupdate").text("Updating ...");
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.api_update') }}",
+            data: {
+                update: 'api',
+                id: $('#api_selection').val()
+            },
+            success: function(data) {
+                location.href = "{{ url_for('.payouts') }}";
+            }
+        });
+    }
+    function doPayment() {
+        var operation = $("#operation").val();
+        var player = $("#player").val();
+        var amount = $("#amount").val();
+        var payInFull = $("#payfull").is(":checked");
+        var zeroOut = $("#payzero").is(":checked");
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('.payouts') }}",
+            data: {
+                operation: operation,
+                player: player,
+                amount: amount,
+                payfull: payInFull,
+                payzero: zeroOut
+            },
+            success: function(data) {
+                console.log("Return: " + data);
+                chooseOperation();
+                setTimeout(function() { choosePlayer(); }, 500);
+            }
+        });
+    }
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/collapse.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="well">
+    <h3>Make Payments <small>this page is locked to bursars</small></h3>
+    <p>
+        This tool supports both manually denoting a player as paid and by supplying a short string of letters and numbers 
+        for pasting into the reason box when donating money to a player, read by the giving corporation's API.
+    </p>
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <select class="form-control width-half" id="operation">
+            {% for operation in operations %}
+                <option>{{ operation.id }} - {{ operation.name }}</option>
+            {% endfor %}
+            </select>
+            <select class="form-control width-half" id="player"></select><br />
+            <div id="player_info"></div>
+            <input class="form-control width-half" type="text" id="amount" placeholder="Amount">
+            <div style="margin-left: 1em;">
+                <label class="checkbox">
+                    <input type="checkbox" class="money" id="payfull">Pay in full
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" class="money" id="payzero">Zero-out
+                </label>
+            </div>
+            <a class="btn btn-primary" onclick="doPayment();">Pay</a>
+        </div>
+        <div class="col-lg-6">
+            <select class="form-control width-half" id="api_selection">
+                {% for apikey in apikeys %}
+                    <option>#{{ apikey.id }}: {{ apikey.note }} ({{ apikey.key}})</option>
+                {% endfor %}
+            </select><br />
+            <a onclick="{% if apienabled %}updateAPI();{% endif %}" id="b_apiupdate" class="btn btn-primary form-control"{% if not apienabled %}disabled="disabled"{% endif %} style="width: 50%;">Update via API</a>
+        </div>
+    </div>
+</div>
+
+<div class="well">
+    <h3>Records</h3>
+    <div id="biglist"></div>
+</div>
+
+{% endblock %}

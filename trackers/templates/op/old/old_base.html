@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>OP Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/op.css') }}">
+{% if eveigb.is_igb() %}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+{% else %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+{% endif %}
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<div class="navbar navbar-default container" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">Op Tracker <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ url_for('site_tracker.index') }}">Site</a></li>
+                <li><a href="{{ url_for('corp_tracker.index') }}">Corp</a></li>
+                <li><a href="{{ url_for('fuel_tracker.index') }}">Fuel</a></li>
+                <li><a href="{{ url_for('war_tracker.index') }}">War</a></li>
+                <li><a href="{{ url_for('char_tracker.index') }}">Char</a></li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li{% if page == 'home' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
+                <li{% if page == 'addop' %} class="active"{% endif %}><a href="{{ url_for('.add_op') }}">Add Operation</a></li>
+                <li{% if page == 'review' %} class="active"{% endif %}><a href="{{ url_for('.review') }}">Review</a></li>
+            {% if bursar %}
+                <li {% if page == 'payout' %}class="active"{% endif %}><a href="{{ url_for('.payouts') }}">Manage Payouts</a></li>
+            {% endif %}
+                <li {% if page == 'loot' %}class="active"{% endif %}><a href="{{ url_for('.loot') }}">Loot</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            {% if not displayname == 'None' %}
+                <li><a href="{{ url_for('logout_page') }}">Logout {{ displayname }}</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+<center>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
+            {{ message }}<br />
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+</center>
+
+{% block content %}{% endblock %}
+
+<hr>
+
+<footer>
+    <p class="footer">
+        App &copy; <a href="https://github.com/Celeo">Celeo</a> 2013-14 <a href="https://github.com/Celeo/EveTrackers">Open source</a>
+        <br />
+        EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual
+        property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts
+        or other recognizable features of the intellectual property relating to these trademarks are
+        likewise the intellectual property of CCP hf. EVE Online and the EVE logo are the registered
+        trademarks of CCP hf. All rights are reserved worldwide. All other trademarks are the property
+        of their respective owners.
+    </p>
+</footer>
+</div>
+{% block loadLaterJavascript %}{% endblock %}
+
+</body>
+
+</html>

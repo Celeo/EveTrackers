@@ -1,0 +1,31 @@
+<table class="table">
+    <tr>
+        <th class="text-left">Operation</th>
+        <th class="text-left">Player Name</th>
+        <th class="text-center">Sites</th>
+        <th class="text-center">Share</th>
+        <th class="text-center">Paid</th>
+        <th class="text-center">API Paid</th>
+        <th class="text-right">Done</th>
+    </tr>
+    <tr>
+        <td class="text-left"><a href="{{ url_for('.op', op_id=operation.id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
+        <td class="text-left">** Alliance **</td>
+        <td class="text-center">-</td>
+        <td class="text-center" id="share{{ operation.id }}">{{ operation.get_alliance_share() }}</td>
+        <td class="text-center">-</td>
+        <td class="text-center">-</td>
+        <td class="text-right" id="complete{{ operation.id }}">-</td>
+    </tr>
+    {% for p in players %}
+    <tr>
+        <td class="text-left"><a href="{{ url_for('.op', op_id=p.operation_id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
+        <td class="text-left">{{ p.name }}</td>
+        <td class="text-center">{{ p.sites }}</td>
+        <td class="text-center" id="share{{ p.id }}">{{ p.get_share_formatted() }}</td>
+        <td class="text-center">{{ p.get_paid_formatted() }} isk</td>
+        <td class="text-center">{{ p.get_api_paid_formatted() }} isk</td>
+        <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="label label-success">True</span>{% else %}<span class="label label-danger">False</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>

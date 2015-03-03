@@ -1,0 +1,27 @@
+<table class="table">
+    <tr>
+        <td><b>Name</b>: {{ player.name }}</td>
+    </tr>
+    <tr>
+        <td><b>Sites</b>: {{ player.sites }}</td>
+    </tr>
+    <tr>
+        <td><b>Share</b>: {{ player.get_share()|formatcommas }}</td>
+    </tr>
+    <tr>
+        <td><b>Paid</b>: {{ player.paid|formatcommas }}</td>
+    </tr>
+    <tr>
+        <td><b>Paid through API</b>: {{ player.api_paid|formatcommas }}</td>
+    </tr>
+    <tr>
+        <td><b>Tax</b>: {{ player.operation.tax_as_percentage() }}</td>
+    </tr>
+    <tr>
+        <td><b>Api key for op</b>: {{ player.operation.key }}</td>
+    </tr>
+    <tr>
+        <td><b>Complete</b>: {{ player.complete }}</td>
+        <td></td>
+    </tr>
+</table>
