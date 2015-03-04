@@ -149,7 +149,7 @@ function cancel(type, n) {
         var start = $('#wstart' + n).html().split('"')[7];
         var end = $('#wend' + n).html().split('"')[7];
         var status = $('#wstatus' + n).html().split('"')[7];
-        var o_scanid = $('#wo_scanid' + n).html().split('"')[7];
+        var o_scanid = $('#wo_scanid' + n).html().split('"')[9];
         $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\', ' + n + ')"><i class="small mdi-action-dns"></i></a>');
         $('#wid' + n).html('<a href="/wormhole/' + n + '">' + scanid + '</a>');
         $('#wstart' + n).html('<a href="/system/' + start +'">' + start + '</a>');
