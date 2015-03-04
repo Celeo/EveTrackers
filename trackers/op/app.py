@@ -79,6 +79,17 @@ def _is_bursar():
     return pan.bursar
 
 
+def _render_template(template_name, **kwargs):
+    """
+        Because the in-game browser doesn't process newer technologies,
+        we render those requests on the pre-materail deign templates.
+    """
+    if InGameBrowser(request).is_igb():
+        return render_template('{}/old/old_{}'.format(*template_name.split('/')), **kwargs)
+    else:
+        return render_template(template_name, **kwargs)
+
+
 @blueprint.context_processor
 def _prerender():
     """ Add variables to all templates """
@@ -99,7 +110,7 @@ def index():
         if (now - operation.last_edited).total_seconds() / 3600 >= 6:
             operation.locked = True
             db.session.commit()
-    return render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count(), show_api_warning=show_api_warning)
+    return _render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count(), show_api_warning=show_api_warning)
 
 
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
@@ -110,7 +121,7 @@ def op(op_id):
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
         total_shares += player.sites
-    return render_template('op/op.html', op=operation, total_shares=total_shares)
+    return _render_template('op/op.html', op=operation, total_shares=total_shares)
 
 
 @blueprint.route('/op/<op_id>/players')
@@ -120,7 +131,7 @@ def players(op_id):
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
         total_shares += player.sites
-    return render_template('op/players.html', op=operation, total_shares=total_shares)
+    return _render_template('op/players.html', op=operation, total_shares=total_shares)
 
 
 @blueprint.route('/playernames', methods=['POST'])
@@ -141,7 +152,7 @@ def player_op_data():
         return redirect(url_for('.index'))
     operation = Operation.query.filter_by(id=int(request.form['op'].split(' ')[0])).first_or_404()
     player = Player.query.filter_by(operation_id=operation.id, name=request.form['player']).first_or_404()
-    return render_template('op/player_op_data.html', player=player)
+    return _render_template('op/player_op_data.html', player=player)
 
 
 @blueprint.route('/payoutplayerlist/<op_id>')
@@ -149,7 +160,7 @@ def payout_player_list(op_id):
     """ AJAX View: return a list of players in an operation in a table """
     if not _is_bursar():
         return redirect(url_for('.index'))
-    return render_template('op/payout_playerlist.html', operation=Operation.query.filter_by(id=op_id).first_or_404(),
+    return _render_template('op/payout_playerlist.html', operation=Operation.query.filter_by(id=op_id).first_or_404(),
         players=Player.query.filter_by(operation_id=op_id).all())
 
 
@@ -162,7 +173,7 @@ def add_op():
         db.session.add(op)
         db.session.commit()
         return redirect(url_for('.op', op_id=op.id))
-    return render_template('op/addop.html', page='addop')
+    return _render_template('op/addop.html', page='addop')
 
 
 @blueprint.route('/payouts', methods=['GET', 'POST'])
@@ -203,7 +214,7 @@ def payouts():
     # send models of players and their operations to the template
     players = Player.query.order_by('-operation_id').order_by('complete').all()
     names = ['{}-{}'.format(pl.operation.id, pl.name) for pl in players if pl and pl.operation]
-    return render_template('op/payouts.html', page='payout', players=players, names=names,
+    return _render_template('op/payouts.html', page='payout', players=players, names=names,
         api_enabled=ApiKey.query.count() > 0, apikeys=ApiKey.query.all(),
         operations=Operation.query.order_by('-id').all())
 
@@ -259,7 +270,7 @@ def review():
     graph = []
     for player, amount in isk_per_player.most_common()[:20]:
         graph.append('{ y: ' + str(amount ) + ', indexLabel: "' + player + '" },')
-    return render_template('op/review.html', page='review', isk_per_player=isk_per_player.most_common(),
+    return _render_template('op/review.html', page='review', isk_per_player=isk_per_player.most_common(),
         srp=srp, brg=brg, graph=graph, total_isk_all=total_isk_all, alliance_tax=alliance_tax)
 
 
@@ -273,7 +284,7 @@ def loot():
             items[int(item.attrib['id'])][tradehub] = float(item.find('buy/avg').text)
     for item in items:
         items[item]['highest'] = max(items[item][tradehub] for tradehub in tradehubs)
-    return render_template('op/loot.html', page='loot', items=items)
+    return _render_template('op/loot.html', page='loot', items=items)
 
 
 @blueprint.route('/dismiss_api_warning')
