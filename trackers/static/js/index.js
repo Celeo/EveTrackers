@@ -275,3 +275,17 @@ function updateModal2(type, id) {
     $("#modal_message_final2").text(type);
     $('#modalCloseModel').openModal();
 }
+
+function performClose() {
+    $.get("/" + $("#clickedType").text() + "/" + $("#clickedID").text() + "/close", function(data) {
+        refreshData();
+    });
+    $("#myModal").modal("toggle")
+}
+
+function performOpen() {
+    $.get("/" + $("#clickedType2").text() + "/" + $("#clickedID2").text() + "/open", function(data) {
+        refreshData();
+    });
+    $("#myModal2").modal("toggle")
+}
