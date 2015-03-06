@@ -20,7 +20,8 @@
 <nav class="light-green accent-4" role="navigation">
     <div class="container">
         <div class="nav-wrapper">
-            <a id="logo-container" href="{{ url_for('.index') }}" class="brand-logo">Op Tracker</a>
+            <a id="logo-container" href="{{ url_for('.index') }}" class="brand-logo" style="position: relative;">Op Tracker</a>
+            <a href="{{ url_for('landing') }}">More</a>
             <ul class="right">
                 <li{% if page == 'home' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
                 <li{% if page == 'addop' %} class="active"{% endif %}><a href="{{ url_for('.add_op') }}">Add Operation</a></li>
