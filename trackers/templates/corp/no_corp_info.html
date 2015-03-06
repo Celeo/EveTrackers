@@ -1,0 +1,9 @@
+{% extends 'corp/base.html' %}
+
+{% block content %}
+
+<h5>You don't have any corporation info set in your login session.</h5>
+
+<h5>You can <a href="{{ url_for('login_page') }}">log back into the site</a> to refresh that data.</h5>
+
+{% endblock %}

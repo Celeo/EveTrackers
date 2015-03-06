@@ -34,6 +34,7 @@ app_settings['ADMINS'] = app.config['ADMINS']
 app_settings['LEADERSHIP'] = app.config['LEADERSHIP']
 app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
+app_settings['CORPORATION_KEYS'] = app.config['CORPORATION_KEYS']
 
 # import blueprints
 from trackers.site.app import blueprint as site_tracker
@@ -105,6 +106,7 @@ def oauth_authorized(resp):
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
     session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['main_character']).characters[0].characterID).characters[0].corporationName
+    # TODO: load corporation roles
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
     app.logger.log(LOGGING_IP, 'User ' + session['oi_auth_user'] + ' has logged in under IP ' + request.environ['REMOTE_ADDR'])

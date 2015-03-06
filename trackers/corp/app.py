@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, redirect, url_for, request
 from datetime import datetime
 
 
@@ -17,6 +17,21 @@ def _name():
 def _prerender():
     """ Add variables to all templates """
     return dict(displayname=_name(), now=datetime.utcnow())
+
+
+@blueprint.before_request
+def _check_corporation():
+    """ Ensure that users have their corpraotion data in their session """
+    if request.path == url_for('.no_corp_info'):
+        return
+    if not 'corporation' in session or not session['corporation'] \
+        or not 'corporation_roles' in session or not session['corporation_roles']:
+        return redirect(url_for('.no_corp_info'))
+
+
+@blueprint.route('/nocorpinfo')
+def no_corp_info():
+    return render_template('corp/no_corp_info.html')
 
 
 @blueprint.route('/')
