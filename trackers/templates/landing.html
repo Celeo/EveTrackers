@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Eve Trackers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    <style>
+        body {
+            background-color: rgb(219, 219, 219);
+        }
+        img {
+            width: 50%;
+            margin: 5px auto 5px auto;
+            height: 4em;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="light-blue lighten-1">
+    <div class="nav-wrapper">
+        <a href="{{ url_for('site_tracker.index') }}" class="brand-logo center">Site</a>
+    </div>
+</nav>
+
+<center><img src="{{ url_for('static', filename='img/blank.png') }}" alt="site_tracker" class="responsive-img"></center>
+
+<nav class="light-green accent-4">
+    <div class="nav-wrapper">
+        <a href="{{ url_for('op_tracker.index') }}" class="brand-logo center">Operations</a>
+    </div>
+</nav>
+
+<center><img src="{{ url_for('static', filename='img/optracker.png') }}" alt="op_tracker" class="responsive-img"></center>
+
+<nav class="orange darken-1">
+    <div class="nav-wrapper">
+        <a href="{{ url_for('war_tracker.index') }}" class="brand-logo center">War</a>
+    </div>
+</nav>
+
+<center><img src="{{ url_for('static', filename='img/wartracker.png') }}" alt="war_tracker" class="responsive-img"></center>
+
+<nav class="yellow darken-1">
+    <div class="nav-wrapper">
+        <a href="{{ url_for('corp_tracker.index') }}" class="brand-logo center">Corp</a>
+    </div>
+</nav>
+
+<center><img src="{{ url_for('static', filename='img/blank.png') }}" alt="corp_tracker" class="responsive-img"></center>
+    
+</body>
+
+</html>

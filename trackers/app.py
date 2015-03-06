@@ -213,6 +213,11 @@ def _format_commas(n):
     return '{:,}'.format(int(n))
 
 
+@app.route('/landing')
+def landing():
+    return render_template('landing.html')
+
+
 @app.route('/noaccess')
 def no_access():
     # the catch-all invalid user notice page
