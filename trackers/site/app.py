@@ -292,6 +292,9 @@ def _edit_site(site, request, session, in_line=False):
     if not site.name == request.form['name']:
         changes.append('<b>Name</b>: {} -> {}'.format(site.name, request.form['name']))
         site.name = request.form['name']
+    if not site.type_ == request.form['type']:
+        changes.append('<b>Type</b>: {} -> {}'.format(site.type_, request.form['type']))
+        site.type_ = request.form['type']
     if not in_line:
         if not site.system == request.form['system']:
             changes.append('<b>System</b>: {} -> {}'.format(site.system, request.form['system']))

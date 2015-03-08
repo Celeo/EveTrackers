@@ -190,7 +190,7 @@ function save(type, n) {
               o_scanid: o_scanid,
           },
           success: function(data) {
-            $('#wlink' + n).html('<a class="label label-warning" onclick="edit(\'wormhole\',' + n + ')">Change</a>');
+            $('#wlink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit(\'wormhole\',' + n + ')"><i class="small mdi-action-dns"></i>');
             $('#wid' + n).html('<a href="/wormhole/' + n + '">' + scanid.toUpperCase() + '</a>');
             $('#wstart' + n).html('<a href="/system/' + start +'">' + start + '</a>');
             $('#wend' + n).html('<a href="/system/' + end +'">' + end + '</a>');
@@ -226,7 +226,7 @@ function save(type, n) {
                 type: type,
             },
             success: function(data) {
-                $('#slink' + n).html('<a class="label label-warning" onclick="edit(\'site\',' + n + ')">Change</a>');
+                $('#slink' + n).html('<a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit(\'site\',' + n + ')"><i class="small mdi-action-dns"></i>');
                 $('#sid' + n).html('<a href="/site/' + n + '">' + scanid.toUpperCase() + '</a>');
                 $('#sname' + n).html(name);
                 $('#stype' + n).html(type);
