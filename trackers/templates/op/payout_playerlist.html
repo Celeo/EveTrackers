@@ -25,7 +25,7 @@
         <td class="text-center" id="share{{ p.id }}">{{ p.get_share_formatted() }}</td>
         <td class="text-center">{{ p.get_paid_formatted() }} isk</td>
         <td class="text-center">{{ p.get_api_paid_formatted() }} isk</td>
-        <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="label label-success">True</span>{% else %}<span class="label label-danger">False</span>{% endif %}</td>
+        <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="badge black-text green">True</span>{% else %}<span class="badge black-text red">False</span>{% endif %}</td>
     </tr>
     {% endfor %}
 </table>
