@@ -38,13 +38,13 @@
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_end" name="end" class="short_input" placeholder="end"></td>
             <td>
                 <select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 10em;" id="w_new_status" name="status">
-                    <option value="1">Undecayed</option>
-                    <option value="2">Fresh</option>
-                    <option value="3">&#60 50% mass</option>
-                    <option value="4">VoC</option>
-                    <option value="5">EoL</option>
-                    <option value="6">VoC and EoL</option>
-                    <option value="7">Unknown</option>
+                    <option value="Undecayed">Undecayed</option>
+                    <option value="Fresh">Fresh</option>
+                    <option value="&#60 50% mass">&#60 50% mass</option>
+                    <option value="VoC">VoC</option>
+                    <option value="EoL">EoL</option>
+                    <option value="VoC and EoL">VoC and EoL</option>
+                    <option value="Unknown">Unknown</option>
                 </select>
             </td>
             <td><input onkeyup="checkNew('wormhole');" type="text" id="w_new_o_scanid" name="o_scanid" class="uppercase short_input" placeholder="ID2" maxlength="3"></td>
@@ -100,11 +100,11 @@
             <td><input onkeyup="checkNew('site');" type="text" id="s_new_name" name="name" class="short_input" placeholder="name"></td>
             <td>
                 <select style="margin: 0 0 0 0; padding: 0 0 0 0; width: 100%;" id="s_new_type" name="type">
-                    <option value="1">Combat</option>
-                    <option value="2">Relic</option>
-                    <option value="3">Gas</option>
-                    <option value="4">Data</option>
-                    <option value="5">Ore</option>
+                    <option value="Combat">Combat</option>
+                    <option value="Relic">Relic</option>
+                    <option value="Gas">Gas</option>
+                    <option value="Data">Data</option>
+                    <option value="Ore">Ore</option>
                 </select>
             </td>
             <td><input onkeyup="checkNew('site');" type="text" id="s_new_system" class="short_input" name="system" placeholder="{{ homesystem }}" value="{{ homesystem }}"></td>
