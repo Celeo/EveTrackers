@@ -43,7 +43,6 @@ from trackers.op.app import blueprint as op_tracker
 from trackers.corp.app import blueprint as corp_tracker
 from trackers.fuel.app import blueprint as fuel_tracker
 from trackers.war.app import blueprint as war_tracker
-from trackers.char.app import blueprint as char_tracker
 from trackers.doctrine.app import blueprint as doctrine_tracker
 
 # flask-admin
@@ -257,7 +256,6 @@ app.register_blueprint(op_tracker, url_prefix='/operations')
 app.register_blueprint(corp_tracker, url_prefix='/corp')
 app.register_blueprint(fuel_tracker, url_prefix='/fuel')
 app.register_blueprint(war_tracker, url_prefix='/war')
-app.register_blueprint(char_tracker, url_prefix='/char')
 app.register_blueprint(doctrine_tracker, url_prefix='/doctrine')
 
 
