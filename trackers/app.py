@@ -35,6 +35,7 @@ app_settings['LEADERSHIP'] = app.config['LEADERSHIP']
 app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
 app_settings['CORPORATION_KEYS'] = app.config['CORPORATION_KEYS']
+app_settings['FLEET_COMMANDERS'] = app.config['FLEET_COMMANDERS']
 
 # import blueprints
 from trackers.site.app import blueprint as site_tracker
@@ -43,6 +44,7 @@ from trackers.corp.app import blueprint as corp_tracker
 from trackers.fuel.app import blueprint as fuel_tracker
 from trackers.war.app import blueprint as war_tracker
 from trackers.char.app import blueprint as char_tracker
+from trackers.doctrine.app import blueprint as doctrine_tracker
 
 # flask-admin
 from trackers.site.models import *
@@ -256,6 +258,7 @@ app.register_blueprint(corp_tracker, url_prefix='/corp')
 app.register_blueprint(fuel_tracker, url_prefix='/fuel')
 app.register_blueprint(war_tracker, url_prefix='/war')
 app.register_blueprint(char_tracker, url_prefix='/char')
+app.register_blueprint(doctrine_tracker, url_prefix='/doctrine')
 
 
 if __name__ == '__main__':

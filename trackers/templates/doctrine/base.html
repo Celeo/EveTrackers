@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Doctrine Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/dctrine.css') }}"> -->
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="deep-orange darken-3" role="navigation">
+    <div class="container">
+        <div class="nav-wrapper">
+            <a id="logo-container" href="{{ url_for('.index') }}" class="brand-logo" style="position: relative;">Doctrine Tracker</a>
+            <a href="{{ url_for('landing') }}">More</a>
+            <ul class="right">
+                <li><a href="{{ url_for('.index') }}">Home</a></li>
+            {% if not displayname == 'None' %}
+                <li><a href="{{ url_for('logout_page') }}">Logout {{ displayname }}</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% endif %}
+            </ul>
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="{{ url_for('.index') }}">Home</a></li>
+            {% if not displayname == 'None' %}
+                <li><a href="{{ url_for('logout_page') }}">Logout {{ displayname }}</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            {% endif %}
+            </ul>
+            <a href="#" data-activities="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <center>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="card-panel {% if category == 'info' %}green{% elif category == 'warning' %}yellow{% else %}red{% endif %}">
+                <p>
+                    {{ message }}
+                </p>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </center>
+
+    {% block content %}{% endblock %}
+</div>
+{% block loadLaterJavascript %}{% endblock %}
+
+<br />
+
+</body>
+
+</html>

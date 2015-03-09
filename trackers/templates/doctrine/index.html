@@ -1,0 +1,30 @@
+{% extends 'doctrine/base.html' %}
+
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('ul.tabs').tabs();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h3>Doctrines</h3>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3"><a class="active" href="#test1">Test members</a></li>
+            <li class="tab col s3"><a href="#test2">Manage fits</a></li>
+        </ul>
+    </div>
+    <div id="test1" class="col s12 card-panel">
+        <!-- TODO -->
+    </div>
+    <div id="test2" class="col s12 card-panel">
+        <!-- TODO -->
+    </div>
+</div>
+        
+{% endblock %}
