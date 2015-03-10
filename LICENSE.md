@@ -1,4 +1,4 @@
-App Copyright (c) 2013-14 Matt Boulanger <celeodor@gmail.com>
+App Copyright (c) 2013-15 Matt Boulanger <celeodor@gmail.com>
 
 https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
 
