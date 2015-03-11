@@ -1,6 +1,6 @@
 App Copyright (c) 2013-15 Matt Boulanger <celeodor@gmail.com>
 
-https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
+This work is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)  ([summary](https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)).
 
 EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual
 property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts
