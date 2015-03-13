@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 import requests, json
 from datetime import datetime
 from lxml import etree
@@ -29,7 +29,7 @@ def kill_info(kill_id, hashcode):
     js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
 
     # sanity check
-    if ('message' in js and js['message'] == 'Invalid killmail ID or hash'):
+    if 'message' in js and js['message'] == 'Invalid killmail ID or hash':
         return 'Invalid killmail ID or hash'
 
     # local storage of id/hash
@@ -86,5 +86,33 @@ def kill_info(kill_id, hashcode):
 def uri_convert():
     """ Redirect View: Parses the CREST URI, separates the id and hash, and redirects to the page for that kill """
     uri = request.args.get('uri', None)
-    if not uri: return redirect(url_for('.index'))
+    if not uri:
+        flash('You must include the CREST URI', 'danger')
+        return redirect(url_for('.index'))
     return redirect(url_for('.kill', kill_id=uri.split('/')[4], hashcode=uri.split('/')[5]))
+
+
+@blueprint.route('/massadd', methods=['GET', 'POST'])
+def mass_add():
+    """ View: Quickly add many URIs to the database """
+    if request.method == 'POST':
+        errors = []
+        uris = request.form['uris']
+        if uris:
+            for uri in uris.split('\n'):
+                kill_id = uri.split('/')[4]
+                hashcode = uri.split('/')[5]
+                js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
+                if 'message' in js and js['message'] == 'Invalid killmail ID or hash':
+                    errors.append('Invalid killmail ID or hash - {}'.format(uri))
+                if Killmail.query.filter_by(kill_id=kill_id, hashcode=hashcode).count() == 0:
+                    date = datetime.strptime(js['killTime'], '%Y.%m.%d %H:%M:%S')
+                    db.session.add(Killmail(kill_id, hashcode, date, js['solarSystem']['name'], js['victim']['character']['name'], js['attackerCount']))
+                    db.session.commit()
+            flash('Entries added', 'info')
+            if errors:
+                flash('<br />'.join(errors), 'danger')
+        else:
+            flash('No entries added', 'danger')
+        return redirect(url_for('.index'))
+    return render_template('war/mass_add.html')

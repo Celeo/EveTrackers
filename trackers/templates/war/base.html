@@ -25,6 +25,7 @@
             <a href="{{ url_for('landing') }}">More</a>
             <ul class="right">
                 <li><a href="{{ url_for('.index') }}">Home</a></li>
+                <li><a href="{{ url_for('.mass_add') }}">Add Many</a></li>
             {% if not displayname == 'None' %}
                 <li><a href="{{ url_for('logout_page') }}">Logout {{ displayname }}</a></li>
             {% else %}

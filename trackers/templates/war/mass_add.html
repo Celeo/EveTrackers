@@ -1,0 +1,28 @@
+{% extends 'war/base.html' %}
+
+{% block content %}
+
+<div class="card-panel orange lighten-3">
+    <p>
+        This page is to add multiple URIs without bothering to load each of their pages.<br />
+        Paste 1 URI per line and click the submit button.
+    </p>
+</div>
+
+<div class="card-panel">
+    <div class="row">
+        <form action="{{ url_for('.mass_add') }}" class="col l12" method="POST">
+            <div class="row">
+                <div class="input-field col l12">
+                    <textarea name="uris" id="uris" class="materialize-textarea"></textarea>
+                    <label for="uris">CREST URIs</label>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light orange darken-1" type="submit" name="action">Save
+                <i class="mdi-content-send right"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
