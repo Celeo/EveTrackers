@@ -48,6 +48,7 @@ from trackers.doctrine.app import blueprint as doctrine_tracker
 # flask-admin
 from trackers.site.models import *
 from trackers.op.models import *
+from trackers.war.models import Killmail
 admin = Admin(app, 'Eve Trackers Admin Panel')
 # the default flask-admin doesn't have any permissions, so it's visible by anyone
 # this extension of ModelView restricts access to only site admins
@@ -67,6 +68,7 @@ admin.add_view(MyModelView(Player, db.session))
 admin.add_view(MyModelView(ApiKey, db.session))
 admin.add_view(MyModelView(PlayerAuthName, db.session))
 admin.add_view(MyModelView(LogStatement, db.session))
+admin.add_view(MyModelView(Killmail, db.session))
 
 
 # flask-oauth
