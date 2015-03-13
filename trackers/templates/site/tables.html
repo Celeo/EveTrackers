@@ -26,9 +26,9 @@
             <td class="countup">{% for k,v in elapsed_timers.items() %}{% if k == w.id %}{{ v }}{% endif %}{% endfor %}</td>
             <td id="wlink{{ w.id }}"><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit('wormhole', {{ w.id }});"><i class="small mdi-action-dns"></i></a></td>
         {% if w.opened %}
-            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this wormhole" onclick="updateModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-done"></i></a><td>
+            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this wormhole" onclick="launchCloseModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-done"></i></a><td>
         {% else %}
-            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this wormhole" onclick="updateModal2('wormhole', '{{ w.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
+            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this wormhole" onclick="launchOpenModal('wormhole', '{{ w.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
         {% endif %}
         </tr>
     {% endfor %}
@@ -89,9 +89,9 @@
             <td>{{ s.date|date }}</td>
             <td id="slink{{ s.id }}"><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Edit" onclick="edit('site', {{ s.id }});"><i class="small mdi-action-dns"></i></a></td>
             {% if s.opened %}
-            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this site" onclick="updateModal('site', '{{ s.id }}');"><i class="small mdi-action-done"></i></a><td>
+            <td><a href="#modalCloseModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Close this site" onclick="launchCloseModal('site', '{{ s.id }}');"><i class="small mdi-action-done"></i></a><td>
             {% else %}
-            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this site" onclick="updateModal2('site', '{{ s.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
+            <td><a href="#modalOpenModel" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Open this site" onclick="launchOpenModal('site', '{{ s.id }}');"><i class="small mdi-action-lock-open"></i></a></td>
             {% endif %}
         </tr>
     {% endfor %}

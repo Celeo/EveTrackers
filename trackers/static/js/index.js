@@ -262,30 +262,28 @@ function checkNew(type) {
     }
 }
 
-function updateModal(type, id) {
-    $("#clickedType").text(type);
-    $("#clickedID").text(id);
-    $("#modal_message_final").text(type);
-    $('#modalOpenModel').openModal();
-}
-
-function updateModal2(type, id) {
-    $("#clickedType2").text(type);
-    $("#clickedID2").text(id);
-    $("#modal_message_final2").text(type);
+function launchCloseModal(type, id) {
+    $(".m_close_clickedType").text(type);
+    $(".m_close_clickedID").text(id);
     $('#modalCloseModel').openModal();
 }
 
+function launchOpenModal(type, id) {
+    $(".m_open_clickedType").text(type);
+    $(".m_open_clickedID").text(id);
+    $('#modalOpenModel').openModal();
+}
+
 function performClose() {
-    $.get("/" + $("#clickedType").text() + "/" + $("#clickedID").text() + "/close", function(data) {
+    $.get("/" + $(".m_close_clickedType").first().text() + "/" + $(".m_close_clickedID").text() + "/close", function(data) {
         refreshData();
     });
-    $("#myModal").modal("toggle")
+    $('#modalCloseModel').closeModal();
 }
 
 function performOpen() {
-    $.get("/" + $("#clickedType2").text() + "/" + $("#clickedID2").text() + "/open", function(data) {
+    $.get("/" + $(".m_open_clickedType").first().text() + "/" + $(".m_open_clickedID").text() + "/open", function(data) {
         refreshData();
     });
-    $("#myModal2").modal("toggle")
+    $('#modalOpenModel').closeModal();
 }
