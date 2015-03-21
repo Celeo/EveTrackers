@@ -1,11 +1,11 @@
 function graph() {
     $('.wormhole_row').each(function(index) { $(this).removeClass('highlighted'); });
-    var stage = new Kinetic.Stage({
+    var stage = new Konva.Stage({
         container: 'graph',
         width: 1300,
         height: 0,
     });
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
     var rowHeight = 65;
     var rectWidth = 80;
     $.getJSON('/graph', function(chains) {
@@ -52,7 +52,7 @@ function graph() {
         13: '#110',
     }
     function drawSystem(system, x, y) {
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             'x': x - rectWidth / 2,
             'y': y - rectWidth / 1.75 / 2,
             'width': rectWidth,
@@ -63,7 +63,7 @@ function graph() {
         });
         layer.add(rect);
         // draw text
-        var sysNameText = new Kinetic.Text({
+        var sysNameText = new Konva.Text({
             'text': system.name,
             'x': x,
             'y': y-16,
@@ -80,7 +80,7 @@ function graph() {
             sys_class = 'C' + system.class;
         else
             sys_class = system.class || '';
-        var sysClassText = new Kinetic.Text({
+        var sysClassText = new Konva.Text({
             'text': sys_class,
             'x': x,
             'y': y,
@@ -92,7 +92,7 @@ function graph() {
         sysClassText.setX(x - textWidth / 2);
         layer.add(sysClassText);
 
-        var sysCountText = new Kinetic.Text({
+        var sysCountText = new Konva.Text({
             'text': system.count + ' in system',
             'x': x - 5,
             'y': y+16,
@@ -122,7 +122,7 @@ function graph() {
             color = '#b12';
         else
             color = '#777';
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             'x': 0,
             'y': 0,
             'points': [x1+rectWidth/2, y1, x2-rectWidth/2, y2],

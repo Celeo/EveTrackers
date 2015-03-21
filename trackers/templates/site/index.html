@@ -6,7 +6,7 @@ Index
 
 {% block extraHead %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/tablesorter.min.js') }}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/kineticjs/5.0.6/kinetic.min.js"></script>
+<script src="{{ url_for('static', filename='js/konva.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/graph.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tablesorter.css') }}">
