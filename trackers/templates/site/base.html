@@ -93,19 +93,21 @@
 
 <div class="" id="page_proper">
     <div class="block-padding">
-        <center>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="card-panel {% if category == 'info' %}green{% elif category == 'warning' %}yellow{% else %}red{% endif %}">
-                    <p>
-                        {{ message }}
-                    </p>
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        </center>
+        <div class="container">
+            <center>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="card-panel {% if category == 'info' %}green{% elif category == 'warning' %}yellow{% else %}red{% endif %}">
+                        <p>
+                            {{ message }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </center>
+        </div>
         <div class="container">
             {% block content %}{% endblock %}
         </div>
