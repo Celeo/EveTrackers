@@ -105,6 +105,12 @@ class Wormhole(db.Model):
     def is_site_object(self):
         return False
 
+    def get_system_effect_start(self):
+        return System.query.filter_by(name=self.start).first().effect
+
+    def get_system_effect_end(self):
+        return System.query.filter_by(name=self.end).first().effect
+
 
 class WormholeSnapshot(db.Model):
 

@@ -575,6 +575,7 @@ def graph():
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.end),
                     'tiny': wh.tiny,
+                    'effect': wh.get_system_effect_start(),
                 })
                 return True
             if c['name'] == get_system_name(wh.end):
@@ -587,6 +588,7 @@ def graph():
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.start),
                     'tiny': wh.tiny,
+                    'effect': wh.get_system_effect_end(),
                 })
                 return True
             if append_connection(c['connections'], wh):
@@ -607,7 +609,8 @@ def graph():
         else:
             return 'nullsec'
     class GraphWormhole(object):
-        def __init__(self, id=0, start='', end='', status='', start_class='', start_sec='', end_clazz='', end_sec='', tiny=False):
+        def __init__(self, wormhole, id=0, start='', end='', status='', start_class='', start_sec='', end_clazz='', end_sec='', tiny=False):
+            self.wormhole = wormhole
             self.id = id
             self.start = start
             self.end = end
@@ -627,10 +630,14 @@ def graph():
             elif self.status == 'Unknown':
                 return 'unknown'
             return 'gone'
+        def get_system_effect_start(self):
+            return self.wormhole.get_system_effect_start()
+        def get_system_effect_end(self):
+            return self.wormhole.get_system_effect_end()
 
     wormholes = []
     for wormhole in Wormhole.query.filter_by(opened=True, closed=False):
-        g = GraphWormhole(id=wormhole.id, start=wormhole.start, end=wormhole.end, status=wormhole.status, tiny=wormhole.tiny)
+        g = GraphWormhole(wormhole=wormhole, id=wormhole.id, start=wormhole.start, end=wormhole.end, status=wormhole.status, tiny=wormhole.tiny)
         s_s = System.query.filter_by(name=wormhole.start).first()
         s_e = System.query.filter_by(name=wormhole.end).first()
         if s_s:
@@ -657,6 +664,7 @@ def graph():
                 'connections': [],
                 'id': wh.id,
                 'count': get_player_count_in_system(wh.start),
+                'effect': wh.get_system_effect_start(),
             }
             chains.append(chain)
             break
