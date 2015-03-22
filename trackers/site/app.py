@@ -575,7 +575,7 @@ def graph():
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.end),
                     'tiny': wh.tiny,
-                    'effect': wh.get_system_effect_start(),
+                    'effect': wh.get_system_effect_end(),
                 })
                 return True
             if c['name'] == get_system_name(wh.end):
@@ -588,7 +588,7 @@ def graph():
                     'mass': wh.get_type_js(),
                     'count': get_player_count_in_system(wh.start),
                     'tiny': wh.tiny,
-                    'effect': wh.get_system_effect_end(),
+                    'effect': wh.get_system_effect_start(),
                 })
                 return True
             if append_connection(c['connections'], wh):
@@ -687,6 +687,7 @@ def graph():
                 'connections': [],
                 'id': wh.id,
                 'count': get_player_count_in_system(wh.start),
+                'effect': wh.get_system_effect_start(),
             })
     return json.dumps(chains)
 

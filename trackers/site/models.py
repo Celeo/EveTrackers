@@ -106,10 +106,10 @@ class Wormhole(db.Model):
         return False
 
     def get_system_effect_start(self):
-        return System.query.filter_by(name=self.start).first().effect
+        return System.query.filter_by(name=self.start).first().effect or 'none'
 
     def get_system_effect_end(self):
-        return System.query.filter_by(name=self.end).first().effect
+        return System.query.filter_by(name=self.end).first().effect or 'none'
 
 
 class WormholeSnapshot(db.Model):

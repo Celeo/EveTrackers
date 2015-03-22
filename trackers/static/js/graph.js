@@ -6,6 +6,7 @@ function graph() {
         height: 0,
     });
     var layer = new Konva.Layer();
+    var imageLayer = new Konva.Layer();
     var rowHeight = 65;
     var rectWidth = 80;
     $.getJSON('/graph', function(chains) {
@@ -92,6 +93,42 @@ function graph() {
         sysClassText.setX(x - textWidth / 2);
         layer.add(sysClassText);
 
+        // add system effect image if system has a wormhole effect
+        if (system.effect !== null && system.effect !== undefined && system.effect !== '' && system.effect !== 'none') {
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                var effectImage = new Konva.Image({
+                    x: rect.x() + rect.width() - 17,
+                    y: y,
+                    image: imageObj,
+                    width: 16,
+                    height: 16,
+                });
+                imageLayer.add(effectImage);
+                stage.add(imageLayer);
+            };
+            switch (system.effect) {
+                case 'Wolf-Rayet':
+                    imageObj.src = 'https://image.eveonline.com/Type/1304_32.png';
+                    break;
+                case 'Red Giant':
+                    imageObj.src = 'https://image.eveonline.com/Type/1563_32.png';
+                    break;
+                case 'Pulsar':
+                    imageObj.src = 'https://image.eveonline.com/Type/10838_32.png';
+                    break;
+                case 'Magnetar':
+                    imageObj.src = 'https://image.eveonline.com/Type/2486_32.png';
+                    break;
+                case 'Cataclysmic Variable':
+                    imageObj.src = 'https://image.eveonline.com/Type/12225_32.png';
+                    break;
+                case 'Black Hole':
+                    imageObj.src = 'https://image.eveonline.com/Type/434_32.png';
+                    break;
+            }
+        }
+
         var sysCountText = new Konva.Text({
             'text': system.count + ' in system',
             'x': x - 5,
@@ -134,7 +171,7 @@ function graph() {
         layer.add(line);
     }
     function moreInfo(system) {
-        $('#graph_info').html('<a href="/system/' + system.proper_name + '" target="_blank">System: ' + system.name + ' (' + system.class + ')</a>');
+        $('#graph_info').html('<a href="/system/' + system.proper_name + '" target="_blank" style="font-size: 1.5em;">System: ' + system.name + ' (' + system.class + ')</a>');
         $('.wormhole_row').each(function(item) { $(this).removeClass('highlighted'); });
         $('#wormhole_row_' + system.id).addClass('highlighted');
         $('#graph_wormhole_start').val(system.proper_name);
