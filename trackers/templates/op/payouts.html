@@ -3,7 +3,7 @@
 {% block head %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('select').material_select();
+        $('#operation').material_select();
         $("input:checkbox.money").on("click", function() {
             if ($(this).prop("checked"))
                 $("#payamount").attr("disabled", "disabled");
@@ -26,13 +26,10 @@
         });
         $("#operation").change(function() {
             chooseOperation();
-            setTimeout(function() { choosePlayer(); }, 500);
-        });
-        $("#player").change(function() {
-            choosePlayer();
+            setTimeout(function() { choosePlayer(); }, 1000);
         });
         chooseOperation();
-        setTimeout(function() { choosePlayer(); }, 500);
+        setTimeout(function() { choosePlayer(); }, 1000);
     });
     function chooseOperation() {
         var op = $("#operation").val();
@@ -44,6 +41,10 @@
             },
             success: function(data) {
                 $("#player").html(data);
+                $('#player').find('select').material_select();
+                $('#player').find('select').change(function() {
+                    choosePlayer();
+                });
                 $("#player_info").html("");
                 $("#biglist").load("payoutplayerlist/" + op.split(' ')[0]);
             }
@@ -55,7 +56,7 @@
             url: "{{ url_for('.player_op_data') }}",
             data: {
                 op: $("#operation").val(),
-                player: $("#player").val()
+                player: $("#player").find('select').val()
             },
             success: function(data) {
                 $("#player_info").html(data);
@@ -79,7 +80,7 @@
     }
     function doPayment() {
         var operation = $("#operation").val();
-        var player = $("#player").val();
+        var player = $("#player").find('select').val();
         var amount = $("#amount").val();
         var payInFull = $("#payfull").is(":checked");
         var zeroOut = $("#payzero").is(":checked");
@@ -94,9 +95,8 @@
                 payzero: zeroOut
             },
             success: function(data) {
-                console.log("Return: " + data);
                 chooseOperation();
-                setTimeout(function() { choosePlayer(); }, 500);
+                setTimeout(function() { choosePlayer(); }, 1000);
             }
         });
     }
@@ -120,7 +120,7 @@
                 <option>{{ operation.id }} - {{ operation.name }}</option>
             {% endfor %}
             </select>
-            <select class="form-control width-half" id="player"></select><br />
+            <div id="player"></div><br />
             <div id="player_info"></div>
             <input class="form-control width-half" type="text" id="amount" placeholder="Amount">
             <div style="margin-left: 1em;">

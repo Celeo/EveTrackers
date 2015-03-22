@@ -141,8 +141,8 @@ def player_names():
         return redirect(url_for('.index'))
     ret = ''
     for player in Operation.query.filter_by(id=int(int(request.form['op'].split(' ')[0]))).first_or_404().get_players():
-        ret += '<option>{}</option>'.format(player.name)
-    return ret
+        ret += '<option value="{0}">{0}</option>'.format(player.name)
+    return '<select class="form-control width-half">{}</select>'.format(ret)
 
 
 @blueprint.route('/playeropdata', methods=['POST'])
