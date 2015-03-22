@@ -118,7 +118,7 @@ function graph() {
                     imageObj.src = 'https://image.eveonline.com/Type/10838_32.png';
                     break;
                 case 'Magnetar':
-                    imageObj.src = 'https://image.eveonline.com/Type/2486_32.png';
+                    imageObj.src = 'https://image.eveonline.com/Type/3573_32.png';
                     break;
                 case 'Cataclysmic Variable':
                     imageObj.src = 'https://image.eveonline.com/Type/12225_32.png';
