@@ -115,6 +115,17 @@ class Player(db.Model):
     def get_api_paid_formatted(self):
         return '{:,}'.format(self.api_paid)
 
+    @property
+    def corp(self):
+        try:
+            pan = PlayerAuthName.query.filter_by(character_name=self.name).first()
+            if pan:
+                return pan.corp
+            pan = PlayerAuthName.query.filter_by(username=self.name).first()
+            return pan.corp or '*other*'
+        except:
+            return '*other*'
+
 
 class ApiKey(db.Model):
 
