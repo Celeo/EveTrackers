@@ -63,21 +63,6 @@
             }
         });
     }
-    function updateAPI() {
-        $("#b_apiupdate").attr("disabled", "disabled");
-        $("#b_apiupdate").text("Updating ...");
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('.api_update') }}",
-            data: {
-                update: 'api',
-                id: $('#api_selection').val()
-            },
-            success: function(data) {
-                location.href = "{{ url_for('.payouts') }}";
-            }
-        });
-    }
     function doPayment() {
         var operation = $("#operation").val();
         var player = $("#player").find('select').val();
@@ -108,41 +93,27 @@
 
 <div class="well">
     <h3>Make Payments <small>this page is locked to bursars</small></h3>
-    <p>
-        This tool supports both manually denoting a player as paid and by supplying a short string of letters and numbers 
-        for pasting into the reason box when donating money to a player, read by the giving corporation's API.
-    </p>
     <br />
     <div class="row">
-        <div class="col-lg-6">
-            <select class="form-control width-half" id="operation">
-            {% for operation in operations %}
-                <option>{{ operation.id }} - {{ operation.name }}</option>
-            {% endfor %}
-            </select>
-            <div id="player"></div><br />
-            <div id="player_info"></div>
-            <input class="form-control width-half" type="text" id="amount" placeholder="Amount">
-            <div style="margin-left: 1em;">
-                <p>
-                    <input type="checkbox" class="money" id="payfull">
-                    <label for="payfull">Pay in full</label>
-                </p>
-                <p>
-                    <input type="checkbox" class="money" id="payzero">
-                    <label for="payzero">Zero-out</label>
-                </p>
-            </div>
-            <a class="btn light-green accent-4" onclick="doPayment();">Pay</a>
+        <select class="form-control width-half" id="operation">
+        {% for operation in operations %}
+            <option>{{ operation.id }} - {{ operation.name }}</option>
+        {% endfor %}
+        </select>
+        <div id="player"></div><br />
+        <div id="player_info"></div>
+        <input class="form-control width-half" type="text" id="amount" placeholder="Amount">
+        <div style="margin-left: 1em;">
+            <p>
+                <input type="checkbox" class="money" id="payfull">
+                <label for="payfull">Pay in full</label>
+            </p>
+            <p>
+                <input type="checkbox" class="money" id="payzero">
+                <label for="payzero">Zero-out</label>
+            </p>
         </div>
-        <div class="col-lg-6">
-            <select class="form-control width-half" id="api_selection">
-                {% for apikey in apikeys %}
-                    <option>#{{ apikey.id }}: {{ apikey.note }} ({{ apikey.key}})</option>
-                {% endfor %}
-            </select><br />
-            <a onclick="{% if apienabled %}updateAPI();{% endif %}" id="b_apiupdate" class="btn light-green accent-4 form-control"{% if not apienabled %}disabled="disabled"{% endif %} style="width: 50%;">Update via API</a>
-        </div>
+        <a class="btn light-green accent-4" onclick="doPayment();">Pay</a>
     </div>
 </div>
 

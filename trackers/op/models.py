@@ -87,17 +87,17 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     operation_id = db.Column(db.Integer, db.ForeignKey('optracker_operation.id'))
     name = db.Column(db.String(200))
+    corporation = db.Column(db.String(200))
     sites = db.Column(db.Float)
     paid = db.Column(db.Integer)
-    api_paid = db.Column(db.Integer)
     complete = db.Column(db.Boolean)
     
-    def __init__(self, operation_id, name, sites=0, paid=0.0, api_paid=0.0, complete=False):
+    def __init__(self, operation_id, name, corporation, sites=0, paid=0.0, complete=False):
         self.operation_id = operation_id
         self.name = name
+        self.corporation = corporation
         self.sites = sites
         self.paid = paid
-        self.api_paid = api_paid
         self.complete = complete
 
     def __repr__(self):
@@ -111,51 +111,6 @@ class Player(db.Model):
 
     def get_paid_formatted(self):
         return '{:,}'.format(self.paid)
-
-    def get_api_paid_formatted(self):
-        return '{:,}'.format(self.api_paid)
-
-
-class ApiKey(db.Model):
-
-    __tablename__ = 'optracker_apikey'
-
-    id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.Integer)
-    code = db.Column(db.String(200))
-    wallet = db.Column(db.Integer)
-    added = db.Column(db.DateTime)
-    note = db.Column(db.Text)
-
-    def __init__(self, key='', code='', wallet=1001, added=None, note=''):
-        self.key = key
-        self.code = code
-        self.wallet = wallet
-        self.added = added if added else datetime.utcnow()
-        self.note = note
-
-    def __repr__(self):
-        return '<ApiKey {} {}'.format(self.key, self.code)
-
-
-class PlayerAuthName(db.Model):
-
-    __tablename__ = 'optracker_playerauthname'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200))
-    character_name = db.Column(db.String(200))
-    corp = db.Column(db.String(200))
-    bursar = db.Column(db.Boolean)
-
-    def __init__(self, username='', character_name='', corp='', bursar=False):
-        self.username = username
-        self.character_name = character_name
-        self.corp = corp
-        self.bursar = bursar
-
-    def __repr__(self):
-        return '<PlayerAuthName {} {} {}>'.format(self.username, self.character_name, self.bursar)
 
 
 class LogStatement(db.Model):

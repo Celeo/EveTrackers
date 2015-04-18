@@ -41,8 +41,6 @@ tradehubs = {
     'Rens': {'region': 'Heimatar', 'region_id': 10000030}
 }
 
-show_api_warning = True
-
 
 def _name():
     """ Returns the name of the user """
@@ -110,7 +108,7 @@ def index():
         if (now - operation.last_edited).total_seconds() / 3600 >= 6:
             operation.locked = True
             db.session.commit()
-    return _render_template('op/index.html', page='home', operations=operations, apikeys=ApiKey.query.count(), show_api_warning=show_api_warning)
+    return _render_template('op/index.html', page='home', operations=operations)
 
 
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
@@ -214,38 +212,7 @@ def payouts():
     # send models of players and their operations to the template
     players = Player.query.order_by('-operation_id').order_by('complete').all()
     names = ['{}-{}'.format(pl.operation.id, pl.name) for pl in players if pl and pl.operation]
-    return _render_template('op/payouts.html', page='payout', players=players, names=names,
-        api_enabled=ApiKey.query.count() > 0, apikeys=ApiKey.query.all(),
-        operations=Operation.query.order_by('-id').all())
-
-
-@blueprint.route('/apiupddate', methods=['POST'])
-def api_update():
-    """ AJAX View: Update players paid from the api keys """
-    if not _is_bursar():
-        return redirect(url_for('.index'))
-    # uses the choosen EVE API key to search for payments to players
-    keypair = ApiKey.query.filter_by(id=request.form['id'].split(' ')[0][1]).first()
-    auth = api.auth(keyID=keypair.key, vCode=keypair.code)
-    wallet = auth.corp.WalletJournal(accountKey=keypair.wallet)
-    count = 0
-    for entry in wallet.entries:
-        if entry.refTypeID == 37:
-            receiver, amount, reason = entry.ownerName2, entry.amount, entry.reason.split(' ')[1].strip()
-            try:
-                players = Player.query.filter_by(name=receiver, api_paid=0).all()
-                for pl in players:
-                    if pl.operation.key in reason:
-                        isk = int(str(amount).split('.')[0]) * -1
-                        pl.api_paid = isk
-                        pl.paid = isk
-                        if pl.get_share() <= isk:
-                            pl.complete = True
-                        count += 1
-            except:
-                pass
-    db.session.commit()
-    return count
+    return _render_template('op/payouts.html', page='payout', players=players, names=names, operations=Operation.query.order_by('-id').all())
 
 
 @blueprint.route('/review')
@@ -262,7 +229,7 @@ def review():
         elif 'brg' in player.name.lower():
             brg += player.paid
         else:
-            isk_per_player[player.name] += player.paid + player.api_paid
+            isk_per_player[player.name] += player.paid
     alliance_tax = 0
     for operation in Operation.query.all():
         total_isk_all += operation.loot
@@ -285,13 +252,6 @@ def loot():
     for item in items:
         items[item]['highest'] = max(items[item][tradehub] for tradehub in tradehubs)
     return _render_template('op/loot.html', page='loot', items=items)
-
-
-@blueprint.route('/dismiss_api_warning')
-def dismiss_api_warning():
-    global show_api_warning
-    show_api_warning = False
-    return 'Hidden'
 
 
 def _log(message):
