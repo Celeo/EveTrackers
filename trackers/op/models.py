@@ -1,5 +1,6 @@
-from trackers.shared import db
+from trackers.shared import db, app_settings
 from datetime import datetime
+from collections import Counter
 
 
 class Operation(db.Model):
@@ -58,13 +59,21 @@ class Operation(db.Model):
 
     def get_share_for(self, player):
         try:
-            share = self.loot * (float(player.sites) / float(self.total_shares()))
-            share -= float(self.tax) * float(share)
-            return round(share, 2)
+            usable = self.loot - (self.loot * self.tax)
+            corp_presence = Counter()
+            for player in self.get_players():
+                corp_presence[player.corporation] += 1
+            corp_share = corp_presence[player.corporation] / sum(corp_presence.values())
+            corp_allotment = corp_share * usable
+            corp_tax = corp_allotment * (app_settings['CORP_TAXES'][player.corporation] if player.corporation in app_settings['CORP_TAXES'] else 1)
+            corp_member_allotment = usable - corp_tax
+            share = corp_member_allotment / player.sites
+            return round(share)
         except:
             return -1
 
     def get_alliance_share(self):
+        # TODO
         offset = 0
         for player in self.get_all_players():
             offset += self.get_share_for(player)
