@@ -65,8 +65,6 @@ admin.add_view(MyModelView(WormholeType, db.session))
 admin.add_view(MyModelView(Settings, db.session))
 admin.add_view(MyModelView(Operation, db.session))
 admin.add_view(MyModelView(Player, db.session))
-admin.add_view(MyModelView(ApiKey, db.session))
-admin.add_view(MyModelView(PlayerAuthName, db.session))
 admin.add_view(MyModelView(LogStatement, db.session))
 admin.add_view(MyModelView(Killmail, db.session))
 

@@ -2,32 +2,11 @@
 
 {% block head %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/collapse.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        setTimeout('$("#no_keys_warning").slideUp(250)', 10000);
-        $('#dismiss_api_warning').on('click', function(data) {
-            $(this).parent().parent().slideUp(250);
-            $.ajax({ url: "{{ url_for('.dismiss_api_warning') }}" });
-        });
-    });
-</script>
 {% endblock %}
 
 {% block content %}
 
 <h3>Operations Listing</h3>
-
-{% if not apikeys and bursar and show_api_warning %}
-<div class="card amber lighten-3" id="no_keys_warning">
-    <div class="card-content">
-        <h4>No API Keys</h4>
-        Hey, Bursar: there aren't any API keys in storage; Eve authentification for payment completion will not work.
-    </div>
-    <div class="card-action black-text">
-        <a href="#" id="dismiss_api_warning" class="blue-text">Dismiss</a>
-    </div>
-</div>
-{% endif %}
 
 {% for op in operations %}
 <div class="cellholder">

@@ -55,12 +55,6 @@ for operation in Operation.query.all():
 for player in Player.query.all():
     writer.writerow((player.operation_id, player.name, player.sites, player.paid, player.api_paid, player.complete))
 
-for apikey in ApiKey.query.all():
-    writer.writerow((apikey.key, apikey.code, apikey.wallet, apikey.added, apikey.note))
-
-for playerauthname in PlayerAuthName.query.all():
-    writer.writerow((playerauthname.username, playerauthname.character_name, playerauthname.corp, playerauthname.bursar))
-
 # ignoring LogStatement
 
 # =====================
