@@ -36,6 +36,8 @@ app_settings['APPROVED_CORPORATIONS'] = app.config['APPROVED_CORPORATIONS']
 app_settings['BANNED_USERS'] = app.config['BANNED_USERS']
 app_settings['CORPORATION_KEYS'] = app.config['CORPORATION_KEYS']
 app_settings['FLEET_COMMANDERS'] = app.config['FLEET_COMMANDERS']
+app_settings['BURSARS'] = app.config['BURSARS']
+app_settings['CORP_TAXES'] = app.config['CORP_TAXES']
 
 # import blueprints
 from trackers.site.app import blueprint as site_tracker

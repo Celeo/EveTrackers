@@ -56,27 +56,7 @@ def _name():
 
 def _is_bursar():
     """ Returns if the user is a bursar """
-    # this app users character names instead of OAuth names, 
-    # so we need to get that name for the player and store it for later use
-    # name = _name()
-    # pan = PlayerAuthName.query.filter_by(username=name).first()
-    # if not pan or not pan.character_name:
-    #     pan = PlayerAuthName(username=name)
-    #     result = api.eve.CharacterID(names=name.replace('_', ' '))
-    #     try:
-    #         char_name = result.characters[0].name
-    #         char_id = result.characters[0].characterID
-    #         result = api.eve.CharacterAffiliation(ids=char_id)
-    #         corp = result.characters[0].corporationName
-    #         pan.character_name = char_name
-    #         pan.corp = corp
-    #     except:
-    #         pass
-    #     db.session.add(pan)
-    #     db.session.commit()
-    # return pan.bursar
-    # TODO
-    return False
+    return _name() in app_settings['BURSARS']
 
 
 def _render_template(template_name, **kwargs):
