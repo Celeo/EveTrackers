@@ -5,7 +5,6 @@
         <th class="text-center">Sites</th>
         <th class="text-center">Share</th>
         <th class="text-center">Paid</th>
-        <th class="text-center">API Paid</th>
         <th class="text-right">Done</th>
     </tr>
     <tr>
@@ -13,7 +12,6 @@
         <td class="text-left">** Alliance **</td>
         <td class="text-center">-</td>
         <td class="text-center" id="share{{ operation.id }}">{{ operation.get_alliance_share() }}</td>
-        <td class="text-center">-</td>
         <td class="text-center">-</td>
         <td class="text-right" id="complete{{ operation.id }}">-</td>
     </tr>
@@ -24,7 +22,6 @@
         <td class="text-center">{{ p.sites }}</td>
         <td class="text-center" id="share{{ p.id }}">{{ p.get_share_formatted() }}</td>
         <td class="text-center">{{ p.get_paid_formatted() }} isk</td>
-        <td class="text-center">{{ p.get_api_paid_formatted() }} isk</td>
         <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="badge black-text green">True</span>{% else %}<span class="badge black-text red">False</span>{% endif %}</td>
     </tr>
     {% endfor %}
