@@ -12,7 +12,7 @@
     </tr>
 {% for player in op.get_all_players() %}
      <tr id="playerrow_{{ player.id }}">
-        <td>{{ player.name }}</td>
+        <td>{{ player }}</td>
         <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
         {% if not op.locked %}
         <td class="text-right"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>

@@ -123,7 +123,7 @@
         messageSocket({ command: "remove", player_id: id });
     }
     function addPlayer() {
-        messageSocket({ command: "add", name: $("#playername").val() });
+        messageSocket({ command: "add", name: $("#playername").val(), corporation: $("#playercorp").val() });
     }
     function changeLoot() {
         messageSocket({ command: "loot", loot: $("#lootprice").val() });
@@ -251,7 +251,7 @@
             </tr>
         {% for player in op.get_all_players() %}
             <tr id="playerrow_{{ player.id }}">
-                <td>{{ player.name }}</td>
+                <td>{{ player }}</td>
                 <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
             {% if not op.locked %}
                 <td class="text-right"><a class="btn btn-floating green increment" playerid="{{ player.id }}"><i class="mdi-content-add small black-text"></i></a></td>
@@ -281,6 +281,7 @@
                 <h4>Add Player</h4>
                 <div class="form-inline">
                     <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
+                    <input type="text" id="playercorp" placeholder="Player corp" value="">
                     <button class="btn light-green accent-4 waves-effect waves-light" onclick="addPlayer();">Add</button>
                 </div>
             {% endif %}

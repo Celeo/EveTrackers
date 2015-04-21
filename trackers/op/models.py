@@ -112,6 +112,9 @@ class Player(db.Model):
     def __repr__(self):
         return '<Player {} {} {}>'.format(self.name, self.sites, self.complete)
 
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.corporation)
+
     def get_share(self):
         return self.operation.get_share_for(self)
 

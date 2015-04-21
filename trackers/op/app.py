@@ -305,7 +305,7 @@ def websocket_message(message):
         _log('Set description for op {} to {}'.format(op_id, operation.description))
     if message['command'] == 'add':
         if Player.query.filter_by(name=message['name'], operation_id=op_id).count() == 0:
-            player = Player(operation_id=op_id, name=message['name'])
+            player = Player(operation_id=op_id, name=message['name'], corporation=message['corporation'])
             db.session.add(player)
             db.session.commit()
             _log('Added {} to op {}'.format(message['name'], op_id))
