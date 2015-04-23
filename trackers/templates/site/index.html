@@ -12,7 +12,7 @@ Index
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tablesorter.css') }}">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/site');
+    var socket = io.connect('http://' + document.domain + ':5001/site');
     socket.on('connect', function() {
         console.log("Client connected");
     });
