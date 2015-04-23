@@ -6,3 +6,4 @@ flask-sqlalchemy
 requests
 eveapi
 lxml
+gunicorn==18.0
