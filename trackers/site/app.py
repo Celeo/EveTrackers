@@ -1122,7 +1122,7 @@ def settings():
 @blueprint.route('/api/<path>/')
 def api_views(path):
     """ View: current data JSON dumps """
-    # current unused; redirect to the index page
+    # currently unused; redirect to the index page
     return redirect(url_for('.index'))
 
 

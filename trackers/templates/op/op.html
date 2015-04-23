@@ -194,30 +194,6 @@
 {% endif %}
 </div>
 
-<div class="modal fade" id="apikeyexplain" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    This API key is used by the tool for automatically tracking payouts for operations from corporation wallets.
-                    <br />
-                    While this tool does support full manual payouts to players, it aims to eliminate much of the work that has to 
-                    be recorded by bursars in doing payouts, specifically for escalations.
-                    <br />
-                    Bursars can push a button on the payout management page and the tool will poll the API keys in storage and 
-                    attempt to mark as many players as possible as paid for their participation in operations.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn blue" data-dismiss="modal" aria-hidden="true">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="well">
     <h4>Description</h4>
     <span id="opdescription">{{ op.description|safe }}</span><br />

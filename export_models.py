@@ -53,7 +53,7 @@ for operation in Operation.query.all():
     writer.writerow((operation.name, operation.date, operation.state, operation.leader, operation.location, operation.description, operation.last_edited, operation.loot, operation.key, operation.locked, operation.tax))
 
 for player in Player.query.all():
-    writer.writerow((player.operation_id, player.name, player.sites, player.paid, player.api_paid, player.complete))
+    writer.writerow((player.operation_id, player.name, player.sites, player.paid, player.complete))
 
 # ignoring LogStatement
 

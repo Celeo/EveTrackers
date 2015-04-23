@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from trackers.shared import InGameBrowser, socketio, api
+from trackers.shared import InGameBrowser, socketio
 from .models import *
 from datetime import datetime
 from collections import Counter
