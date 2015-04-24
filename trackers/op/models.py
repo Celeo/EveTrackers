@@ -73,11 +73,7 @@ class Operation(db.Model):
             return -1
 
     def get_alliance_share(self):
-        # TODO
-        offset = 0
-        for player in self.get_all_players():
-            offset += self.get_share_for(player)
-        return self.loot - offset
+        return self.loot * self.tax
 
     def get_players(self):
         return [p for p in self.get_all_players() if not p.name == 'SRP']
