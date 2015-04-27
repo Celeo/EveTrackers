@@ -59,17 +59,13 @@ class Operation(db.Model):
 
     def get_share_for(self, player):
         try:
-            usable = self.loot - (self.loot * self.tax)
-            corp_presence = Counter()
-            for player in self.get_players():
-                corp_presence[player.corporation] += 1
-            corp_share = corp_presence[player.corporation] / sum(corp_presence.values())
-            corp_allotment = corp_share * usable
-            corp_tax = corp_allotment * (app_settings['CORP_TAXES'][player.corporation] if player.corporation in app_settings['CORP_TAXES'] else 1)
-            corp_member_allotment = usable - corp_tax
-            share = corp_member_allotment / player.sites
-            print('{}, {}, {}, {}, {}, {}, {}'.format(usable, \
-                corp_presence, corp_share, corp_allotment, corp_tax, corp_member_allotment, share))
+            share = self.loot * (float(player.sites) / float(self.total_shares()))
+            corp_tax_rate = 0
+            if player.corporation in app_settings['CORP_TAXES']:
+                corp_tax_rate = app_settings['CORP_TAXES'][player.corporation]
+            elif not player.corporation or player.corporation == 'None':
+                corp_tax_rate = 1
+            share -= share * corp_tax_rate
             return round(share)
         except:
             return -1
