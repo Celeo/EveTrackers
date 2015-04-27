@@ -48,12 +48,12 @@ class Operation(db.Model):
         elif self.state == 'Paid':
             return 'white'
 
-    def get_all_players(self):
+    def get_players(self):
         return Player.query.filter_by(operation_id=self.id).all()
 
     def total_shares(self):
         count = 0
-        for player in self.get_all_players():
+        for player in self.get_players():
             count += player.sites
         return count
 
@@ -68,6 +68,8 @@ class Operation(db.Model):
             corp_tax = corp_allotment * (app_settings['CORP_TAXES'][player.corporation] if player.corporation in app_settings['CORP_TAXES'] else 1)
             corp_member_allotment = usable - corp_tax
             share = corp_member_allotment / player.sites
+            print('{}, {}, {}, {}, {}, {}, {}'.format(usable, \
+                corp_presence, corp_share, corp_allotment, corp_tax, corp_member_allotment, share))
             return round(share)
         except:
             return -1
@@ -75,11 +77,8 @@ class Operation(db.Model):
     def get_alliance_share(self):
         return self.loot * self.tax
 
-    def get_players(self):
-        return [p for p in self.get_all_players() if not p.name == 'SRP']
-
     def get_player_count(self):
-        return len(self.get_all_players())
+        return len(self.get_players())
 
     def tax_as_percentage(self):
         return "{}%".format(self.tax * 100)

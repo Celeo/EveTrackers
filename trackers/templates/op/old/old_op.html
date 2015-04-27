@@ -216,7 +216,7 @@
                 <th class="text-right">ISK Earned</th>
             {% endif %}
             </tr>
-        {% for player in op.get_all_players() %}
+        {% for player in op.get_players() %}
             <tr id="playerrow_{{ player.id }}">
                 <td>{{ player }}</td>
                 <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
