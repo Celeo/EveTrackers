@@ -11,11 +11,21 @@
         <td class="text-left"><a href="{{ url_for('.op', op_id=operation.id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
         <td class="text-left">** Alliance **</td>
         <td class="text-center">-</td>
-        <td class="text-center" id="share{{ operation.id }}">{{ operation.get_alliance_share() }}</td>
+        <td class="text-center" id="share{{ operation.id }}">{{ operation.get_alliance_share_formatted() }}</td>
         <td class="text-center">-</td>
         <td class="text-right" id="complete{{ operation.id }}">-</td>
     </tr>
-    {% for p in players %}
+{% for c in operation.corps() %}
+    <tr>
+        <td class="text-left"><a href="{{ url_for('.op', op_id=operation.id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
+        <td class="text-left">** {{ c[0] }} **</td>
+        <td class="text-center">-</td>
+        <td class="text-center" id="">{{ c[1] }}</td>
+        <td class="text-center">-</td>
+        <td class="text-right" id="complete{{ operation.id }}">-</td>
+    </tr>
+{% endfor %}
+{% for p in players %}
     <tr>
         <td class="text-left"><a href="{{ url_for('.op', op_id=p.operation_id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
         <td class="text-left">{{ p.name }}</td>
@@ -24,5 +34,5 @@
         <td class="text-center">{{ p.get_paid_formatted() }} isk</td>
         <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="badge black-text green">True</span>{% else %}<span class="badge black-text red">False</span>{% endif %}</td>
     </tr>
-    {% endfor %}
+{% endfor %}
 </table>

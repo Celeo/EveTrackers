@@ -1,6 +1,5 @@
 from trackers.shared import db, app_settings
 from datetime import datetime
-from collections import Counter
 
 
 class Operation(db.Model):
@@ -52,10 +51,38 @@ class Operation(db.Model):
         return Player.query.filter_by(operation_id=self.id).all()
 
     def total_shares(self):
-        count = 0
+        count = 0.0
         for player in self.get_players():
             count += player.sites
         return count
+
+    def get_payout_data(self):
+        data = {
+            'alliance': None,
+            'corps': None,
+            'players': None
+        }
+        data['alliance'] = self.loot * self.tax
+        isk_per_share = self.loot / self.total_shares()
+        corps, corp_names = {}, []
+        players = []
+        for player in self.get_players():
+            if not player.corporation in corp_names:
+                corp_names.append(player.corporation)
+        for corp in corp_names:
+            corps[corp] = {
+                'tax': app_settings['CORP_TAXES'][corp] if corp in app_settings['CORP_TAXES'] else 1,
+                'isk': 0.0
+            }
+        for player in self.get_players():
+            pre_tax = isk_per_share * player.sites
+            corp_tax = pre_tax * corps[player.corporation]['tax']
+            post_tax = pre_tax - corp_tax
+            players.append([player.name, post_tax])
+            corps[player.corporation]['isk'] += corp_tax
+        data['corps'] = corps
+        data['players'] = players
+        return data
 
     def get_share_for(self, player):
         try:
@@ -72,6 +99,19 @@ class Operation(db.Model):
 
     def get_alliance_share(self):
         return self.loot * self.tax
+
+    def get_alliance_share_formatted(self):
+        return "{:,}".format(self.loot * self.tax)
+
+    def corps(self):
+        corps, corp_names = [], []
+        for player in self.get_players():
+            if not player.corporation in corp_names:
+                corp_names.append(player.corporation)
+        # TODO
+        for corp_name in corp_names:
+            pass
+        return corps
 
     def get_player_count(self):
         return len(self.get_players())
