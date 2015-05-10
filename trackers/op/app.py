@@ -140,7 +140,9 @@ def payout_player_list(op_id):
     """ AJAX View: return a list of players in an operation in a table """
     if not _is_bursar():
         return redirect(url_for('.index'))
-    return _render_template('op/payout_playerlist.html', operation=Operation.query.filter_by(id=op_id).first_or_404(),
+    operation = Operation.query.filter_by(id=op_id).first_or_404()
+    data = operation.get_payout_data()
+    return _render_template('op/payout_playerlist.html', operation=operation, data=data,
         players=Player.query.filter_by(operation_id=op_id).all())
 
 

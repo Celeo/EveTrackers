@@ -63,9 +63,10 @@ class Operation(db.Model):
             'players': None
         }
         data['alliance'] = self.loot * self.tax
+        data['alliance_formatted'] = '{:,.0f}'.format(self.loot * self.tax)
         isk_per_share = self.loot / self.total_shares()
         corps, corp_names = {}, []
-        players = []
+        players = {}
         for player in self.get_players():
             if not player.corporation in corp_names:
                 corp_names.append(player.corporation)
@@ -78,8 +79,17 @@ class Operation(db.Model):
             pre_tax = isk_per_share * player.sites
             corp_tax = pre_tax * corps[player.corporation]['tax']
             post_tax = pre_tax - corp_tax
-            players.append([player.name, post_tax])
+            players[player.name] = {
+                'sites': player.sites,
+                'isk': post_tax,
+                'isk_formatted': '{:,.0f}'.format(post_tax),
+                'paid': player.paid,
+                'paid_formatted': '{:,.0f}'.format(player.paid),
+                'complete': player.complete
+            }
             corps[player.corporation]['isk'] += corp_tax
+        for corp in corps:
+            corps[corp]['isk_formatted'] = '{:,.0f}'.format(corps[corp]['isk'])
         data['corps'] = corps
         data['players'] = players
         return data
