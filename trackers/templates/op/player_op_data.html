@@ -1,6 +1,6 @@
 <table class="card-panel table">
     <tr>
-        <td><b>Name</b>: {{ player.name }}</td>
+        <td><b>Name</b>: {{ player }}</td>
     </tr>
     <tr>
         <td><b>Corp</b>: {{ player.corp }}</td>
@@ -15,13 +15,7 @@
         <td><b>Paid</b>: {{ player.paid|formatcommas }}</td>
     </tr>
     <tr>
-        <td><b>Paid through API</b>: {{ player.api_paid|formatcommas }}</td>
-    </tr>
-    <tr>
         <td><b>Tax</b>: {{ player.operation.tax_as_percentage() }}</td>
-    </tr>
-    <tr>
-        <td><b>Api key for op</b>: {{ player.operation.key }}</td>
     </tr>
     <tr>
         <td><b>Complete</b>: {{ player.complete }}</td>

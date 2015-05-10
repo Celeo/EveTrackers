@@ -2,7 +2,6 @@
     <tr>
         <th class="text-left">Operation</th>
         <th class="text-left">Player Name</th>
-        <th class="text-left">Player Corp</th>
         <th class="text-center">Sites</th>
         <th class="text-center">Share</th>
         <th class="text-center">Paid</th>
@@ -12,20 +11,34 @@
         <td class="text-left"><a href="{{ url_for('.op', op_id=operation.id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
         <td class="text-left">** Alliance **</td>
         <td class="text-center">-</td>
-        <td class="text-center">-</td>
-        <td class="text-center" id="share{{ operation.id }}">{{ operation.get_alliance_share() }}</td>
+        <td class="text-center" id="share{{ operation.id }}">{{ data['alliance_formatted'] }}</td>
         <td class="text-center">-</td>
         <td class="text-right" id="complete{{ operation.id }}">-</td>
     </tr>
-    {% for p in players %}
+{% for c in data['corps'] %}
+    <tr>
+        <td class="text-left"><a href="{{ url_for('.op', op_id=operation.id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
+        <td class="text-left">** {% if c %}{{ c }}{% else %}none{% endif %} **</td>
+        <td class="text-center">-</td>
+        <td class="text-center" id="">{{ data['corps'][c]['isk_formatted'] }}</td>
+        <td class="text-center">-</td>
+        <td class="text-right" id="">-</td>
+    </tr>
+{% endfor %}
+{% for p in data['players'] %}
     <tr>
         <td class="text-left"><a href="{{ url_for('.op', op_id=p.operation_id) }}">{{ operation.id }} - {{ operation.name }}</a></td>
-        <td class="text-left">{{ p.name }}</td>
-        <td class="text-left">{{ p.corp }}</td>
-        <td class="text-center">{{ p.sites }}</td>
-        <td class="text-center" id="share{{ p.id }}">{{ p.get_share_formatted() }}</td>
-        <td class="text-center">{{ p.get_paid_formatted() }} isk</td>
-        <td class="text-right" id="complete{{ p.id }}">{% if p.complete %}<span class="badge black-text green">True</span>{% else %}<span class="badge black-text red">False</span>{% endif %}</td>
+        <td class="text-left">{{ p }}</td>
+        <td class="text-center">{{ data['players'][p]['sites'] }}</td>
+        <td class="text-center" id="share{{ p.id }}">{{ data['players'][p]['isk_formatted'] }}</td>
+        <td class="text-center">{{ data['players'][p]['paid_formatted'] }} isk</td>
+        <td class="text-right" id="complete{{ p.id }}">
+        {% if data['players'][p]['complete'] %}
+            <span class="badge black-text green">True</span>
+        {% else %}
+            <span class="badge black-text red">False</span>
+        {% endif %}
+        </td>
     </tr>
-    {% endfor %}
+{% endfor %}
 </table>

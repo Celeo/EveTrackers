@@ -13,14 +13,6 @@
 
 <h3>Operation Listing</h3>
 
-{% if not apikeys and bursar %}
-<div class="alert alert-warning" id="no_keys_warning">
-    <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
-    <h4>No API Keys</h4>
-    Hey, Bursar: there aren't any API keys in storage; Eve authentification for payment completion will not work.
-</div>
-{% endif %}
-
 <div class="alert alert-info">
     <button type="button" class="close" onclick="$(this).parent().fadeOut(250);">&times;</button>
     <h4>Using the status field</h4>

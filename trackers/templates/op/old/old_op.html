@@ -156,7 +156,6 @@
         <b>Location</b>: <span id="oplocation">{{ op.location }}</span> {% if not op.locked %}<a onclick="changeLocation();" id="changelocation" class="font-half">CHANGE</a> 
             <a onclick="saveChangeLocation();" id="savechangelocation" class="font-half" hidden>SAVE</a>{% endif %}<br />
         <b>Started</b>: {{ op.date }}<br />
-        <b>API key</b>: {{ op.key }} <a href="#apikeyexplain" role="button" data-toggle="modal" class="font-half">WHAT IS THIS?</a><br />
         <b>State</b>: <span class="label label-success" id="opstate">{{ op.state }}</span><br />
         {% if not op.locked %}
         <div class="form-inline">
@@ -185,30 +184,6 @@
         </p>        
         {% endif %}
     </p>
-</div>
-
-<div class="modal fade" id="apikeyexplain" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    This API key is used by the tool for automatically tracking payouts for operations from corporation wallets.
-                    <br />
-                    While this tool does support full manual payouts to players, it aims to eliminate much of the work that has to 
-                    be recorded by bursars in doing payouts, specifically for escalations.
-                    <br />
-                    Bursars can push a button on the payout management page and the tool will poll the API keys in storage and 
-                    attempt to mark as many players as possible as paid for their participation in operations.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="well">
@@ -241,9 +216,9 @@
                 <th class="text-right">ISK Earned</th>
             {% endif %}
             </tr>
-        {% for player in op.get_all_players() %}
+        {% for player in op.get_players() %}
             <tr id="playerrow_{{ player.id }}">
-                <td>{{ player.name }}</td>
+                <td>{{ player }}</td>
                 <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
             {% if not op.locked %}
                 <td class="text-right"><a class="increment btn btn-success" playerid="{{ player.id }}">+</a></td>
