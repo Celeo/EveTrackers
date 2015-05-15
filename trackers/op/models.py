@@ -64,7 +64,7 @@ class Operation(db.Model):
         }
         data['alliance'] = self.loot * self.tax
         data['alliance_formatted'] = '{:,.0f}'.format(self.loot * self.tax)
-        isk_per_share = self.loot / self.total_shares()
+        isk_per_share = (self.loot - (self.loot * self.tax)) / self.total_shares()
         corps, corp_names = {}, []
         players = {}
         for player in self.get_players():
