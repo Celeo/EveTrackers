@@ -96,14 +96,7 @@ class Operation(db.Model):
 
     def get_share_for(self, player):
         try:
-            share = self.loot * (float(player.sites) / float(self.total_shares()))
-            corp_tax_rate = 0
-            if player.corporation in app_settings['CORP_TAXES']:
-                corp_tax_rate = app_settings['CORP_TAXES'][player.corporation]
-            elif not player.corporation or player.corporation == 'None':
-                corp_tax_rate = 1
-            share -= share * corp_tax_rate
-            return round(share)
+            return round(self.get_payout_data()['players'][player.name]['isk'])
         except:
             return -1
 
