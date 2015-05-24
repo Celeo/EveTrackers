@@ -72,12 +72,19 @@
         });
     });
     function updatePlayers() {
-        $("#players").load("{{ url_for('.players', op_id=op.id) }}");
-        $("#playercorp").change(function() {
-            if ($("#playercorp").val() == "* Manually enter ...*") {
-                $("#playercorp_manual").css("visibility", "visible");
-            } else {
-                $("#playercorp_manual").css("visibility", "hidden");
+        $.ajax({
+            type: "GET",
+            url: "{{ url_for('.players', op_id=op.id) }}",
+            success: function(data) {
+                $("#players").html(data);
+                $("select").material_select();
+                $("#playercorp").change(function() {
+                    if ($("#playercorp").val() == "* Manually enter ...*") {
+                        $("#playercorp_manual").css("visibility", "visible");
+                    } else {
+                        $("#playercorp_manual").css("visibility", "hidden");
+                    }
+                });
             }
         });
     }
