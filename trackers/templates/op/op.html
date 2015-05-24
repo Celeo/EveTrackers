@@ -63,9 +63,23 @@
             var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
             messageSocket({ command: "decrement", player_id: pid, step: step });
         });
+        $("#playercorp").change(function() {
+            if ($("#playercorp").val() == "* Manually enter ...*") {
+                $("#playercorp_manual").css("visibility", "visible");
+            } else {
+                $("#playercorp_manual").css("visibility", "hidden");
+            }
+        });
     });
     function updatePlayers() {
         $("#players").load("{{ url_for('.players', op_id=op.id) }}");
+        $("#playercorp").change(function() {
+            if ($("#playercorp").val() == "* Manually enter ...*") {
+                $("#playercorp_manual").css("visibility", "visible");
+            } else {
+                $("#playercorp_manual").css("visibility", "hidden");
+            }
+        });
     }
     function renameOperation() {
         $("#opname").html('<input type="text" id="i_opname" value="' + $("#currentopname").text() + '">');
@@ -123,7 +137,13 @@
         messageSocket({ command: "remove", player_id: id });
     }
     function addPlayer() {
-        messageSocket({ command: "add", name: $("#playername").val(), corporation: $("#playercorp").val() });
+        var corp = "";
+        if ($("#playercorp").val() == "* Manually enter ...*") {
+            corp = $("#playercorp_manual").val();
+        } else {
+            corp = $("#playercorp").val();
+        }
+        messageSocket({ command: "add", name: $("#playername").val(), corporation: corp });
     }
     function changeLoot() {
         messageSocket({ command: "loot", loot: $("#lootprice").val() });
@@ -257,7 +277,13 @@
                 <h4>Add Player</h4>
                 <div class="form-inline">
                     <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
-                    <input type="text" id="playercorp" placeholder="Player corp" value="">
+                    <select id="playercorp">
+                        <option value="Wormbro">Wormbro</option>
+                        <option value="BRG Corp">BRG Corp</option>
+                        <option value="Pan Galactic Gargle Blasters">Pan Galactic Gargle Blasters</option>
+                        <option value="* Manually enter ...*">* Manually enter ...*</option>
+                    </select>
+                    <input type="text" id="playercorp_manual" placeholder="Player corp" style="visibility: hidden;">
                     <button class="btn light-green accent-4 waves-effect waves-light" onclick="addPlayer();">Add</button>
                 </div>
             {% endif %}
