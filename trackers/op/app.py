@@ -96,8 +96,10 @@ def index():
 @blueprint.route('/op/<op_id>', methods=['GET', 'POST'])
 def op(op_id):
     """ View: operation page """
-    # the operation page template is passed the op model and the total shares count initially - other data come from websockets
-    operation = Operation.query.filter_by(id=op_id).first_or_404()
+    # the operation page template is passed the op model and the total shares count initially - other data comes from websockets
+    operation = Operation.query.filter_by(id=op_id).first()
+    if not operation:
+        return _render_template('op/op_not_found.html', op_id=op_id)
     total_shares = 0
     for player in Player.query.filter_by(operation_id=op_id).all():
         total_shares += player.sites
