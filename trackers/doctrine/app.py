@@ -31,6 +31,7 @@ def _check_fleet_commander():
 
 @blueprint.route('/not_fleet_commander')
 def not_fleet_commander():
+    """ Redirect page for regular viewers """
     return render_template('doctrine/not_fleet_commander.html')
 
 

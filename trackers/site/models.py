@@ -43,7 +43,7 @@ class Site(db.Model):
         'Exceptional Core Deposit', 'Unexceptional Frontier Reservoir', 'Ordinary Permiter Deposit', \
         'Core Garrison', 'Core Stronghold', 'Oruze Osobnyk', 'Quarantine Area', 'Ordinary Perimeter Deposit', \
         'Rarified Core Deposit', 'Unexceptional Frontier Deposit']
-    
+
 
 class SiteSnapshot(db.Model):
 
