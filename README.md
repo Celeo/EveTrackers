@@ -14,6 +14,12 @@ The **char** app (WIP) is for viewing a character sheet.
 
 The **war** app is for quickly viewing killmails on the web.
 
+# Requirements
+
+1. `pip install -r requirements.txt`
+2. `pip uninstall oauth2`
+3. `pip install git+https://github.com/Celeo/python-oauth2.git`
+
 # License
 
 See the included LICENSE.md file for the license.
