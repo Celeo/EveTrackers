@@ -73,7 +73,7 @@ admin.add_view(MyModelView(Killmail, db.session))
 
 # flask-oauth
 oauth = OAuth()
-oi_auth = oauth.remote_app('oi_auth',
+oi_auth = oauth.remote_app('oi_auth', True,
     consumer_key = app.config['OI_OAUTH_CONSUMER_KEY'],
     consumer_secret = app.config['OI_OAUTH_CONSUMER_SECRET'],
     request_token_params =  {'response_type': 'code', 'scope': 'auth_info'},
@@ -82,7 +82,8 @@ oi_auth = oauth.remote_app('oi_auth',
     access_token_method =  'GET',
     access_token_url =  'https://oauth.talkinlocal.org/token',
     authorize_url =  'https://oauth.talkinlocal.org/authorize',
-    access_token_params = {'grant_type': 'authorization_code'}
+    access_token_params = {'grant_type': 'authorization_code'},
+    http_opts = { 'disable_ssl_certificate_validation': True }
 )
 
 
@@ -101,7 +102,7 @@ def oauth_authorized(resp):
     if resp is None:
         flash('You denied the request to sign in', 'danger')
         return redirect(url_for('site_tracker.index'))
-    data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token']).json()['user']
+    data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token'], verify=False).json()['user']
     if not data['auth_status'] in ['Internal', 'Protected']:
         flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
         app.logger.log(LOGGING_IP, 'User ' + data['user_id'] + ' was denied access through an accountStatus of ' + data['auth_status'])
