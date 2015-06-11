@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Eve Trackers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Celeo">
+
+    <link href="{{ url_for('static', filename='css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    <style>
+        body {
+            background-color: rgb(219, 219, 219);
+        }
+        h3 {
+            margin-left: 10%;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="light-blue lighten-1" go="{{ url_for('site_tracker.index') }}">
+    <div class="nav-wrapper">
+        <a href="{{ url_for('landing') }}" class="brand-logo center">Trackers</a>
+    </div>
+</nav>
+
+<h3>404 error - page not found</h3>
+
+</body>
+
+</html>

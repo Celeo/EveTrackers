@@ -148,6 +148,16 @@ def root_login():
     return render_template('root_login.html')
 
 
+@app.errorhandler(404)
+def error_404(error):
+    return render_template('404.html')
+
+
+@app.errorhandler(500)
+def error_500(error):
+    return render_template('500.html')
+
+
 def _name():
     """ Returns the name of the user """
     # the user's name on the site
