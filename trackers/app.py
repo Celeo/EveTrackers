@@ -4,7 +4,6 @@ from flask_oauth import OAuth
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 import requests
-import logging
 from datetime import datetime, timedelta
 from trackers.shared import app_settings, db, socketio, InGameBrowser, api
 
@@ -19,11 +18,6 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 db.app = app
 db.init_app(app)
 
-
-# logger
-LOGGING_IP = 60
-logging.addLevelName(LOGGING_IP, 'IP')
-logging.basicConfig(filename='log.txt', level=LOGGING_IP)
 
 # settings
 app_settings['ALLIANCE'] = app.config['ALLIANCE']
@@ -105,7 +99,6 @@ def oauth_authorized(resp):
     data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token'], verify=False).json()['user']
     if not data['auth_status'] in ['Internal', 'Protected']:
         flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
-        app.logger.log(LOGGING_IP, 'User ' + data['user_id'] + ' was denied access through an accountStatus of ' + data['auth_status'])
         return redirect(url_for('site_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
@@ -113,7 +106,6 @@ def oauth_authorized(resp):
     # TODO: load corporation roles
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
-    app.logger.log(LOGGING_IP, 'User ' + session['oi_auth_user'] + ' has logged in under IP ' + request.environ['REMOTE_ADDR'])
     return redirect(url_for('site_tracker.index'))
 
 
@@ -202,7 +194,6 @@ def _preprocess():
     # for any page in the app that isn't a static file or involved in logging in, only allow access to valid users
     if request.path.startswith('/static/'):
         return
-    app.logger.log(LOGGING_IP, 'User "' + _name() + '" viewing page "' + request.path + '" with IP ' + request.environ['REMOTE_ADDR'])
     if request.path in ['/noaccess', '/login', '/oauthauthorized', '/root_login']:
         return
     if not _can_access():
