@@ -95,18 +95,18 @@ def oauth_authorized(resp):
     """ Perform the "login validation" after oauth """
     if resp is None:
         flash('You denied the request to sign in', 'danger')
-        return redirect(url_for('site_tracker.index'))
+        return redirect(url_for('op_tracker.index'))
     data = requests.get('https://oauth.talkinlocal.org/api/v1/auth_user?access_token=' + resp['access_token'], verify=False).json()['user']
     if not data['auth_status'] in ['Internal', 'Protected']:
         flash('You do not have sufficient permissions to use this tool. Requires group "Internal", while you have group "{}".'.format(data['auth_status']), 'danger')
-        return redirect(url_for('site_tracker.index'))
+        return redirect(url_for('op_tracker.index'))
     session['oi_auth_token'] = resp['access_token']
     session['oi_auth_user'] = data['user_id']
     session['corporation'] = api.eve.CharacterAffiliation(ids=api.eve.CharacterID(names=data['main_character']).characters[0].characterID).characters[0].corporationName
     # TODO: load corporation roles
     session.permanent = True
     flash('You were signed in as {}'.format(data['user_id']), 'info')
-    return redirect(url_for('site_tracker.index'))
+    return redirect(url_for('op_tracker.index'))
 
 
 @app.route('/login')
@@ -136,7 +136,7 @@ def root_login():
             session['corporation'] = app_settings['APPROVED_CORPORATIONS'][0]
             session.permanent = True
             flash('You used the root login page to log into the trackers as {}'.format(app.config['ROOT_LOGIN'][0]), 'info')
-            return redirect(url_for('site_tracker.index'))
+            return redirect(url_for('op_tracker.index'))
     return render_template('root_login.html')
 
 
@@ -230,7 +230,7 @@ def no_access():
     # the catch-all invalid user notice page
     if _can_access():
         flash('Your are already logged in', 'info')
-        return redirect(url_for('site_tracker.index'))
+        return redirect(url_for('op_tracker.index'))
     return render_template('no_access.html')
 
 
@@ -255,8 +255,8 @@ def update_approved_corporations():
 socketio.app = app
 socketio.init_app(app)
 
-app.register_blueprint(site_tracker)
-app.register_blueprint(op_tracker, url_prefix='/operations')
+app.register_blueprint(site_tracker, url_prefix='/site')
+app.register_blueprint(op_tracker)
 app.register_blueprint(corp_tracker, url_prefix='/corp')
 app.register_blueprint(fuel_tracker, url_prefix='/fuel')
 app.register_blueprint(war_tracker, url_prefix='/war')

@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 function refreshData() {
     $('#notify_refresh').hide();
-    $('#tables').load("/tables", "", function(data) {
+    $('#tables').load("/site/tables", "", function(data) {
         $('.modal-trigger').leanModal();
         $('.tooltipped').tooltip({delay: 50});
         $('select').material_select();
@@ -60,7 +60,7 @@ function refreshData() {
 function addNewWormhole() {
     $.ajax({
         type: 'POST',
-        url: "/",
+        url: "/site",
         data: {
             data_type: 'wormhole',
             scanid: $('#w_new_scanid').val(),
@@ -78,7 +78,7 @@ function addNewWormhole() {
 function addNewSite() {
     $.ajax({
         type: 'POST',
-        url: "/",
+        url: "/site",
         data: {
             data_type: 'site',
             scanid: $('#s_new_scanid').val(),
@@ -95,7 +95,7 @@ function addNewSite() {
 function addNewWormholeGraph() {
     $.ajax({
         type: 'POST',
-        url: "/",
+        url: "/site",
         data: {
             graph_new_wormhole: 1,
             scanid: $('#graph_wormhole_scanid').val(),
@@ -180,7 +180,7 @@ function save(type, n) {
         var o_scanid = $('#wo_scanid' + n + '_edit').val();
         $.ajax({
           type: "POST",
-          url: String("inlineeditwormhole/" + n),
+          url: String("/site/inlineeditwormhole/" + n),
           data: {
               id: id,
               scanid: scanid,
@@ -218,7 +218,7 @@ function save(type, n) {
         var type = $('#stype' + n + '_edit').val();
         $.ajax({
             type: "POST",
-            url: String("inlineeditsite/" + n),
+            url: String("/site/inlineeditsite/" + n),
             data: {
                 id: id,
                 scanid: scanid,
@@ -275,14 +275,14 @@ function launchOpenModal(type, id) {
 }
 
 function performClose() {
-    $.get("/" + $(".m_close_clickedType").first().text() + "/" + $(".m_close_clickedID").text() + "/close", function(data) {
+    $.get("/site/" + $(".m_close_clickedType").first().text() + "/" + $(".m_close_clickedID").text() + "/close", function(data) {
         refreshData();
     });
     $('#modalCloseModel').closeModal();
 }
 
 function performOpen() {
-    $.get("/" + $(".m_open_clickedType").first().text() + "/" + $(".m_open_clickedID").text() + "/open", function(data) {
+    $.get("/site/" + $(".m_open_clickedType").first().text() + "/" + $(".m_open_clickedID").text() + "/open", function(data) {
         refreshData();
     });
     $('#modalOpenModel').closeModal();
