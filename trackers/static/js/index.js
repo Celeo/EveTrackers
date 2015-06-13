@@ -145,7 +145,7 @@ function edit(type, n) {
 
 function cancel(type, n) {
     if (type === 'wormhole') {
-        var scanid = $('#wid' + n).html().split('"')[7];
+        var scanid = $('#wid' + n).html().split('"')[9];
         var start = $('#wstart' + n).html().split('"')[7];
         var end = $('#wend' + n).html().split('"')[7];
         var status = $('#wstatus' + n).html().split('"')[7];
