@@ -225,10 +225,10 @@
 <div class="well">
     <h4>Description</h4>
     <span id="opdescription">{{ op.description|safe }}</span><br />
-    {% if not op.locked %}
+{% if not op.locked %}
     <a onclick="changeDescription();" id="changedescription" class="font-half">CHANGE</a> 
     <a onclick="saveChangeDescription();" id="savechangedescription" class="font-half" hidden>SAVE</a>
-    {% endif %}
+{% endif %}
 </div>
 
 <div class="well">
