@@ -166,6 +166,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('select').material_select();
+        updatePlayers();
     });
 </script>
 {% endblock %}
@@ -176,10 +177,10 @@
 <span id="currentopid" hidden>{{ op.id }}</span>
 
 <h3><span id="opname">{{ op.name }}</span>
-    {% if not op.locked %}
+{% if not op.locked %}
     <a onclick="renameOperation();" id="renameop" class="font-half">RENAME</a> 
     <a onclick="saveRenameOperation();" id="saverename" class="font-half" hidden>SAVE</a>
-    {% endif %}
+{% endif %}
 </h3>
 
 <div class="card-panel">
@@ -232,97 +233,8 @@
 
 <div class="well">
     <h4 class="float-left">Players</h4>
-    {% if not op.locked %}
-    <div class="float-right">
-        <label for="step">Delta (default is 1.0)</label>
-        <input id="step" type="number" min="0.1" max="1.0" step="0.1" style="width: 12em;">
-    </div>
-    {% endif %}
     <div class="clearfix"></div>
-    <div id="players">
-        <table class="bordered hoverable" id="playerstable">
-            <tr id="tableheader">
-                <th>Name</th>
-                <th class="text-center">Shares</th>
-            {% if not op.locked %}
-                <th class="text-right">Increment</th>
-                <th class="text-right">Decrement</th>
-                <th class="text-right">Remove</th>
-            {% else %}
-                <th class="text-right">ISK Earned</th>
-            {% endif %}
-            </tr>
-        {% for player in op.get_players() %}
-            <tr id="playerrow_{{ player.id }}">
-                <td>{{ player }}</td>
-                <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
-            {% if not op.locked %}
-                <td class="text-right"><a class="btn btn-floating green increment" playerid="{{ player.id }}"><i class="mdi-content-add small black-text"></i></a></td>
-                <td class="text-right"><a class="btn btn-floating yellow decrement" playerid="{{ player.id }}"><i class="mdi-content-remove small black-text"></i></a></td>
-                <th class="text-right">
-                    <div class="form-inline">
-                        <input type="hidden" name="remove" value="{{ player.id }}">
-                        <a class="btn btn-floating red" onclick="removePlayer({{ player.id }});"><i class="mdi-content-clear small black-text"></i></a>
-                    </div>
-                </th>
-            {% else %}
-                <td class="text-right">{{ player.get_share()|formatcommas }}</td>
-            {% endif %}
-            </tr>
-        {% endfor %}
-            <tr id="playerrow_total">
-                <td></td>
-                <th class="text-center" id="tabletotalshares">{{ op.total_shares()|formatcommas }}</th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-        <div class="row">
-            <div class="col-lg-4">
-            {% if not op.locked %}
-                <h4>Add Player</h4>
-                <div class="form-inline">
-                    <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
-                    <select id="playercorp">
-                        <option value="Wormbro">Wormbro</option>
-                        <option value="BRG Corp">BRG Corp</option>
-                        <option value="Pan Galactic Gargle Blasters">Pan Galactic Gargle Blasters</option>
-                        <option value="* Manually enter ...*">* Manually enter ...*</option>
-                    </select>
-                    <input type="text" id="playercorp_manual" placeholder="Player corp" style="visibility: hidden;">
-                    <button class="btn light-green accent-4 waves-effect waves-light" onclick="addPlayer();">Add</button>
-                </div>
-            {% endif %}
-            </div>
-            <div class="col-lg-4">
-                <h4>Loot</h4>
-                {% if op.locked or not bursar %}
-                    <p>
-                        {{ op.loot|formatcommas }} isk
-                    </p>
-                {% else %}
-                    <div class="form-inline">
-                        <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
-                        <button class="btn light-green accent-4" onclick="changeLoot();">Save</button>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="col-lg-4">
-                <h4>Tax (decimal)</h4>
-                {% if op.locked or not bursar %}
-                    <p>
-                        {{ op.tax_as_percentage() }}
-                    </p>
-                {% else %}
-                    <div class="form-inline">
-                        <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
-                        <button class="btn light-green accent-4" onclick="changeTax();">Save</button>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    <div id="players"></div>
 </div>
 
 {% endblock %}

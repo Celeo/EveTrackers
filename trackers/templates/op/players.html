@@ -1,20 +1,20 @@
-<table class="bordered hoverable">
-    <tr>
+<table class="bordered hoverable" id="playerstable">
+    <tr id="tableheader">
         <th>Name</th>
         <th class="text-center">Shares</th>
-        {% if not op.locked %}
+    {% if not op.locked %}
         <th class="text-right">Increment</th>
         <th class="text-right">Decrement</th>
         <th class="text-right">Remove</th>
-        {% else %}
+    {% else %}
         <th class="text-right">ISK Earned</th>
-        {% endif %}
+    {% endif %}
     </tr>
 {% for player in op.get_players() %}
      <tr id="playerrow_{{ player.id }}">
         <td>{{ player }}</td>
         <td class="text-center" id="playerrow_{{ player.id }}_share"><span id="sc_{{ player.id }}">{{ player.sites }}</span></td>
-        {% if not op.locked %}
+    {% if not op.locked %}
         <td class="text-right"><a class="btn btn-floating green increment" playerid="{{ player.id }}"><i class="mdi-content-add small black-text"></i></a></td>
         <td class="text-right"><a class="btn btn-floating yellow decrement" playerid="{{ player.id }}"><i class="mdi-content-remove small black-text"></i></a></td>
         <th class="text-right">
@@ -23,25 +23,28 @@
                 <a class="btn btn-floating red" onclick="removePlayer({{ player.id }});"><i class="mdi-content-clear small black-text"></i></a>
             </div>
         </th>
-        {% else %}
-        <td class="text-right">{{ player.get_share() }}</td>
-        {% endif %}
+    {% else %}
+        <td class="text-right">{{ player.get_share()|formatcommas }}</td>
+    {% endif %}
     </tr>
 {% endfor %}
     <tr id="playerrow_total">
         <td></td>
-        <th class="text-center" id="tabletotalshares">{{ op.total_shares() }}</th>
+        <th class="text-center" id="tabletotalshares">{{ op.total_shares()|formatcommas }}</th>
         <td></td>
         <td></td>
         <td></td>
     </tr>
 </table>
+
 <div class="row">
-    <div class="col-lg-4">
-        {% if not op.locked %}
-        <h4>Add Player</h4>
-        <div class="form-inline">
+{% if not op.locked %}
+    <h4>Add Player</h4>
+    <div class="row">
+        <div class="input-field col l3">
             <input type="text" id="playername" placeholder="Player name" value="{{ displayname }}">
+        </div>
+        <div class="input-field col l3">
             <select id="playercorp">
                 <option value="Wormbro">Wormbro</option>
                 <option value="BRG Corp">BRG Corp</option>
@@ -49,34 +52,46 @@
                 <option value="* Manually enter ...*">* Manually enter ...*</option>
             </select>
             <input type="text" id="playercorp_manual" placeholder="Player corp" style="visibility: hidden;">
+        </div>
+        <div class="input-field col l2">
             <button class="btn light-green accent-4 waves-effect waves-light" onclick="addPlayer();">Add</button>
         </div>
-        {% endif %}
     </div>
-    <div class="col-lg-4">
+{% endif %}
+</div>
+<div class="row">
+    <div class="col l6">
         <h4>Loot</h4>
-        {% if op.locked or not bursar %}
-            <p>
-                {{ op.loot }} isk
-            </p>
-        {% else %}
-            <div class="form-inline">
-                <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}><br />
+    {% if op.locked or not bursar %}
+        <p>
+            {{ op.loot|formatcommas }} isk
+        </p>
+    {% else %}
+        <div class="row">
+            <div class="form-inline col l6">
+                <input type="text" placeholder="123456789" id="lootprice" {% if not op.loot == 0 %}value="{{ op.loot }}"{% endif %}>
+            </div>
+            <div class="form-inline col l6">
                 <button class="btn light-green accent-4 waves-effect waves-light" onclick="changeLoot();">Save</button>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
     </div>
-    <div class="col-lg-4">
+    <div class="col l6">
         <h4>Tax (decimal)</h4>
-        {% if op.locked or not bursar %}
-            <p>
-                {{ op.tax_as_percentage() }}
-            </p>
-        {% else %}
-            <div class="form-inline">
-                <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}><br />
+    {% if op.locked or not bursar %}
+        <p>
+            {{ op.tax_as_percentage() }}
+        </p>
+    {% else %}
+        <div class="row">
+            <div class="form-inline col l6">
+                <input name="tax" id="tax" type="number" min="0.0" max="1.0" step="0.01" placeholder="Tax (default is .10)" {% if not op.tax == '0.1' %}value="{{ op.tax }}"{% endif %}>
+            </div>
+            <div class="form-inline col l6">
                 <button class="btn light-green accent-4 waves-effect waves-light" onclick="changeTax();">Save</button>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
     </div>
 </div>
