@@ -41,6 +41,9 @@
         if (message.command == "tax") {
             $("#tax").val(message.tax);
         }
+        if (message.command == "holes") {
+            $("#playerrow_" + message.player_id + "_holes").click();
+        }
     });
     function messageSocket(message) {
         message["op_id"] = getOpId();
@@ -55,13 +58,18 @@
     $(document).ready(function() {
         $(document).on("click", "a.increment", function() {
             var pid = $(this).attr("playerid");
-            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
-            messageSocket({ command: "increment", player_id: pid, step: step });
+            messageSocket({ command: "increment", player_id: pid });
         });
         $(document).on("click", "a.decrement", function() {
             var pid = $(this).attr("playerid");
-            var step = $("#step").val() == "" ? 1.0 : parseFloat($("#step").val());
-            messageSocket({ command: "decrement", player_id: pid, step: step });
+            messageSocket({ command: "decrement", player_id: pid });
+        });
+        $(document).on("click", ".filled-in", function() {
+            var pid = $(this).attr("playerid");
+            var did = '0'; // TODO
+            // TODO when the message comes back, the checkbox is toggled on, which causes
+            // the message to be sent again, etc. Infinite loop.
+            // messageSocket({ command: "holes", player_id: pid, did: did });
         });
         $("#playercorp").change(function() {
             if ($("#playercorp").val() == "* Manually enter ...*") {

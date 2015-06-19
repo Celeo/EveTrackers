@@ -316,16 +316,25 @@ def websocket_message(message):
         else:
             _log('Tried to add duplicate player {} to {}'.format(message['name'], op_id))
             return
+    if message['command'] == 'holes':
+        player = Player.query.filter_by(id=message['player_id']).first()
+        if not player:
+            return
+        if message['did'] == '1' and player.sites % 2 != 0:
+            player.sites += 0.5
+        elif message['did'] == '0' and player.sites % 2 == 0:
+            player.sites -= 0.5
+        db.session.commit()
+        _log('Set holes for {} to {} on op {}'.format(player.name, player.sites % 2 != 0, op_id))
     if message['command'] in ['increment', 'decrement']:
         player = Player.query.filter_by(id=message['player_id']).first()
         if not player:
             return
-        step = float(message['step'])
         if message['command'] == 'increment':
-            player.sites += step
+            player.sites += 1
         else:
-            if player.sites - step >= 0.0:
-                player.sites -= step
+            if player.sites - 1 >= 0.0:
+                player.sites -= 1
         db.session.commit()
         _log('Set count for {} to {} on op {}'.format(player.name, player.sites, op_id))
         new_message = message.copy()

@@ -29,10 +29,10 @@
         </td>
         <td class="text-right"><a class="btn btn-floating green increment" playerid="{{ player.id }}"><i class="mdi-content-add small black-text"></i></a></td>
         <td class="text-right"><a class="btn btn-floating yellow decrement" playerid="{{ player.id }}"><i class="mdi-content-remove small black-text"></i></a></td>
-        <td class="text-right" id="playerrow_{{ player.id }}_holes">
+        <td class="text-right">
             <p>
-              <input type="checkbox" class="filled-in" id="filled-in-box-{{ player.id }}" />
-              <label for="filled-in-box-{{ player.id }}"></label>
+                <input type="checkbox" class="filled-in" id="playerrow_{{ player.id }}_holes" playerid="{{ player.id }}" />
+                <label for="playerrow_{{ player.id }}_holes"></label>
             </p>
         </td>
         <td class="text-right">
