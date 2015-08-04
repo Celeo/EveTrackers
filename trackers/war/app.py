@@ -26,7 +26,7 @@ def kill(kill_id, hashcode):
 def kill_info(kill_id, hashcode):
     """ AJAX View: Fetch the actual information about a kill to return to the calling page """
     # get data from CREST
-    js = json.loads(requests.get('http://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
+    js = json.loads(requests.get('https://public-crest.eveonline.com/killmails/{}/{}/'.format(kill_id, hashcode)).text)
 
     # sanity check
     if 'message' in js and js['message'] == 'Invalid killmail ID or hash':
